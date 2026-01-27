@@ -61,37 +61,57 @@
 <script>
 function calcular() {
   const pesoAtual = parseFloat(document.getElementById("pesoAtual").value);
-  const alturaCm = parseFloat(document.getElementById("altura").value);
+  const altura = parseFloat(document.getElementById("altura").value);
   const pesoDesejado = parseFloat(document.getElementById("pesoDesejado").value);
+  const meta = document.getElementById("meta").value;
 
-  const resultado = document.getElementById("resultado");
-
-  if (!pesoAtual || !alturaCm || !pesoDesejado) {
-    resultado.innerHTML = "⚠️ Preencha todos os campos.";
+  if (!pesoAtual || !altura || !pesoDesejado || !meta) {
+    alert("Preencha todos os campos");
     return;
   }
 
-  const altura = alturaCm / 100;
-  const imc = (pesoAtual / (altura * altura)).toFixed(1);
-
-  let exercicios = "";
+  let plano = "";
   let alimentacao = "";
+  let treino = "";
 
-  if (pesoAtual > pesoDesejado) {
-    exercicios = "🚶 Caminhada, corrida leve, bicicleta.";
-    alimentacao = "🥗 Mais legumes, frutas e menos açúcar.";
-  } else if (pesoAtual < pesoDesejado) {
-    exercicios = "🏋️ Treino de força e resistência.";
-    alimentacao = "🍗 Aumentar proteínas e refeições equilibradas.";
-  } else {
-    exercicios = "✅ Manter rotina de exercícios.";
-    alimentacao = "🥑 Manter alimentação saudável.";
+  // 🔓 PLANO GRÁTIS (automático simples)
+  if (meta === "emagrecer") {
+    plano = "Plano diário simples para emagrecimento";
+    alimentacao = "Café da manhã leve, almoço equilibrado, jantar leve. Evite açúcar.";
+    treino = "Caminhada ou corrida 30 min por dia.";
   }
 
-  resultado.innerHTML = `
-    <strong>IMC:</strong> ${imc}<br><br>
-    <strong>Exercícios:</strong> ${exercicios}<br>
-    <strong>Alimentação:</strong> ${alimentacao}
+  if (meta === "massa") {
+    plano = "Plano diário simples para ganho de massa";
+    alimentacao = "Mais proteínas e carboidratos ao longo do dia.";
+    treino = "Treino de força 4x por semana.";
+  }
+
+  if (meta === "definicao") {
+    plano = "Plano diário simples para definição corporal";
+    alimentacao = "Alimentação equilibrada com proteínas.";
+    treino = "Treino + cardio leve.";
+  }
+
+  document.getElementById("resultado").innerHTML = `
+    <h3>${plano}</h3>
+
+    <p><strong>Alimentação:</strong> ${alimentacao}</p>
+    <p><strong>Treino:</strong> ${treino}</p>
+
+    <hr>
+
+    <p style="color: gray;">
+      🔒 Plano VIP desbloqueia:
+      <br>• Plano diário detalhado
+      <br>• Ajuste por peso e altura
+      <br>• Evolução diária
+      <br>• Sugestões personalizadas
+    </p>
+
+    <button onclick="alert('Plano VIP em breve 💎')">
+      Desbloquear VIP – R$5/mês
+    </button>
   `;
 }
 </script>
