@@ -53,36 +53,41 @@
 </div>
 
 <script>
-  function calcular() {
-    const peso = parseFloat(document.getElementById("pesoAtual").value);
-    const alturaCm = parseFloat(document.getElementById("altura").value);
-    const pesoDesejado = parseFloat(document.getElementById("pesoDesejado").value);
+function calcular() {
+  const pesoAtual = parseFloat(document.getElementById("pesoAtual").value);
+  const alturaCm = parseFloat(document.getElementById("altura").value);
+  const pesoDesejado = parseFloat(document.getElementById("pesoDesejado").value);
 
-    if (!peso || !alturaCm || !pesoDesejado) {
-      document.getElementById("resultado").innerHTML =
-        "⚠️ Preencha todos os campos.";
-      return;
-    }
+  const resultado = document.getElementById("resultado");
 
-    const altura = alturaCm / 100;
-    const imc = peso / (altura * altura);
-    let exercicios = "";
-    let alimentacao = "";
-
-    if (peso > pesoDesejado) {
-      exercicios = "🚶 Caminhada, corrida leve, agachamentos e bicicleta.";
-      alimentacao = "🥗 Comer mais legumes, frutas e reduzir açúcar.";
-    } else {
-      exercicios = "🏋️ Exercícios de força e resistência.";
-      alimentacao = "🍗 Aumentar proteínas e refeições equilibradas.";
-    }
-
-    document.getElementById("resultado").innerHTML = `
-      <b>IMC:</b> ${imc.toFixed(1)} <br><br>
-      <b>Exercícios sugeridos:</b><br>${exercicios}<br><br>
-      <b>Alimentação básica:</b><br>${alimentacao}
-    `;
+  if (!pesoAtual || !alturaCm || !pesoDesejado) {
+    resultado.innerHTML = "⚠️ Preencha todos os campos.";
+    return;
   }
+
+  const altura = alturaCm / 100;
+  const imc = (pesoAtual / (altura * altura)).toFixed(1);
+
+  let exercicios = "";
+  let alimentacao = "";
+
+  if (pesoAtual > pesoDesejado) {
+    exercicios = "🚶 Caminhada, corrida leve, bicicleta.";
+    alimentacao = "🥗 Mais legumes, frutas e menos açúcar.";
+  } else if (pesoAtual < pesoDesejado) {
+    exercicios = "🏋️ Treino de força e resistência.";
+    alimentacao = "🍗 Aumentar proteínas e refeições equilibradas.";
+  } else {
+    exercicios = "✅ Manter rotina de exercícios.";
+    alimentacao = "🥑 Manter alimentação saudável.";
+  }
+
+  resultado.innerHTML = `
+    <strong>IMC:</strong> ${imc}<br><br>
+    <strong>Exercícios:</strong> ${exercicios}<br>
+    <strong>Alimentação:</strong> ${alimentacao}
+  `;
+}
 </script>
 
 </body>
