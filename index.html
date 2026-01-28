@@ -17,7 +17,6 @@ body{
   margin:auto;
 }
 
-/* CARDS */
 .card{
   background:#fff;
   border-radius:12px;
@@ -27,33 +26,29 @@ body{
 }
 
 h2,h3{
-  margin-top:0;
   text-align:center;
+  margin-top:0;
 }
 
-/* GRÁTIS */
-.free{
-  border-left:6px solid #2ecc71;
+select, button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
 }
 
-/* VIP */
 .vip{
   border-left:6px solid gold;
 }
 
 .vip-btn{
   background:linear-gradient(135deg,#FFD700,#C9A300);
-  color:#000;
   font-weight:bold;
   border:none;
-  padding:12px;
-  width:100%;
-  border-radius:10px;
   cursor:pointer;
-  margin-top:10px;
 }
 
-/* CALENDÁRIO */
+/* DIAS */
 .days{
   display:flex;
   justify-content:space-between;
@@ -82,8 +77,8 @@ h2,h3{
 }
 
 .exercise h4{
-  color:#2c3e50;
   margin:5px 0;
+  color:#2c3e50;
 }
 
 .exercise small{
@@ -97,7 +92,6 @@ h2,h3{
   padding:8px;
   border:none;
   border-radius:8px;
-  cursor:pointer;
 }
 
 .done{
@@ -126,23 +120,26 @@ h2,h3{
 
 <div class="container">
 
-  <!-- PLANO GRÁTIS -->
-  <div class="card free">
-    <h3>🌱 Plano Diário Grátis</h3>
-    <p><strong>☀️ Manhã:</strong> Café leve + fruta</p>
-    <p><strong>🍽️ Almoço:</strong> Comida equilibrada</p>
-    <p><strong>🌙 Noite:</strong> Jantar leve</p>
-    <p style="color:gray;font-size:13px">
-      🔒 Exercícios completos apenas no VIP
-    </p>
+  <!-- ESCOLHA DE META -->
+  <div class="card">
+    <h3>🎯 Escolha sua meta</h3>
+    <select id="meta" onchange="updatePlano()">
+      <option value="">Selecione</option>
+      <option value="emagrecer">Emagrecer</option>
+      <option value="massa">Ganhar Massa</option>
+      <option value="definir">Definir Corpo</option>
+    </select>
   </div>
 
-  <!-- VIP -->
+  <!-- ALIMENTAÇÃO -->
+  <div class="card">
+    <h3>🍽️ Alimentação Recomendada</h3>
+    <div id="alimentacao">Escolha uma meta</div>
+  </div>
+
+  <!-- TREINO VIP -->
   <div class="card vip">
-    <h3>💎 Plano VIP</h3>
-    <p style="text-align:center;font-size:14px">
-      Escolha seus dias de treino e desbloqueie exercícios personalizados
-    </p>
+    <h3>🏋️ Treino VIP</h3>
 
     <div class="days">
       <div class="day" onclick="selectDay(0)">Seg</div>
@@ -160,17 +157,63 @@ h2,h3{
 </div>
 
 <script>
-const exercises = [
-  ["Agachamento","Flexão","Abdominal"],
-  ["Polichinelo","Afundo","Prancha"],
-  ["Corrida parada","Flexão joelho","Abdominal bicicleta"],
-  ["Agachamento sumô","Escalada","Prancha lateral"],
-  ["Burpee","Agachamento","Abdominal"]
-];
-
+let metaSelecionada = "";
 let doneCount = 0;
 
+const alimentacao = {
+  emagrecer: `
+    ☀️ Café leve (fruta + ovo)<br>
+    🍽️ Almoço equilibrado<br>
+    🌙 Jantar leve
+  `,
+  massa: `
+    ☀️ Café reforçado (ovos + pão)<br>
+    🍽️ Almoço completo<br>
+    🌙 Jantar com proteína
+  `,
+  definir: `
+    ☀️ Café equilibrado<br>
+    🍽️ Almoço balanceado<br>
+    🌙 Jantar leve
+  `
+};
+
+const treinos = {
+  emagrecer: [
+    ["Polichinelo","Agachamento","Abdominal"],
+    ["Corrida parada","Afundo","Prancha"],
+    ["Burpee","Agachamento","Abdominal"],
+    ["Escalada","Flexão","Prancha"],
+    ["Polichinelo","Agachamento","Abdominal"]
+  ],
+  massa: [
+    ["Agachamento","Flexão","Abdominal"],
+    ["Afundo","Flexão","Prancha"],
+    ["Agachamento","Flexão","Abdominal"],
+    ["Agachamento sumô","Flexão","Prancha"],
+    ["Agachamento","Flexão","Abdominal"]
+  ],
+  definir: [
+    ["Agachamento","Prancha","Abdominal"],
+    ["Flexão","Abdominal bicicleta","Prancha"],
+    ["Agachamento","Flexão","Prancha"],
+    ["Escalada","Abdominal","Prancha"],
+    ["Agachamento","Flexão","Abdominal"]
+  ]
+};
+
+function updatePlano(){
+  metaSelecionada = document.getElementById("meta").value;
+  document.getElementById("alimentacao").innerHTML =
+    alimentacao[metaSelecionada] || "Escolha uma meta";
+}
+
 function selectDay(day){
+  if(!metaSelecionada){
+    alert("Escolha a meta primeiro");
+    return;
+  }
+
   document.querySelectorAll(".day").forEach(d=>d.classList.remove("active"));
   document.querySelectorAll(".day")[day].classList.add("active");
 
@@ -178,14 +221,13 @@ function selectDay(day){
   treino.innerHTML = "";
   doneCount = 0;
 
-  exercises[day].forEach(ex=>{
+  treinos[metaSelecionada][day].forEach(ex=>{
     const div = document.createElement("div");
     div.className = "exercise";
     div.innerHTML = `
       <h4>${ex}</h4>
-      <small>🔥 Trabalha músculos importantes</small>
-
-      <button class="video">▶ Ver vídeo explicativo</button>
+      <small>🔥 Exercício recomendado</small>
+      <button class="video">▶ Ver vídeo</button>
       <button class="done" onclick="markDone(this)">✔ Marcar como feito</button>
     `;
     treino.appendChild(div);
@@ -198,11 +240,10 @@ function markDone(btn){
   doneCount++;
 
   const total = document.querySelectorAll(".exercise").length;
-
   if(doneCount === total){
     const msg = document.createElement("div");
     msg.className = "motivacao";
-    msg.innerText = "🎉 Parabéns! Você concluiu o treino de hoje! Continue firme 💪";
+    msg.innerText = "🎉 Treino finalizado! Orgulho de você 💪";
     document.getElementById("treino").appendChild(msg);
   }
 }
