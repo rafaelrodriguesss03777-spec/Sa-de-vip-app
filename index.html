@@ -71,47 +71,46 @@ function calcular() {
   }
 
   let plano = "";
-  let alimentacao = "";
-  let treino = "";
+  let manha = "";
+  let tarde = "";
+  let noite = "";
 
-  // 🔓 PLANO GRÁTIS (automático simples)
   if (meta === "emagrecer") {
-    plano = "Plano diário simples para emagrecimento";
-    alimentacao = "Café da manhã leve, almoço equilibrado, jantar leve. Evite açúcar.";
-    treino = "Caminhada ou corrida 30 min por dia.";
+    plano = "Plano diário grátis para emagrecimento";
+    manha = "Café da manhã leve (fruta + ovo ou iogurte).";
+    tarde = "Almoço equilibrado e caminhada de 30 minutos.";
+    noite = "Jantar leve, evite açúcar e frituras.";
   }
 
   if (meta === "massa") {
-    plano = "Plano diário simples para ganho de massa";
-    alimentacao = "Mais proteínas e carboidratos ao longo do dia.";
-    treino = "Treino de força 4x por semana.";
+    plano = "Plano diário grátis para ganho de massa";
+    manha = "Café reforçado com proteína e carboidrato.";
+    tarde = "Almoço completo + treino de força.";
+    noite = "Jantar com proteína e boa hidratação.";
   }
 
   if (meta === "definicao") {
-    plano = "Plano diário simples para definição corporal";
-    alimentacao = "Alimentação equilibrada com proteínas.";
-    treino = "Treino + cardio leve.";
+    plano = "Plano diário grátis para definição corporal";
+    manha = "Café equilibrado com proteína.";
+    tarde = "Treino + refeição balanceada.";
+    noite = "Jantar leve e descanso.";
   }
 
   document.getElementById("resultado").innerHTML = `
     <h3>${plano}</h3>
 
-    <p><strong>Alimentação:</strong> ${alimentacao}</p>
-    <p><strong>Treino:</strong> ${treino}</p>
+    <p><strong>☀️ Manhã:</strong> ${manha}</p>
+    <p><strong>🍽️ Tarde:</strong> ${tarde}</p>
+    <p><strong>🌙 Noite:</strong> ${noite}</p>
 
     <hr>
 
     <p style="color: gray;">
       🔒 Plano VIP desbloqueia:
-      <br>• Plano diário detalhado
-      <br>• Ajuste por peso e altura
-      <br>• Evolução diária
-      <br>• Sugestões personalizadas
+      <br>• Plano diário detalhado por peso e altura
+      <br>• Ajustes diários automáticos
+      <br>• Metas avançadas
     </p>
-
-    <button onclick="alert('Plano VIP em breve 💎')">
-      Desbloquear VIP – R$5/mês
-    </button>
   `;
 }
 </script>
