@@ -2,230 +2,210 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Saúde e Metas VIP</title>
+<title>Saúde & Metas</title>
+
 <style>
-body { font-family: Arial, sans-serif; background:#f2f2f2; margin:0; padding:0;}
-.container { max-width:700px; margin:30px auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
-h2,h3,h4 { text-align:center; color:green;}
-input, select, button { width:100%; padding:10px; margin-top:10px; border-radius:5px; border:1px solid #ccc;}
-button { cursor:pointer;}
-.card { background:#e8ffe8; padding:15px; border-radius:10px; margin-top:15px; box-shadow:0 2px 6px rgba(0,0,0,0.15);}
-.vip-card { background:#fff8dc; border:2px solid gold; padding:15px; border-radius:10px; margin-top:15px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
-.exercicio { background:#f1f1f1; padding:10px; border-radius:5px; margin-top:10px;}
-.exercicio img { width:50px; height:50px; display:block; margin:auto;}
-.video-btn { display:block; width:100%; margin-top:5px; background:#27ae60; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer;}
-.video-btn:hover { background:#1e8449;}
-.calendario { display:flex; justify-content:space-between; margin-top:10px;}
-.day { flex:1; padding:8px; margin:2px; text-align:center; border-radius:5px; cursor:pointer; border:1px solid #ccc;}
-.day.selected { background:#27ae60; color:white;}
-.vip-btn { background:gold; color:black; padding:12px; border:none; border-radius:5px; font-weight:bold; font-size:16px; margin-top:10px; cursor:pointer;}
-.vip-btn:hover { background:#e6c200;}
-.hidden { display:none;}
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  margin:0;
+  padding:20px;
+}
+
+.container{
+  max-width:420px;
+  margin:auto;
+}
+
+/* CARDS */
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2,h3{
+  margin-top:0;
+  text-align:center;
+}
+
+/* GRÁTIS */
+.free{
+  border-left:6px solid #2ecc71;
+}
+
+/* VIP */
+.vip{
+  border-left:6px solid gold;
+}
+
+.vip-btn{
+  background:linear-gradient(135deg,#FFD700,#C9A300);
+  color:#000;
+  font-weight:bold;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:10px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+/* CALENDÁRIO */
+.days{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+}
+
+.day{
+  background:#eee;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.day.active{
+  background:#2ecc71;
+  color:#fff;
+}
+
+/* EXERCÍCIOS */
+.exercise{
+  background:#f7f7f7;
+  border-radius:10px;
+  padding:10px;
+  margin-top:10px;
+}
+
+.exercise h4{
+  color:#2c3e50;
+  margin:5px 0;
+}
+
+.exercise small{
+  color:#27ae60;
+  font-weight:bold;
+}
+
+.exercise button{
+  width:100%;
+  margin-top:8px;
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.done{
+  background:#2ecc71;
+  color:#fff;
+}
+
+.video{
+  background:#3498db;
+  color:#fff;
+}
+
+/* MOTIVAÇÃO */
+.motivacao{
+  background:#e8ffe8;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+  text-align:center;
+  font-weight:bold;
+}
 </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div class="container" id="loginContainer">
-<h2>Login / Cadastro</h2>
-<input type="text" id="usuario" placeholder="Nome de usuário">
-<input type="password" id="senha" placeholder="Senha">
-<button onclick="login()">Entrar</button>
-<p id="login-msg" style="color:red;text-align:center;"></p>
-</div>
+<div class="container">
 
-<!-- APP -->
-<div class="container hidden" id="appContainer">
-<h2>Saúde e Metas</h2>
+  <!-- PLANO GRÁTIS -->
+  <div class="card free">
+    <h3>🌱 Plano Diário Grátis</h3>
+    <p><strong>☀️ Manhã:</strong> Café leve + fruta</p>
+    <p><strong>🍽️ Almoço:</strong> Comida equilibrada</p>
+    <p><strong>🌙 Noite:</strong> Jantar leve</p>
+    <p style="color:gray;font-size:13px">
+      🔒 Exercícios completos apenas no VIP
+    </p>
+  </div>
 
-<label>Peso atual (kg)</label>
-<input type="number" id="pesoAtual">
-<label>Altura (cm)</label>
-<input type="number" id="altura">
-<label>Peso desejado (kg)</label>
-<input type="number" id="pesoDesejado">
+  <!-- VIP -->
+  <div class="card vip">
+    <h3>💎 Plano VIP</h3>
+    <p style="text-align:center;font-size:14px">
+      Escolha seus dias de treino e desbloqueie exercícios personalizados
+    </p>
 
-<label>Qual é sua meta?</label>
-<select id="meta">
-<option value="">Selecione</option>
-<option value="emagrecer">Emagrecer</option>
-<option value="massa">Ganhar massa</option>
-<option value="definicao">Definir o físico</option>
-</select>
+    <div class="days">
+      <div class="day" onclick="selectDay(0)">Seg</div>
+      <div class="day" onclick="selectDay(1)">Ter</div>
+      <div class="day" onclick="selectDay(2)">Qua</div>
+      <div class="day" onclick="selectDay(3)">Qui</div>
+      <div class="day" onclick="selectDay(4)">Sex</div>
+    </div>
 
-<button onclick="calcular()">Ver sugestão</button>
+    <div id="treino"></div>
 
-<div id="resultado"></div>
+    <button class="vip-btn">✨ Desbloquear VIP</button>
+  </div>
 
-<div class="vip-card hidden" id="vip">
-<h3>VIP 💎</h3>
-<p>Escolha os dias que você quer treinar:</p>
-<div class="calendario" id="calendar"></div>
-<div id="exerciciosVIP"></div>
-<button class="vip-btn" onclick="ativarVIP()">Ativar VIP – R$5/mês</button>
 </div>
 
 <script>
-// Dados do usuário
-let usuarioLogado = {vip:false};
-let diasSelecionados = [];
-let currentDayIndex = 0;
-let exerciciosFeitos = [];
-let ultimosTreinos = {}; // guarda status dos exercícios por dia
-
-// Login simples
-function login(){
-  const usuario = document.getElementById("usuario").value;
-  const senha = document.getElementById("senha").value;
-  if(usuario && senha){
-    document.getElementById("appContainer").classList.remove("hidden");
-    document.getElementById("loginContainer").style.display="none";
-    alert("Bem-vindo! Comece escolhendo sua meta e veja o plano grátis.");
-  } else {
-    document.getElementById("login-msg").innerText="Preencha usuário e senha!";
-  }
-}
-
-// Exercícios por meta
-const exerciciosPorMeta = {
-  emagrecer:[
-    {nome:"Corrida", img:"https://i.imgur.com/O4WghvC.png", video:"https://www.youtube.com/watch?v=1"},
-    {nome:"Pular corda", img:"https://i.imgur.com/8G0RmHk.png", video:"https://www.youtube.com/watch?v=2"},
-    {nome:"Agachamento", img:"https://i.imgur.com/LvG6fUL.png", video:"https://www.youtube.com/watch?v=3"}
-  ],
-  massa:[
-    {nome:"Supino", img:"https://i.imgur.com/X1X8fV9.png", video:"https://www.youtube.com/watch?v=4"},
-    {nome:"Levantamento Terra", img:"https://i.imgur.com/R3XfLdt.png", video:"https://www.youtube.com/watch?v=5"},
-    {nome:"Rosca Bíceps", img:"https://i.imgur.com/yJQyLvQ.png", video:"https://www.youtube.com/watch?v=6"}
-  ],
-  definicao:[
-    {nome:"Flexão", img:"https://i.imgur.com/tvM5eYY.png", video:"https://www.youtube.com/watch?v=7"},
-    {nome:"Abdominal", img:"https://i.imgur.com/6V3U7lG.png", video:"https://www.youtube.com/watch?v=8"},
-    {nome:"Prancha", img:"https://i.imgur.com/wu7j0yQ.png", video:"https://www.youtube.com/watch?v=9"}
-  ]
-};
-
-// Selecionar dia VIP
-function toggleDia(day){
-  if(diasSelecionados.includes(day)) diasSelecionados = diasSelecionados.filter(d=>d!==day);
-  else diasSelecionados.push(day);
-  renderCalendar();
-  renderExerciciosVIP();
-}
-
-// Renderiza calendário
-function renderCalendar(){
-  let html = '';
-  ["Segunda","Terça","Quarta","Quinta","Sexta"].forEach(day=>{
-    html += `<div class="day ${diasSelecionados.includes(day)?'selected':''}" onclick="toggleDia('${day}')">${day}</div>`;
-  });
-  document.getElementById("calendar").innerHTML = html;
-}
-
-// Renderiza exercícios VIP do dia atual
-function renderExerciciosVIP(){
-  if(!usuarioLogado.vip || diasSelecionados.length===0) {
-    document.getElementById("exerciciosVIP").innerHTML = '';
-    return;
-  }
-  const meta = document.getElementById("meta").value;
-  let dia = diasSelecionados[currentDayIndex];
-  if(!dia) return;
-  const exs = exerciciosPorMeta[meta];
-  let html = `<h4>${dia}</h4>`;
-  exs.forEach((ex,i)=>{
-    html += `<div class="exercicio">
-      <img src="${ex.img}" alt="${ex.nome}">
-      <span><strong>${ex.nome}</strong></span>
-      <button class="video-btn" onclick="window.open('${ex.video}','_blank')">Ver vídeo</button>
-      <button class="vip-btn" onclick="marcarExercicio(${i})">Marcar como feito</button>
-    </div>`;
-  });
-  document.getElementById("exerciciosVIP").innerHTML = html;
-  if(!ultimosTreinos[dia]) ultimosTreinos[dia] = Array(exs.length).fill(false);
-  exerciciosFeitos = ultimosTreinos[dia];
-}
-
-// Marca exercício como concluído
-function marcarExercicio(index){
-  exerciciosFeitos[index] = true;
-  const dia = diasSelecionados[currentDayIndex];
-  ultimosTreinos[dia] = exerciciosFeitos;
-  if(exerciciosFeitos.every(e=>e)){
-    alert(`🎉 Parabéns! Você completou todos os exercícios do dia ${dia}!`);
-    currentDayIndex++;
-    if(currentDayIndex<diasSelecionados.length){
-      alert(`Próximo dia de treino será: ${diasSelecionados[currentDayIndex]}`);
-      renderExerciciosVIP();
-    } else {
-      alert("Você completou todos os dias selecionados! Continue firme na próxima semana!");
-      document.getElementById("exerciciosVIP").innerHTML = '';
-    }
-  }
-}
-
-// Calcular plano grátis
-function calcular(){
-  const pesoAtual = parseFloat(document.getElementById("pesoAtual").value);
-  const altura = parseFloat(document.getElementById("altura").value);
-  const pesoDesejado = parseFloat(document.getElementById("pesoDesejado").value);
-  const meta = document.getElementById("meta").value;
-  if(!pesoAtual||!altura||!pesoDesejado||!meta){alert("Preencha todos os campos"); return;}
-
-  let plano="",manha="",tarde="",noite="";
-  if(meta==="emagrecer"){plano="Plano diário grátis para emagrecimento";manha="Café leve";tarde="Almoço equilibrado";noite="Jantar leve";}
-  if(meta==="massa"){plano="Plano diário grátis para ganho de massa";manha="Café reforçado";tarde="Almoço completo";noite="Jantar com proteína";}
-  if(meta==="definicao"){plano="Plano diário grátis para definição";manha="Café equilibrado";tarde="Treino + refeição";noite="Jantar leve";}
-
-  document.getElementById("resultado").innerHTML = `
-    <div class="card">
-      <h3>${plano}</h3>
-      <p>☀️ Manhã: ${manha}</p>
-      <p>🍽️ Tarde: ${tarde}</p>
-      <p>🌙 Noite: ${noite}</p>
-      <hr>
-      <p style="color:gray;">🔒 Desbloqueie o VIP para exercícios completos e calendário!</p>
-    </div>
-  `;
-  document.getElementById("vip").classList.remove("hidden");
-  renderCalendar();
-  renderExerciciosVIP();
-}
-
-// Ativar VIP
-function ativarVIP(){ 
-  usuarioLogado.vip=true; 
-  alert("VIP ativado! Agora você pode escolher os dias e ver os exercícios do dia!");
-  renderExerciciosVIP();
-}
-
-// Mensagens motivacionais automáticas
-const mensagensMotivacionais = [
-  "💪 Vamos lá! Complete seus exercícios de hoje!",
-  "⚡ Lembre-se: cada treino te aproxima da sua meta!",
-  "🔥 Não desista! O próximo dia de treino te espera!",
-  "🏃‍♂️ Movimento é saúde! Volte a treinar hoje!",
-  "🌟 Você consegue! Complete os exercícios que escolheu."
+const exercises = [
+  ["Agachamento","Flexão","Abdominal"],
+  ["Polichinelo","Afundo","Prancha"],
+  ["Corrida parada","Flexão joelho","Abdominal bicicleta"],
+  ["Agachamento sumô","Escalada","Prancha lateral"],
+  ["Burpee","Agachamento","Abdominal"]
 ];
 
-function verificarPendentes() {
-  if(!usuarioLogado.vip || diasSelecionados.length===0) return;
+let doneCount = 0;
 
-  let pendente = false;
-  diasSelecionados.forEach(dia=>{
-    const status = ultimosTreinos[dia] || [];
-    if(status.includes(false)) pendente = true;
+function selectDay(day){
+  document.querySelectorAll(".day").forEach(d=>d.classList.remove("active"));
+  document.querySelectorAll(".day")[day].classList.add("active");
+
+  const treino = document.getElementById("treino");
+  treino.innerHTML = "";
+  doneCount = 0;
+
+  exercises[day].forEach(ex=>{
+    const div = document.createElement("div");
+    div.className = "exercise";
+    div.innerHTML = `
+      <h4>${ex}</h4>
+      <small>🔥 Trabalha músculos importantes</small>
+
+      <button class="video">▶ Ver vídeo explicativo</button>
+      <button class="done" onclick="markDone(this)">✔ Marcar como feito</button>
+    `;
+    treino.appendChild(div);
   });
-
-  if(pendente) {
-    const msg = mensagensMotivacionais[Math.floor(Math.random() * mensagensMotivacionais.length)];
-    alert(msg + " Dias pendentes: " + diasSelecionados.join(", "));
-  }
 }
 
-// Executa a verificação a cada 6 horas (simulação)
-setInterval(verificarPendentes, 1000 * 60 * 60 * 6);
+function markDone(btn){
+  btn.disabled = true;
+  btn.innerText = "✅ Concluído";
+  doneCount++;
 
+  const total = document.querySelectorAll(".exercise").length;
+
+  if(doneCount === total){
+    const msg = document.createElement("div");
+    msg.className = "motivacao";
+    msg.innerText = "🎉 Parabéns! Você concluiu o treino de hoje! Continue firme 💪";
+    document.getElementById("treino").appendChild(msg);
+  }
+}
 </script>
 
 </body>
