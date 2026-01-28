@@ -10,26 +10,50 @@
       padding: 20px;
     }
     .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
     }
     h2 {
       text-align: center;
       color: green;
     }
-    input, button {
+    input, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-    }
-    .resultado {
-      margin-top: 20px;
-      background: #e8ffe8;
-      padding: 10px;
       border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      cursor: pointer;
+    }
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .exercise-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .exercise-name.agachamento { color: #e74c3c; }
+    .exercise-name.flexao { color: #2980b9; }
+    .exercise-name.abdominal { color: #27ae60; }
+    .video-frame {
+      width: 100%;
+      height: 200px;
+      margin-top: 10px;
+      display: none; /* começa oculto */
+    }
+    .vip-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 2px dashed #ccc;
     }
   </style>
 </head>
@@ -46,13 +70,15 @@
 
   <label>Peso desejado (kg)</label>
   <input type="number" id="pesoDesejado">
-<label>Qual é sua meta?</label>
-<select id="meta">
-  <option value="">Selecione</option>
-  <option value="emagrecer">Emagrecer</option>
-  <option value="massa">Ganhar massa</option>
-  <option value="definicao">Definir o físico</option>
-</select>
+
+  <label>Qual é sua meta?</label>
+  <select id="meta">
+    <option value="">Selecione</option>
+    <option value="emagrecer">Emagrecer</option>
+    <option value="massa">Ganhar massa</option>
+    <option value="definicao">Definir o físico</option>
+  </select>
+
   <button onclick="calcular()">Ver sugestão</button>
 
   <div class="resultado" id="resultado"></div>
@@ -70,6 +96,7 @@ function calcular() {
     return;
   }
 
+  // PLANOS GRÁTIS
   let plano = "";
   let manha = "";
   let tarde = "";
@@ -81,14 +108,12 @@ function calcular() {
     tarde = "Almoço equilibrado e caminhada de 30 minutos.";
     noite = "Jantar leve, evite açúcar e frituras.";
   }
-
   if (meta === "massa") {
     plano = "Plano diário grátis para ganho de massa";
     manha = "Café reforçado com proteína e carboidrato.";
     tarde = "Almoço completo + treino de força.";
     noite = "Jantar com proteína e boa hidratação.";
   }
-
   if (meta === "definicao") {
     plano = "Plano diário grátis para definição corporal";
     manha = "Café equilibrado com proteína.";
@@ -97,21 +122,69 @@ function calcular() {
   }
 
   document.getElementById("resultado").innerHTML = `
-    <h3>${plano}</h3>
+    <!-- GRÁTIS -->
+    <div class="card">
+      <h3>${plano}</h3>
+      <p><strong>☀️ Manhã:</strong> ${manha}</p>
+      <p><strong>🍽️ Tarde:</strong> ${tarde}</p>
+      <p><strong>🌙 Noite:</strong> ${noite}</p>
+    </div>
 
-    <p><strong>☀️ Manhã:</strong> ${manha}</p>
-    <p><strong>🍽️ Tarde:</strong> ${tarde}</p>
-    <p><strong>🌙 Noite:</strong> ${noite}</p>
+    <!-- VIP -->
+    <div class="vip-card">
+      <h3>🔒 Conteúdo VIP</h3>
 
-    <hr>
+      <div class="card">
+        <h4>🥗 Alimentação VIP</h4>
+        <p><strong>Manhã:</strong> Café completo com proteínas e carboidratos.</p>
+        <p><strong>Tarde:</strong> Almoço balanceado + lanche saudável.</p>
+        <p><strong>Noite:</strong> Jantar leve focado em recuperação.</p>
+      </div>
 
-    <p style="color: gray;">
-      🔒 Plano VIP desbloqueia:
-      <br>• Plano diário detalhado por peso e altura
-      <br>• Ajustes diários automáticos
-      <br>• Metas avançadas
-    </p>
+      <div class="card">
+        <h4>🏋️ Treino VIP</h4>
+        <p class="exercise-name agachamento">Agachamento → pernas e glúteos</p>
+        <p class="exercise-name flexao">Flexão de braço → peito, braços e ombros</p>
+        <p class="exercise-name abdominal">Abdominal → core e abdômen</p>
+      </div>
+
+      <div class="card">
+        <h4>🧍‍♂️ Como fazer os exercícios</h4>
+        <p>🦵 <span class="exercise-name agachamento">Agachamento</span><br>
+           Fique em pé, pés afastados na largura dos ombros. Flexione os joelhos e volte devagar.<br>
+           ❓ Ficou com dúvida? <button onclick="mostrarVideo('videoAgachamento')">Ver vídeo</button>
+        </p>
+        <iframe id="videoAgachamento" class="video-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+
+        <p>🤸‍♂️ <span class="exercise-name flexao">Flexão de braço</span><br>
+           Corpo reto, mãos no chão, desça e suba controlando.<br>
+           ❓ Ficou com dúvida? <button onclick="mostrarVideo('videoFlexao')">Ver vídeo</button>
+        </p>
+        <iframe id="videoFlexao" class="video-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+
+        <p>🧘‍♂️ <span class="exercise-name abdominal">Abdominal</span><br>
+           Deitado, flexione joelhos, suba o tronco contraindo abdômen.<br>
+           ❓ Ficou com dúvida? <button onclick="mostrarVideo('videoAbdominal')">Ver vídeo</button>
+        </p>
+        <iframe id="videoAbdominal" class="video-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <button style="margin-top:15px; width:100%; background:#f39c12; color:white; padding:10px; border:none; border-radius:5px;">
+        Ativar VIP – R$5/mês
+      </button>
+    </div>
   `;
+}
+
+// FUNÇÃO PARA MOSTRAR/OCULTAR VÍDEOS
+function mostrarVideo(id) {
+  const video = document.getElementById(id);
+  if (video.style.display === "none") {
+    video.style.display = "block";
+    video.scrollIntoView({behavior: "smooth"});
+  } else {
+    video.style.display = "none";
+  }
 }
 </script>
 
