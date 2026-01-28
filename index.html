@@ -6,14 +6,14 @@
 <style>
 body { font-family: Arial, sans-serif; background:#f2f2f2; margin:0; padding:0;}
 .container { max-width:700px; margin:30px auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
-h2,h3 { text-align:center; color:green;}
+h2,h3,h4 { text-align:center; color:green;}
 input, select, button { width:100%; padding:10px; margin-top:10px; border-radius:5px; border:1px solid #ccc;}
 button { cursor:pointer;}
 .card { background:#e8ffe8; padding:15px; border-radius:10px; margin-top:15px; box-shadow:0 2px 6px rgba(0,0,0,0.15);}
 .vip-card { background:#fff8dc; border:2px solid gold; padding:15px; border-radius:10px; margin-top:15px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
-.exercicio { display:flex; align-items:center; margin-top:10px; background:#f1f1f1; padding:10px; border-radius:5px;}
-.exercicio img { width:50px; height:50px; margin-right:10px;}
-.video-btn { margin-left:auto; background:#27ae60; color:white; border:none; padding:6px 10px; border-radius:5px; cursor:pointer;}
+.exercicio { background:#f1f1f1; padding:10px; border-radius:5px; margin-top:10px;}
+.exercicio img { width:50px; height:50px; display:block; margin:auto;}
+.video-btn { display:block; width:100%; margin-top:5px; background:#27ae60; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer;}
 .video-btn:hover { background:#1e8449;}
 .calendario { display:flex; justify-content:space-between; margin-top:10px;}
 .day { flex:1; padding:8px; margin:2px; text-align:center; border-radius:5px; cursor:pointer; border:1px solid #ccc;}
@@ -57,15 +57,9 @@ button { cursor:pointer;}
 
 <div id="resultado"></div>
 
-<div class="vip-card" id="vip" style="display:none;">
+<div class="vip-card hidden" id="vip">
 <h3>VIP 💎</h3>
-<p>Desbloqueie todas as vantagens VIP:</p>
-<ul>
-<li>Ajustes diários automáticos</li>
-<li>Plano detalhado por peso e altura</li>
-<li>Exercícios completos com calendário semanal</li>
-<li>Dicas exclusivas de alimentação e treino</li>
-</ul>
+<p>Escolha os dias que você quer treinar:</p>
 <div class="calendario" id="calendar"></div>
 <div id="exerciciosVIP"></div>
 <button class="vip-btn" onclick="ativarVIP()">Ativar VIP – R$5/mês</button>
@@ -74,7 +68,10 @@ button { cursor:pointer;}
 <script>
 // Dados do usuário
 let usuarioLogado = {vip:false};
-let diasSelecionados = ["Segunda","Terça","Quarta","Quinta","Sexta"];
+let diasSelecionados = [];
+let currentDayIndex = 0;
+let exerciciosFeitos = [];
+let ultimosTreinos = {}; // guarda status dos exercícios por dia
 
 // Login simples
 function login(){
@@ -83,6 +80,7 @@ function login(){
   if(usuario && senha){
     document.getElementById("appContainer").classList.remove("hidden");
     document.getElementById("loginContainer").style.display="none";
+    alert("Bem-vindo! Comece escolhendo sua meta e veja o plano grátis.");
   } else {
     document.getElementById("login-msg").innerText="Preencha usuário e senha!";
   }
@@ -107,14 +105,66 @@ const exerciciosPorMeta = {
   ]
 };
 
-// Marcar/desmarcar dia
+// Selecionar dia VIP
 function toggleDia(day){
   if(diasSelecionados.includes(day)) diasSelecionados = diasSelecionados.filter(d=>d!==day);
   else diasSelecionados.push(day);
-  calcular();
+  renderCalendar();
+  renderExerciciosVIP();
 }
 
-// Calcular plano
+// Renderiza calendário
+function renderCalendar(){
+  let html = '';
+  ["Segunda","Terça","Quarta","Quinta","Sexta"].forEach(day=>{
+    html += `<div class="day ${diasSelecionados.includes(day)?'selected':''}" onclick="toggleDia('${day}')">${day}</div>`;
+  });
+  document.getElementById("calendar").innerHTML = html;
+}
+
+// Renderiza exercícios VIP do dia atual
+function renderExerciciosVIP(){
+  if(!usuarioLogado.vip || diasSelecionados.length===0) {
+    document.getElementById("exerciciosVIP").innerHTML = '';
+    return;
+  }
+  const meta = document.getElementById("meta").value;
+  let dia = diasSelecionados[currentDayIndex];
+  if(!dia) return;
+  const exs = exerciciosPorMeta[meta];
+  let html = `<h4>${dia}</h4>`;
+  exs.forEach((ex,i)=>{
+    html += `<div class="exercicio">
+      <img src="${ex.img}" alt="${ex.nome}">
+      <span><strong>${ex.nome}</strong></span>
+      <button class="video-btn" onclick="window.open('${ex.video}','_blank')">Ver vídeo</button>
+      <button class="vip-btn" onclick="marcarExercicio(${i})">Marcar como feito</button>
+    </div>`;
+  });
+  document.getElementById("exerciciosVIP").innerHTML = html;
+  if(!ultimosTreinos[dia]) ultimosTreinos[dia] = Array(exs.length).fill(false);
+  exerciciosFeitos = ultimosTreinos[dia];
+}
+
+// Marca exercício como concluído
+function marcarExercicio(index){
+  exerciciosFeitos[index] = true;
+  const dia = diasSelecionados[currentDayIndex];
+  ultimosTreinos[dia] = exerciciosFeitos;
+  if(exerciciosFeitos.every(e=>e)){
+    alert(`🎉 Parabéns! Você completou todos os exercícios do dia ${dia}!`);
+    currentDayIndex++;
+    if(currentDayIndex<diasSelecionados.length){
+      alert(`Próximo dia de treino será: ${diasSelecionados[currentDayIndex]}`);
+      renderExerciciosVIP();
+    } else {
+      alert("Você completou todos os dias selecionados! Continue firme na próxima semana!");
+      document.getElementById("exerciciosVIP").innerHTML = '';
+    }
+  }
+}
+
+// Calcular plano grátis
 function calcular(){
   const pesoAtual = parseFloat(document.getElementById("pesoAtual").value);
   const altura = parseFloat(document.getElementById("altura").value);
@@ -122,35 +172,10 @@ function calcular(){
   const meta = document.getElementById("meta").value;
   if(!pesoAtual||!altura||!pesoDesejado||!meta){alert("Preencha todos os campos"); return;}
 
-  // Plano grátis
   let plano="",manha="",tarde="",noite="";
   if(meta==="emagrecer"){plano="Plano diário grátis para emagrecimento";manha="Café leve";tarde="Almoço equilibrado";noite="Jantar leve";}
   if(meta==="massa"){plano="Plano diário grátis para ganho de massa";manha="Café reforçado";tarde="Almoço completo";noite="Jantar com proteína";}
   if(meta==="definicao"){plano="Plano diário grátis para definição";manha="Café equilibrado";tarde="Treino + refeição";noite="Jantar leve";}
-
-  // Monta calendário VIP
-  let calendarHtml = `<div class="calendario">`;
-  ["Segunda","Terça","Quarta","Quinta","Sexta"].forEach(day=>{
-    calendarHtml += `<div class="day ${diasSelecionados.includes(day)?'selected':''}" onclick="toggleDia('${day}')">${day}</div>`;
-  });
-  calendarHtml += `</div>`;
-
-  // Exercícios VIP por dia
-  let exerciciosHtml = '';
-  if(usuarioLogado.vip){
-    const exs = exerciciosPorMeta[meta];
-    diasSelecionados.forEach(dia=>{
-      exerciciosHtml += `<h4>${dia}</h4>`;
-      exs.forEach(ex=>{
-        exerciciosHtml += `
-        <div class="exercicio">
-          <img src="${ex.img}" alt="${ex.nome}">
-          <span><strong>${ex.nome}</strong></span>
-          <button class="video-btn" onclick="window.open('${ex.video}','_blank')">Ver vídeo</button>
-        </div>`;
-      });
-    });
-  }
 
   document.getElementById("resultado").innerHTML = `
     <div class="card">
@@ -162,14 +187,45 @@ function calcular(){
       <p style="color:gray;">🔒 Desbloqueie o VIP para exercícios completos e calendário!</p>
     </div>
   `;
-
-  document.getElementById("calendar").innerHTML = usuarioLogado.vip ? calendarHtml : '';
-  document.getElementById("exerciciosVIP").innerHTML = exerciciosHtml;
-  document.getElementById("vip").style.display = 'block';
+  document.getElementById("vip").classList.remove("hidden");
+  renderCalendar();
+  renderExerciciosVIP();
 }
 
 // Ativar VIP
-function ativarVIP(){ usuarioLogado.vip=true; alert("VIP ativado! Atualize a página para ver o conteúdo completo."); calcular(); }
+function ativarVIP(){ 
+  usuarioLogado.vip=true; 
+  alert("VIP ativado! Agora você pode escolher os dias e ver os exercícios do dia!");
+  renderExerciciosVIP();
+}
+
+// Mensagens motivacionais automáticas
+const mensagensMotivacionais = [
+  "💪 Vamos lá! Complete seus exercícios de hoje!",
+  "⚡ Lembre-se: cada treino te aproxima da sua meta!",
+  "🔥 Não desista! O próximo dia de treino te espera!",
+  "🏃‍♂️ Movimento é saúde! Volte a treinar hoje!",
+  "🌟 Você consegue! Complete os exercícios que escolheu."
+];
+
+function verificarPendentes() {
+  if(!usuarioLogado.vip || diasSelecionados.length===0) return;
+
+  let pendente = false;
+  diasSelecionados.forEach(dia=>{
+    const status = ultimosTreinos[dia] || [];
+    if(status.includes(false)) pendente = true;
+  });
+
+  if(pendente) {
+    const msg = mensagensMotivacionais[Math.floor(Math.random() * mensagensMotivacionais.length)];
+    alert(msg + " Dias pendentes: " + diasSelecionados.join(", "));
+  }
+}
+
+// Executa a verificação a cada 6 horas (simulação)
+setInterval(verificarPendentes, 1000 * 60 * 60 * 6);
+
 </script>
 
 </body>
