@@ -1,265 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Saúde & Metas</title>
+  <meta charset="UTF-8">
+  <title>Saúde VIP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
 
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f2f2f2;
-  margin:0;
-  padding:20px;
-}
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
 
-.container{
-  max-width:420px;
-  margin:auto;
-}
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+    }
 
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+    label {
+      font-weight: bold;
+    }
 
-h2,h3{
-  text-align:center;
-  margin-top:0;
-}
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
 
-select, button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-}
+    button {
+      background: #2e7d32;
+      color: white;
+      font-size: 16px;
+      border: none;
+    }
 
-.vip{
-  border-left:6px solid gold;
-}
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
 
-.vip-btn{
-  background:linear-gradient(135deg,#FFD700,#C9A300);
-  font-weight:bold;
-  border:none;
-  cursor:pointer;
-}
+    .vip {
+      border: 2px solid gold;
+    }
 
-/* DIAS */
-.days{
-  display:flex;
-  justify-content:space-between;
-  margin-top:10px;
-}
+    ul {
+      padding-left: 18px;
+    }
 
-.day{
-  background:#eee;
-  padding:8px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:12px;
-}
+    li {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
 
-.day.active{
-  background:#2ecc71;
-  color:#fff;
-}
-
-/* EXERCÍCIOS */
-.exercise{
-  background:#f7f7f7;
-  border-radius:10px;
-  padding:10px;
-  margin-top:10px;
-}
-
-.exercise h4{
-  margin:5px 0;
-  color:#2c3e50;
-}
-
-.exercise small{
-  color:#27ae60;
-  font-weight:bold;
-}
-
-.exercise button{
-  width:100%;
-  margin-top:8px;
-  padding:8px;
-  border:none;
-  border-radius:8px;
-}
-
-.done{
-  background:#2ecc71;
-  color:#fff;
-}
-
-.video{
-  background:#3498db;
-  color:#fff;
-}
-
-/* MOTIVAÇÃO */
-.motivacao{
-  background:#e8ffe8;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-  text-align:center;
-  font-weight:bold;
-}
-</style>
+    .aviso {
+      color: gray;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="container">
 
-  <!-- ESCOLHA DE META -->
-  <div class="card">
-    <h3>🎯 Escolha sua meta</h3>
-    <select id="meta" onchange="updatePlano()">
-      <option value="">Selecione</option>
-      <option value="emagrecer">Emagrecer</option>
-      <option value="massa">Ganhar Massa</option>
-      <option value="definir">Definir Corpo</option>
-    </select>
-  </div>
-<div class="card">
-  <h3>🏋️ Treinamentos Recomendados</h3>
+  <h2>💪 Saúde e Metas</h2>
 
-  <ul style="padding-left:18px; font-size:14px;">
-    <li><strong>Caminhada</strong> – ajuda na queima de gordura</li>
-    <li><strong>Agachamento</strong> – trabalha pernas e glúteos</li>
-    <li><strong>Flexão</strong> – fortalece braços e peito</li>
-    <li><strong>Abdominal</strong> – ajuda na definição do core</li>
-  </ul>
+  <label>Peso atual (kg)</label>
+  <input type="number">
 
-  <p style="color:gray; font-size:13px;">
-    🔒 No VIP os treinos são personalizados por meta, dia e progresso.
-  </p>
-</div>
+  <label>Altura (cm)</label>
+  <input type="number">
+
+  <label>Peso desejado (kg)</label>
+  <input type="number">
+
+  <label>Qual é sua meta?</label>
+  <select id="meta">
+    <option value="">Escolha a meta</option>
+    <option value="emagrecer">Emagrecer</option>
+    <option value="massa">Ganhar massa</option>
+    <option value="definir">Definir corpo</option>
+  </select>
+
+  <button>Ver recomendação</button>
+
   <!-- ALIMENTAÇÃO -->
   <div class="card">
-    <h3>🍽️ Alimentação Recomendada</h3>
-    <div id="alimentacao">Escolha uma meta</div>
+    <h3>🍽️ Alimentação recomendada</h3>
+    <ul id="alimentacao">
+      <li>Escolha uma meta para ver a alimentação</li>
+    </ul>
   </div>
 
-  <!-- TREINO VIP -->
+  <!-- TREINOS GRATIS -->
+  <div class="card">
+    <h3>🏋️ Treinamentos recomendados</h3>
+    <ul id="treinos">
+      <li>Escolha uma meta para ver os treinos</li>
+    </ul>
+
+    <p class="aviso">
+      🔒 No VIP os treinos são personalizados por dia, progresso e objetivo.
+    </p>
+  </div>
+
+  <!-- VIP -->
   <div class="card vip">
-    <h3>🏋️ Treino VIP</h3>
+    <h3>⭐ Plano VIP</h3>
+    <p>✔️ Treinos por dia da semana</p>
+    <p>✔️ Exercícios exclusivos</p>
+    <p>✔️ Ajustes automáticos</p>
+    <p>✔️ Acompanhamento de progresso</p>
 
-    <div class="days">
-      <div class="day" onclick="selectDay(0)">Seg</div>
-      <div class="day" onclick="selectDay(1)">Ter</div>
-      <div class="day" onclick="selectDay(2)">Qua</div>
-      <div class="day" onclick="selectDay(3)">Qui</div>
-      <div class="day" onclick="selectDay(4)">Sex</div>
-    </div>
-
-    <div id="treino"></div>
-
-    <button class="vip-btn">✨ Desbloquear VIP</button>
+    <button style="background:gold; color:black;">
+      Desbloquear VIP
+    </button>
   </div>
 
 </div>
 
 <script>
-let metaSelecionada = "";
-let doneCount = 0;
+  const metaSelect = document.getElementById("meta");
+  const alimentacao = document.getElementById("alimentacao");
+  const treinos = document.getElementById("treinos");
 
-const alimentacao = {
-  emagrecer: `
-    ☀️ Café leve (fruta + ovo)<br>
-    🍽️ Almoço equilibrado<br>
-    🌙 Jantar leve
-  `,
-  massa: `
-    ☀️ Café reforçado (ovos + pão)<br>
-    🍽️ Almoço completo<br>
-    🌙 Jantar com proteína
-  `,
-  definir: `
-    ☀️ Café equilibrado<br>
-    🍽️ Almoço balanceado<br>
-    🌙 Jantar leve
-  `
-};
+  metaSelect.addEventListener("change", () => {
+    const meta = metaSelect.value;
 
-const treinos = {
-  emagrecer: [
-    ["Polichinelo","Agachamento","Abdominal"],
-    ["Corrida parada","Afundo","Prancha"],
-    ["Burpee","Agachamento","Abdominal"],
-    ["Escalada","Flexão","Prancha"],
-    ["Polichinelo","Agachamento","Abdominal"]
-  ],
-  massa: [
-    ["Agachamento","Flexão","Abdominal"],
-    ["Afundo","Flexão","Prancha"],
-    ["Agachamento","Flexão","Abdominal"],
-    ["Agachamento sumô","Flexão","Prancha"],
-    ["Agachamento","Flexão","Abdominal"]
-  ],
-  definir: [
-    ["Agachamento","Prancha","Abdominal"],
-    ["Flexão","Abdominal bicicleta","Prancha"],
-    ["Agachamento","Flexão","Prancha"],
-    ["Escalada","Abdominal","Prancha"],
-    ["Agachamento","Flexão","Abdominal"]
-  ]
-};
+    alimentacao.innerHTML = "";
+    treinos.innerHTML = "";
 
-function updatePlano(){
-  metaSelecionada = document.getElementById("meta").value;
-  document.getElementById("alimentacao").innerHTML =
-    alimentacao[metaSelecionada] || "Escolha uma meta";
-}
+    if (meta === "") {
+      alimentacao.innerHTML = "<li>Escolha uma meta para ver a alimentação</li>";
+      treinos.innerHTML = "<li>Escolha uma meta para ver os treinos</li>";
+      return;
+    }
 
-function selectDay(day){
-  if(!metaSelecionada){
-    alert("Escolha a meta primeiro");
-    return;
-  }
+    if (meta === "emagrecer") {
+      alimentacao.innerHTML = `
+        <li>Frutas e legumes</li>
+        <li>Proteínas magras</li>
+        <li>Evitar açúcar e frituras</li>
+        <li>Beber bastante água</li>
+      `;
 
-  document.querySelectorAll(".day").forEach(d=>d.classList.remove("active"));
-  document.querySelectorAll(".day")[day].classList.add("active");
+      treinos.innerHTML = `
+        <li>Caminhada rápida – queima gordura</li>
+        <li>Polichinelo – acelera o metabolismo</li>
+        <li>Agachamento – gasto calórico</li>
+        <li>Abdominal – fortalece o core</li>
+      `;
+    }
 
-  const treino = document.getElementById("treino");
-  treino.innerHTML = "";
-  doneCount = 0;
+    if (meta === "massa") {
+      alimentacao.innerHTML = `
+        <li>Carboidratos complexos</li>
+        <li>Proteínas em todas as refeições</li>
+        <li>Boa hidratação</li>
+        <li>Alimentação frequente</li>
+      `;
 
-  treinos[metaSelecionada][day].forEach(ex=>{
-    const div = document.createElement("div");
-    div.className = "exercise";
-    div.innerHTML = `
-      <h4>${ex}</h4>
-      <small>🔥 Exercício recomendado</small>
-      <button class="video">▶ Ver vídeo</button>
-      <button class="done" onclick="markDone(this)">✔ Marcar como feito</button>
-    `;
-    treino.appendChild(div);
+      treinos.innerHTML = `
+        <li>Agachamento – ganho de massa</li>
+        <li>Flexão – peito e braços</li>
+        <li>Afundo – pernas e glúteos</li>
+        <li>Prancha – força</li>
+      `;
+    }
+
+    if (meta === "definir") {
+      alimentacao.innerHTML = `
+        <li>Proteína equilibrada</li>
+        <li>Carboidratos moderados</li>
+        <li>Alimentos naturais</li>
+        <li>Evitar ultraprocessados</li>
+      `;
+
+      treinos.innerHTML = `
+        <li>Flexão – definição</li>
+        <li>Agachamento – definição de pernas</li>
+        <li>Abdominal – core</li>
+        <li>Prancha – resistência</li>
+      `;
+    }
   });
-}
-
-function markDone(btn){
-  btn.disabled = true;
-  btn.innerText = "✅ Concluído";
-  doneCount++;
-
-  const total = document.querySelectorAll(".exercise").length;
-  if(doneCount === total){
-    const msg = document.createElement("div");
-    msg.className = "motivacao";
-    msg.innerText = "🎉 Treino finalizado! Orgulho de você 💪";
-    document.getElementById("treino").appendChild(msg);
-  }
-}
 </script>
 
 </body>
