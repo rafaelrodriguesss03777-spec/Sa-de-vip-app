@@ -7,13 +7,15 @@
   <style>
     body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
     .container { max-width: 400px; margin: 0 auto; padding: 20px; }
-    .section { margin-bottom: 20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .section { margin-bottom: 20px; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); background:#fff; }
     .vip { background:#000; color:#FFD700; font-weight:bold; }
     .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
     .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
     .day-blocked { opacity:0.5; pointer-events:none; }
     .completed { text-decoration: line-through; color:green; }
     .message { margin-top:10px; font-style:italic; color:#333; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .card { padding:10px; border-radius:8px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
@@ -32,15 +34,17 @@
       <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
     </div>
 
-    <div class="section vip">
-      <h2>Treinamentos Recomendados (VIP)</h2>
-      <div id="trainingDay">
-        <strong>Dia 1:</strong>
-        <ul id="exercises">
-          <!-- Exercícios do dia aparecem aqui -->
-        </ul>
-        <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
-        <div class="message" id="message"></div>
+    <div class="section">
+      <h2>Treinamentos Recomendados</h2>
+      <div id="trainingDay" class="vip">
+        <div class="card">
+          <strong id="dayTitle">Dia 1</strong>
+          <ul id="exercises">
+            <!-- Exercícios aparecem aqui -->
+          </ul>
+          <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
+          <div class="message" id="message"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +54,7 @@
     const exercisesEl = document.getElementById('exercises');
     const messageEl = document.getElementById('message');
     const completeBtn = document.getElementById('completeBtn');
+    const dayTitle = document.getElementById('dayTitle');
 
     const exercisesByGoal = {
       emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
@@ -57,9 +62,9 @@
       definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
     };
 
-    // Simula progresso salvo
-    let currentDay = 1;
-    let completedDays = [];
+    // Progresso salvo localmente
+    let currentDay = parseInt(localStorage.getItem('currentDay')) || 1;
+    let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
 
     function loadExercises() {
       const goal = goalSelect.value;
@@ -70,25 +75,38 @@
         li.textContent = ex;
         exercisesEl.appendChild(li);
       });
+      dayTitle.textContent = `Dia ${currentDay}`;
       messageEl.textContent = '';
     }
 
     goalSelect.addEventListener('change', () => {
-      currentDay = 1; // resetar dia atual se mudar meta
+      currentDay = 1;
+      localStorage.setItem('currentDay', currentDay);
       loadExercises();
     });
 
     completeBtn.addEventListener('click', () => {
-      // Marca os exercícios do dia como concluídos
       Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
       messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
       completedDays.push(currentDay);
+      localStorage.setItem('completedDays', JSON.stringify(completedDays));
       currentDay++;
-      // Aqui você poderia bloquear próximos dias até o dia correto
+      localStorage.setItem('currentDay', currentDay);
+      loadExercises();
     });
 
-    // Inicializa a primeira vez
-    loadExercises();
+    // Mensagem para dias não concluídos
+    function checkMissedDays() {
+      const lastDay = parseInt(localStorage.getItem('currentDay')) || 1;
+      if (!completedDays.includes(lastDay-1) && lastDay > 1) {
+        alert("Ei! Você não completou o treino do dia anterior. Bora voltar a treinar?");
+      }
+    }
+
+    window.onload = () => {
+      loadExercises();
+      checkMissedDays();
+    }
   </script>
 </body>
 </html>
