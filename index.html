@@ -3,28 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Fitness Completo Grátis x VIP</title>
+<title>App Fitness Ultra Visual</title>
 <style>
-  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
-  .container { max-width: 400px; margin: 0 auto; padding: 20px; }
-  .section { margin-bottom: 20px; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); background:#fff; }
-  .vip { background:#000; color:#FFD700; font-weight:bold; }
-  .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
-  .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
-  .day-blocked { opacity:0.5; pointer-events:none; }
-  .completed { text-decoration: line-through; color:green; }
-  .message { margin-top:10px; font-style:italic; color:#333; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap:10px; }
-  .card { padding:10px; border-radius:8px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
+  .container { max-width: 420px; margin:0 auto; padding:20px; }
+  .section { margin-bottom:20px; padding:15px; border-radius:10px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
   .tabs { display:flex; margin-bottom:10px; }
-  .tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; }
-  .tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; }
+  .tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; border-radius:5px 5px 0 0; }
+  .tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; background:#000; }
+  select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s; }
+  .card.completed { background:#d4edda; color:green; text-decoration:line-through; transform: scale(1.05); }
+  .vip-card { background:#000; color:#FFD700; font-weight:bold; }
+  .btn { margin-top:10px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; }
+  .btn-vip { background:#FFD700; color:#000; font-weight:bold; width:100%; }
+  .message { margin-top:10px; font-style:italic; color:#333; transition: opacity 0.5s; }
+  .calendar { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-top:10px; }
+  .calendar .day { padding:8px; border-radius:5px; background:#e0e0e0; text-align:center; cursor:pointer; transition: 0.3s; }
+  .calendar .day.blocked { opacity:0.5; pointer-events:none; }
+  .calendar .day.completed { background:#FFD700; color:#000; font-weight:bold; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Escolha de Meta -->
+  <!-- Meta -->
   <div class="section">
     <h2>Escolha sua Meta</h2>
     <select id="goalSelect">
@@ -41,89 +45,80 @@
       <div class="tab" id="tabVIP">VIP</div>
     </div>
 
-    <!-- CONTEÚDO GRÁTIS -->
+    <!-- GRÁTIS -->
     <div id="contentFree">
       <h3>Alimentação Recomendada (Grátis)</h3>
-      <div id="nutritionFree"></div>
+      <div id="nutritionFree" class="card"></div>
 
       <h3>Treinamentos Recomendados (Grátis)</h3>
       <div id="trainingFree" class="grid"></div>
     </div>
 
-    <!-- CONTEÚDO VIP -->
+    <!-- VIP -->
     <div id="contentVIP" style="display:none;">
       <h3>Alimentação Recomendada (VIP)</h3>
-      <div id="nutritionVIP"></div>
+      <div id="nutritionVIP" class="vip-card"></div>
 
       <h3>Treinamentos Recomendados (VIP)</h3>
-      <div id="trainingVIP" class="vip">
-        <div class="card">
-          <strong id="dayTitleVIP">Dia 1</strong>
-          <ul id="exercisesVIP"></ul>
-          <button class="btn btn-vip" id="completeBtnVIP">Concluir treino do dia</button>
-          <div class="message" id="messageVIP"></div>
-        </div>
+      <div id="trainingVIP" class="vip-card card">
+        <strong id="dayTitleVIP">Dia 1</strong>
+        <ul id="exercisesVIP"></ul>
+        <button class="btn btn-vip" id="completeBtnVIP">Concluir treino do dia</button>
+        <div class="message" id="messageVIP"></div>
       </div>
 
-      <h4>Calendário de Treinos (Seg-Sex)</h4>
-      <div id="calendarVIP" class="grid">
-        <div class="card" id="dayMon">Segunda</div>
-        <div class="card" id="dayTue">Terça</div>
-        <div class="card" id="dayWed">Quarta</div>
-        <div class="card" id="dayThu">Quinta</div>
-        <div class="card" id="dayFri">Sexta</div>
+      <h4>Calendário (Seg-Sex)</h4>
+      <div class="calendar">
+        <div class="day" id="dayMon">Seg</div>
+        <div class="day" id="dayTue">Ter</div>
+        <div class="day" id="dayWed">Qua</div>
+        <div class="day" id="dayThu">Qui</div>
+        <div class="day" id="dayFri">Sex</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // === Tabs ===
+  // Tabs
   const tabFree = document.getElementById('tabFree');
   const tabVIP = document.getElementById('tabVIP');
   const contentFree = document.getElementById('contentFree');
   const contentVIP = document.getElementById('contentVIP');
 
-  tabFree.addEventListener('click', () => {
-    tabFree.classList.add('active');
-    tabVIP.classList.remove('active');
-    contentFree.style.display = 'block';
-    contentVIP.style.display = 'none';
+  tabFree.addEventListener('click', ()=>{
+    tabFree.classList.add('active'); tabVIP.classList.remove('active');
+    contentFree.style.display='block'; contentVIP.style.display='none';
+  });
+  tabVIP.addEventListener('click', ()=>{
+    tabVIP.classList.add('active'); tabFree.classList.remove('active');
+    contentVIP.style.display='block'; contentFree.style.display='none';
   });
 
-  tabVIP.addEventListener('click', () => {
-    tabVIP.classList.add('active');
-    tabFree.classList.remove('active');
-    contentVIP.style.display = 'block';
-    contentFree.style.display = 'none';
-  });
-
-  // === Dados de Exercícios e Alimentação ===
-  const exercisesByGoalFree = {
-    emagrecer: ["Caminhada 15min", "Abdominal 2x15", "Agachamento 2x12"],
-    massa: ["Flexão 3x10", "Agachamento 3x12", "Prancha 2x1min"],
-    definir: ["Burpee 2x10", "Prancha 2x1min", "Abdominal 2x20"]
+  // Dados
+  const exercisesFree = {
+    emagrecer:["Caminhada 15min","Abdominal 2x15","Agachamento 2x12"],
+    massa:["Flexão 3x10","Agachamento 3x12","Prancha 2x1min"],
+    definir:["Burpee 2x10","Prancha 2x1min","Abdominal 2x20"]
   };
-  const nutritionByGoalFree = {
-    emagrecer: "Alimentação leve: frutas, vegetais e proteína magra.",
-    massa: "Alimentação para massa: proteínas, carboidratos complexos e vegetais.",
-    definir: "Alimentação para definir: proteínas magras, vegetais e baixa gordura."
+  const nutritionFree = {
+    emagrecer:"Frutas, vegetais e proteína magra.",
+    massa:"Proteínas, carboidratos e vegetais.",
+    definir:"Proteínas magras, vegetais e baixa gordura."
   };
-
-  const exercisesByGoalVIP = {
-    emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
-    massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
-    definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+  const exercisesVIP = {
+    emagrecer:["Corrida 20min","Pular corda 10min","Abdominal 3x15"],
+    massa:["Supino 3x12","Agachamento 3x15","Rosca bíceps 3x12"],
+    definir:["Prancha 3x1min","Flexão 3x12","Burpee 3x10"]
   };
-  const nutritionByGoalVIP = {
-    emagrecer: "Alimentação avançada: dieta restrita, cardio e proteínas.",
-    massa: "Alimentação avançada: foco em hipertrofia com proteína e carboidrato.",
-    definir: "Alimentação avançada: dieta equilibrada para definição muscular."
+  const nutritionVIP = {
+    emagrecer:"Dieta restrita, cardio e proteínas.",
+    massa:"Hipertrofia: proteína e carboidrato.",
+    definir:"Dieta equilibrada para definição."
   };
 
-  // === Meta Select ===
   const goalSelect = document.getElementById('goalSelect');
-  const trainingFree = document.getElementById('trainingFree');
+  const trainingFreeEl = document.getElementById('trainingFree');
   const nutritionFreeEl = document.getElementById('nutritionFree');
   const exercisesVIPEl = document.getElementById('exercisesVIP');
   const nutritionVIPEl = document.getElementById('nutritionVIP');
@@ -131,79 +126,72 @@
   const completeBtnVIP = document.getElementById('completeBtnVIP');
   const dayTitleVIP = document.getElementById('dayTitleVIP');
   const calendarDays = [
-    document.getElementById('dayMon'),
-    document.getElementById('dayTue'),
-    document.getElementById('dayWed'),
-    document.getElementById('dayThu'),
+    document.getElementById('dayMon'), document.getElementById('dayTue'), 
+    document.getElementById('dayWed'), document.getElementById('dayThu'), 
     document.getElementById('dayFri')
   ];
 
+  // VIP State
   let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
   let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
   let selectedDayVIP = null;
 
-  function loadFreeContent() {
+  function loadFree() {
     const goal = goalSelect.value;
-    nutritionFreeEl.textContent = nutritionByGoalFree[goal];
-    trainingFree.innerHTML = '';
-    exercisesByGoalFree[goal].forEach(ex => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.textContent = ex;
-      trainingFree.appendChild(div);
+    nutritionFreeEl.textContent = nutritionFree[goal];
+    trainingFreeEl.innerHTML='';
+    exercisesFree[goal].forEach(ex=>{
+      const div=document.createElement('div'); div.className='card'; div.textContent=ex;
+      trainingFreeEl.appendChild(div);
     });
   }
 
-  function loadVIPContent() {
+  function loadVIP() {
     const goal = goalSelect.value;
-    nutritionVIPEl.textContent = nutritionByGoalVIP[goal];
-    exercisesVIPEl.innerHTML = '';
-    exercisesByGoalVIP[goal].forEach(ex => {
-      const li = document.createElement('li');
-      li.textContent = ex;
+    nutritionVIPEl.textContent = nutritionVIP[goal];
+    exercisesVIPEl.innerHTML='';
+    exercisesVIP[goal].forEach(ex=>{
+      const li=document.createElement('li'); li.textContent=ex;
       exercisesVIPEl.appendChild(li);
     });
-    dayTitleVIP.textContent = selectedDayVIP ? `Dia ${selectedDayVIP}` : `Dia ${currentDayVIP}`;
+    dayTitleVIP.textContent=selectedDayVIP?`Dia ${selectedDayVIP}`:`Dia ${currentDayVIP}`;
     highlightCalendar();
-    messageVIP.textContent = '';
+    messageVIP.style.opacity=0;
   }
 
-  function highlightCalendar() {
-    calendarDays.forEach((day, index) => {
-      day.classList.remove('day-blocked', 'completed');
+  function highlightCalendar(){
+    calendarDays.forEach((day,index)=>{
+      day.classList.remove('blocked','completed');
       if(completedDaysVIP.includes(index+1)) day.classList.add('completed');
-      else if(selectedDayVIP && selectedDayVIP !== index+1) day.classList.add('day-blocked');
+      else if(selectedDayVIP && selectedDayVIP!==index+1) day.classList.add('blocked');
     });
   }
 
-  goalSelect.addEventListener('change', () => {
-    loadFreeContent();
-    loadVIPContent();
+  goalSelect.addEventListener('change',()=>{
+    loadFree();
+    loadVIP();
   });
 
-  completeBtnVIP.addEventListener('click', () => {
-    Array.from(exercisesVIPEl.children).forEach(li => li.classList.add('completed'));
+  completeBtnVIP.addEventListener('click',()=>{
+    Array.from(exercisesVIPEl.children).forEach(li=>li.classList.add('completed'));
     const dayDone = selectedDayVIP || currentDayVIP;
     if(!completedDaysVIP.includes(dayDone)) completedDaysVIP.push(dayDone);
-    localStorage.setItem('completedDaysVIP', JSON.stringify(completedDaysVIP));
-    messageVIP.textContent = `Parabéns! Você completou o treino do dia ${dayDone}.`;
-    selectedDayVIP = null;
-    currentDayVIP++;
-    localStorage.setItem('currentDayVIP', currentDayVIP);
-    loadVIPContent();
+    localStorage.setItem('completedDaysVIP',JSON.stringify(completedDaysVIP));
+    messageVIP.textContent=`Parabéns! Treino do dia ${dayDone} concluído!`;
+    messageVIP.style.opacity=1;
+    selectedDayVIP=null;
+    currentDayVIP++; localStorage.setItem('currentDayVIP',currentDayVIP);
+    loadVIP();
   });
 
-  calendarDays.forEach((day, index) => {
-    day.addEventListener('click', () => {
-      selectedDayVIP = index + 1;
-      loadVIPContent();
-    });
+  calendarDays.forEach((day,index)=>{
+    day.addEventListener('click',()=>{ selectedDayVIP=index+1; loadVIP(); });
   });
 
-  window.onload = () => {
-    loadFreeContent();
-    loadVIPContent();
-    if(currentDayVIP > 1 && !completedDaysVIP.includes(currentDayVIP-1)){
+  window.onload=()=>{
+    loadFree();
+    loadVIP();
+    if(currentDayVIP>1 && !completedDaysVIP.includes(currentDayVIP-1)){
       alert("Ei! Você não completou o treino do dia anterior. Bora voltar a treinar?");
     }
   }
