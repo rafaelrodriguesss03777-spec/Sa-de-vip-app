@@ -1,112 +1,190 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App Fitness VIP</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
-    .container { max-width: 400px; margin: 0 auto; padding: 20px; }
-    .section { margin-bottom: 20px; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); background:#fff; }
-    .vip { background:#000; color:#FFD700; font-weight:bold; }
-    .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
-    .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
-    .day-blocked { opacity:0.5; pointer-events:none; }
-    .completed { text-decoration: line-through; color:green; }
-    .message { margin-top:10px; font-style:italic; color:#333; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    .card { padding:10px; border-radius:8px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Fitness Completo</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
+  .container { max-width: 400px; margin: 0 auto; padding: 20px; }
+  .section { margin-bottom: 20px; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); background:#fff; }
+  .vip { background:#000; color:#FFD700; font-weight:bold; }
+  .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
+  .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
+  .day-blocked { opacity:0.5; pointer-events:none; }
+  .completed { text-decoration: line-through; color:green; }
+  .message { margin-top:10px; font-style:italic; color:#333; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .card { padding:10px; border-radius:8px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+  .tabs { display:flex; margin-bottom:10px; }
+  .tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; }
+  .tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="section">
-      <h2>Escolha sua Meta</h2>
-      <select id="goalSelect">
-        <option value="emagrecer">Emagrecer</option>
-        <option value="massa">Ganhar Massa</option>
-        <option value="definir">Definir Corpo</option>
-      </select>
+<div class="container">
+
+  <!-- Escolha de Meta -->
+  <div class="section">
+    <h2>Escolha sua Meta</h2>
+    <select id="goalSelect">
+      <option value="emagrecer">Emagrecer</option>
+      <option value="massa">Ganhar Massa</option>
+      <option value="definir">Definir Corpo</option>
+    </select>
+  </div>
+
+  <!-- Tabs Grátis / VIP -->
+  <div class="section">
+    <div class="tabs">
+      <div class="tab active" id="tabFree">Grátis</div>
+      <div class="tab" id="tabVIP">VIP</div>
     </div>
 
-    <div class="section">
-      <h2>Alimentação Recomendada</h2>
-      <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
+    <div id="contentFree">
+      <h3>Alimentação Recomendada (Grátis)</h3>
+      <div id="nutritionFree">Dicas básicas de alimentação.</div>
+      <h3>Treinamentos Recomendados (Grátis)</h3>
+      <div id="trainingFree" class="grid">
+        <div class="card">Exercício Básico 1</div>
+        <div class="card">Exercício Básico 2</div>
+        <div class="card">Exercício Básico 3</div>
+      </div>
     </div>
 
-    <div class="section">
-      <h2>Treinamentos Recomendados</h2>
-      <div id="trainingDay" class="vip">
+    <div id="contentVIP" style="display:none;">
+      <h3>Alimentação Recomendada (VIP)</h3>
+      <div id="nutritionVIP">Dicas avançadas de alimentação de acordo com sua meta.</div>
+
+      <h3>Treinamentos Recomendados (VIP)</h3>
+      <div id="trainingVIP">
         <div class="card">
           <strong id="dayTitle">Dia 1</strong>
-          <ul id="exercises">
-            <!-- Exercícios aparecem aqui -->
+          <ul id="exercisesVIP">
+            <!-- Exercícios do dia aparecem aqui -->
           </ul>
-          <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
-          <div class="message" id="message"></div>
+          <button class="btn btn-vip" id="completeBtnVIP">Concluir treino do dia</button>
+          <div class="message" id="messageVIP"></div>
         </div>
+      </div>
+
+      <h4>Calendário de Treinos (Seg-Sex)</h4>
+      <div id="calendarVIP" class="grid">
+        <div class="card" id="dayMon">Segunda</div>
+        <div class="card" id="dayTue">Terça</div>
+        <div class="card" id="dayWed">Quarta</div>
+        <div class="card" id="dayThu">Quinta</div>
+        <div class="card" id="dayFri">Sexta</div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    const goalSelect = document.getElementById('goalSelect');
-    const exercisesEl = document.getElementById('exercises');
-    const messageEl = document.getElementById('message');
-    const completeBtn = document.getElementById('completeBtn');
-    const dayTitle = document.getElementById('dayTitle');
+<script>
+  // Tabs
+  const tabFree = document.getElementById('tabFree');
+  const tabVIP = document.getElementById('tabVIP');
+  const contentFree = document.getElementById('contentFree');
+  const contentVIP = document.getElementById('contentVIP');
 
-    const exercisesByGoal = {
-      emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
-      massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
-      definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
-    };
+  tabFree.addEventListener('click', () => {
+    tabFree.classList.add('active');
+    tabVIP.classList.remove('active');
+    contentFree.style.display = 'block';
+    contentVIP.style.display = 'none';
+  });
 
-    // Progresso salvo localmente
-    let currentDay = parseInt(localStorage.getItem('currentDay')) || 1;
-    let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
+  tabVIP.addEventListener('click', () => {
+    tabVIP.classList.add('active');
+    tabFree.classList.remove('active');
+    contentVIP.style.display = 'block';
+    contentFree.style.display = 'none';
+  });
 
-    function loadExercises() {
-      const goal = goalSelect.value;
-      const exercises = exercisesByGoal[goal];
-      exercisesEl.innerHTML = '';
-      exercises.forEach(ex => {
-        const li = document.createElement('li');
-        li.textContent = ex;
-        exercisesEl.appendChild(li);
-      });
-      dayTitle.textContent = `Dia ${currentDay}`;
-      messageEl.textContent = '';
-    }
+  // Exercícios por meta
+  const exercisesByGoalVIP = {
+    emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
+    massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
+    definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+  };
 
-    goalSelect.addEventListener('change', () => {
-      currentDay = 1;
-      localStorage.setItem('currentDay', currentDay);
-      loadExercises();
+  const goalSelect = document.getElementById('goalSelect');
+  const exercisesVIP = document.getElementById('exercisesVIP');
+  const messageVIP = document.getElementById('messageVIP');
+  const completeBtnVIP = document.getElementById('completeBtnVIP');
+  const dayTitle = document.getElementById('dayTitle');
+
+  // Calendário
+  const calendarDays = [
+    document.getElementById('dayMon'),
+    document.getElementById('dayTue'),
+    document.getElementById('dayWed'),
+    document.getElementById('dayThu'),
+    document.getElementById('dayFri')
+  ];
+
+  let currentDay = parseInt(localStorage.getItem('currentDayVIP')) || 1;
+  let completedDays = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
+  let selectedDay = null;
+
+  function loadExercises() {
+    const goal = goalSelect.value;
+    const exercises = exercisesByGoalVIP[goal];
+    exercisesVIP.innerHTML = '';
+    exercises.forEach(ex => {
+      const li = document.createElement('li');
+      li.textContent = ex;
+      exercisesVIP.appendChild(li);
     });
+    dayTitle.textContent = selectedDay ? `Dia ${selectedDay}` : `Dia ${currentDay}`;
+    messageVIP.textContent = '';
+    highlightCalendar();
+  }
 
-    completeBtn.addEventListener('click', () => {
-      Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
-      messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
-      completedDays.push(currentDay);
-      localStorage.setItem('completedDays', JSON.stringify(completedDays));
-      currentDay++;
-      localStorage.setItem('currentDay', currentDay);
-      loadExercises();
-    });
-
-    // Mensagem para dias não concluídos
-    function checkMissedDays() {
-      const lastDay = parseInt(localStorage.getItem('currentDay')) || 1;
-      if (!completedDays.includes(lastDay-1) && lastDay > 1) {
-        alert("Ei! Você não completou o treino do dia anterior. Bora voltar a treinar?");
+  function highlightCalendar() {
+    calendarDays.forEach((day, index) => {
+      day.classList.remove('day-blocked');
+      day.classList.remove('completed');
+      if(completedDays.includes(index+1)) {
+        day.classList.add('completed');
+      } else if(selectedDay && selectedDay !== index+1) {
+        day.classList.add('day-blocked');
       }
-    }
+    });
+  }
 
-    window.onload = () => {
+  goalSelect.addEventListener('change', () => {
+    loadExercises();
+  });
+
+  completeBtnVIP.addEventListener('click', () => {
+    Array.from(exercisesVIP.children).forEach(li => li.classList.add('completed'));
+    const dayDone = selectedDay || currentDay;
+    messageVIP.textContent = `Parabéns! Você completou o treino do dia ${dayDone}. Próximo treino aparecerá no dia que você escolher.`;
+    if(!completedDays.includes(dayDone)) completedDays.push(dayDone);
+    localStorage.setItem('completedDaysVIP', JSON.stringify(completedDays));
+    selectedDay = null;
+    currentDay++;
+    localStorage.setItem('currentDayVIP', currentDay);
+    loadExercises();
+  });
+
+  // Selecionar dia no calendário
+  calendarDays.forEach((day, index) => {
+    day.addEventListener('click', () => {
+      selectedDay = index + 1;
       loadExercises();
-      checkMissedDays();
+    });
+  });
+
+  // Inicializa
+  window.onload = () => {
+    loadExercises();
+    // Checa dias não concluídos e avisa
+    if(currentDay > 1 && !completedDays.includes(currentDay-1)){
+      alert("Ei! Você não completou o treino do dia anterior. Bora voltar a treinar?");
     }
-  </script>
+  }
+</script>
 </body>
 </html>
