@@ -2,198 +2,372 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Saúde VIP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Fitness VIP</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: auto;
-    }
-
-    h2 {
-      text-align: center;
-      color: #2e7d32;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      background: #2e7d32;
-      color: white;
-      font-size: 16px;
-      border: none;
-    }
-
-    .card {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .vip {
-      border: 2px solid gold;
-    }
-
-    ul {
-      padding-left: 18px;
-    }
-
-    li {
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    .aviso {
-      color: gray;
-      font-size: 13px;
-      margin-top: 10px;
-    }
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
+    .container { max-width: 400px; margin: 0 auto; padding: 20px; }
+    .section { margin-bottom: 20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .vip { background:#000; color:#FFD700; font-weight:bold; }
+    .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
+    .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
+    .day-blocked { opacity:0.5; pointer-events:none; }
+    .completed { text-decoration: line-through; color:green; }
+    .message { margin-top:10px; font-style:italic; color:#333; }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="section">
+      <h2>Escolha sua Meta</h2>
+      <select id="goalSelect">
+        <option value="emagrecer">Emagrecer</option>
+        <option value="massa">Ganhar Massa</option>
+        <option value="definir">Definir Corpo</option>
+      </select>
+    </div>
 
-<div class="container">
+    <div class="section">
+      <h2>Alimentação Recomendada</h2>
+      <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
+    </div>
 
-  <h2>💪 Saúde e Metas</h2>
-
-  <label>Peso atual (kg)</label>
-  <input type="number">
-
-  <label>Altura (cm)</label>
-  <input type="number">
-
-  <label>Peso desejado (kg)</label>
-  <input type="number">
-
-  <label>Qual é sua meta?</label>
-  <select id="meta">
-    <option value="">Escolha a meta</option>
-    <option value="emagrecer">Emagrecer</option>
-    <option value="massa">Ganhar massa</option>
-    <option value="definir">Definir corpo</option>
-  </select>
-
-  <button>Ver recomendação</button>
-
-  <!-- ALIMENTAÇÃO -->
-  <div class="card">
-    <h3>🍽️ Alimentação recomendada</h3>
-    <ul id="alimentacao">
-      <li>Escolha uma meta para ver a alimentação</li>
-    </ul>
+    <div class="section vip">
+      <h2>Treinamentos Recomendados (VIP)</h2>
+      <div id="trainingDay">
+        <strong>Dia 1:</strong>
+        <ul id="exercises">
+          <!-- Exercícios do dia aparecem aqui -->
+        </ul>
+        <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
+        <div class="message" id="message"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- TREINOS GRATIS -->
-  <div class="card">
-    <h3>🏋️ Treinamentos recomendados</h3>
-    <ul id="treinos">
-      <li>Escolha uma meta para ver os treinos</li>
-    </ul>
+  <script>
+    const goalSelect = document.getElementById('goalSelect');
+    const exercisesEl = document.getElementById('exercises');
+    const messageEl = document.getElementById('message');
+    const completeBtn = document.getElementById('completeBtn');
 
-    <p class="aviso">
-      🔒 No VIP os treinos são personalizados por dia, progresso e objetivo.
-    </p>
-  </div>
+    const exercisesByGoal = {
+      emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
+      massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
+      definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+    };
 
-  <!-- VIP -->
-  <div class="card vip">
-    <h3>⭐ Plano VIP</h3>
-    <p>✔️ Treinos por dia da semana</p>
-    <p>✔️ Exercícios exclusivos</p>
-    <p>✔️ Ajustes automáticos</p>
-    <p>✔️ Acompanhamento de progresso</p>
+    // Simula progresso salvo
+    let currentDay = 1;
+    let completedDays = [];
 
-    <button style="background:gold; color:black;">
-      Desbloquear VIP
-    </button>
-  </div>
-
-</div>
-
-<script>
-  const metaSelect = document.getElementById("meta");
-  const alimentacao = document.getElementById("alimentacao");
-  const treinos = document.getElementById("treinos");
-
-  metaSelect.addEventListener("change", () => {
-    const meta = metaSelect.value;
-
-    alimentacao.innerHTML = "";
-    treinos.innerHTML = "";
-
-    if (meta === "") {
-      alimentacao.innerHTML = "<li>Escolha uma meta para ver a alimentação</li>";
-      treinos.innerHTML = "<li>Escolha uma meta para ver os treinos</li>";
-      return;
+    function loadExercises() {
+      const goal = goalSelect.value;
+      const exercises = exercisesByGoal[goal];
+      exercisesEl.innerHTML = '';
+      exercises.forEach(ex => {
+        const li = document.createElement('li');
+        li.textContent = ex;
+        exercisesEl.appendChild(li);
+      });
+      messageEl.textContent = '';
     }
 
-    if (meta === "emagrecer") {
-      alimentacao.innerHTML = `
-        <li>Frutas e legumes</li>
-        <li>Proteínas magras</li>
-        <li>Evitar açúcar e frituras</li>
-        <li>Beber bastante água</li>
-      `;
+    goalSelect.addEventListener('change', () => {
+      currentDay = 1; // resetar dia atual se mudar meta
+      loadExercises();
+    });
 
-      treinos.innerHTML = `
-        <li>Caminhada rápida – queima gordura</li>
-        <li>Polichinelo – acelera o metabolismo</li>
-        <li>Agachamento – gasto calórico</li>
-        <li>Abdominal – fortalece o core</li>
-      `;
-    }
+    completeBtn.addEventListener('click', () => {
+      // Marca os exercícios do dia como concluídos
+      Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
+      messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
+      completedDays.push(currentDay);
+      currentDay++;
+      // Aqui você poderia bloquear próximos dias até o dia correto
+    });
 
-    if (meta === "massa") {
-      alimentacao.innerHTML = `
-        <li>Carboidratos complexos</li>
-        <li>Proteínas em todas as refeições</li>
-        <li>Boa hidratação</li>
-        <li>Alimentação frequente</li>
-      `;
-
-      treinos.innerHTML = `
-        <li>Agachamento – ganho de massa</li>
-        <li>Flexão – peito e braços</li>
-        <li>Afundo – pernas e glúteos</li>
-        <li>Prancha – força</li>
-      `;
-    }
-
-    if (meta === "definir") {
-      alimentacao.innerHTML = `
-        <li>Proteína equilibrada</li>
-        <li>Carboidratos moderados</li>
-        <li>Alimentos naturais</li>
-        <li>Evitar ultraprocessados</li>
-      `;
-
-      treinos.innerHTML = `
-        <li>Flexão – definição</li>
-        <li>Agachamento – definição de pernas</li>
-        <li>Abdominal – core</li>
-        <li>Prancha – resistência</li>
-      `;
-    }
-  });
-</script>
-
+    // Inicializa a primeira vez
+    loadExercises();
+  </script>
 </body>
-</html>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Fitness VIP</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
+    .container { max-width: 400px; margin: 0 auto; padding: 20px; }
+    .section { margin-bottom: 20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .vip { background:#000; color:#FFD700; font-weight:bold; }
+    .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
+    .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
+    .day-blocked { opacity:0.5; pointer-events:none; }
+    .completed { text-decoration: line-through; color:green; }
+    .message { margin-top:10px; font-style:italic; color:#333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>Escolha sua Meta</h2>
+      <select id="goalSelect">
+        <option value="emagrecer">Emagrecer</option>
+        <option value="massa">Ganhar Massa</option>
+        <option value="definir">Definir Corpo</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2>Alimentação Recomendada</h2>
+      <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
+    </div>
+
+    <div class="section vip">
+      <h2>Treinamentos Recomendados (VIP)</h2>
+      <div id="trainingDay">
+        <strong>Dia 1:</strong>
+        <ul id="exercises">
+          <!-- Exercícios do dia aparecem aqui -->
+        </ul>
+        <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
+        <div class="message" id="message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const goalSelect = document.getElementById('goalSelect');
+    const exercisesEl = document.getElementById('exercises');
+    const messageEl = document.getElementById('message');
+    const completeBtn = document.getElementById('completeBtn');
+
+    const exercisesByGoal = {
+      emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
+      massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
+      definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+    };
+
+    // Simula progresso salvo
+    let currentDay = 1;
+    let completedDays = [];
+
+    function loadExercises() {
+      const goal = goalSelect.value;
+      const exercises = exercisesByGoal[goal];
+      exercisesEl.innerHTML = '';
+      exercises.forEach(ex => {
+        const li = document.createElement('li');
+        li.textContent = ex;
+        exercisesEl.appendChild(li);
+      });
+      messageEl.textContent = '';
+    }
+
+    goalSelect.addEventListener('change', () => {
+      currentDay = 1; // resetar dia atual se mudar meta
+      loadExercises();
+    });
+
+    completeBtn.addEventListener('click', () => {
+      // Marca os exercícios do dia como concluídos
+      Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
+      messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
+      completedDays.push(currentDay);
+      currentDay++;
+      // Aqui você poderia bloquear próximos dias até o dia correto
+    });
+
+    // Inicializa a primeira vez
+    loadExercises();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Fitness VIP</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
+    .container { max-width: 400px; margin: 0 auto; padding: 20px; }
+    .section { margin-bottom: 20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .vip { background:#000; color:#FFD700; font-weight:bold; }
+    .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
+    .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
+    .day-blocked { opacity:0.5; pointer-events:none; }
+    .completed { text-decoration: line-through; color:green; }
+    .message { margin-top:10px; font-style:italic; color:#333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>Escolha sua Meta</h2>
+      <select id="goalSelect">
+        <option value="emagrecer">Emagrecer</option>
+        <option value="massa">Ganhar Massa</option>
+        <option value="definir">Definir Corpo</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2>Alimentação Recomendada</h2>
+      <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
+    </div>
+
+    <div class="section vip">
+      <h2>Treinamentos Recomendados (VIP)</h2>
+      <div id="trainingDay">
+        <strong>Dia 1:</strong>
+        <ul id="exercises">
+          <!-- Exercícios do dia aparecem aqui -->
+        </ul>
+        <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
+        <div class="message" id="message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const goalSelect = document.getElementById('goalSelect');
+    const exercisesEl = document.getElementById('exercises');
+    const messageEl = document.getElementById('message');
+    const completeBtn = document.getElementById('completeBtn');
+
+    const exercisesByGoal = {
+      emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
+      massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
+      definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+    };
+
+    // Simula progresso salvo
+    let currentDay = 1;
+    let completedDays = [];
+
+    function loadExercises() {
+      const goal = goalSelect.value;
+      const exercises = exercisesByGoal[goal];
+      exercisesEl.innerHTML = '';
+      exercises.forEach(ex => {
+        const li = document.createElement('li');
+        li.textContent = ex;
+        exercisesEl.appendChild(li);
+      });
+      messageEl.textContent = '';
+    }
+
+    goalSelect.addEventListener('change', () => {
+      currentDay = 1; // resetar dia atual se mudar meta
+      loadExercises();
+    });
+
+    completeBtn.addEventListener('click', () => {
+      // Marca os exercícios do dia como concluídos
+      Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
+      messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
+      completedDays.push(currentDay);
+      currentDay++;
+      // Aqui você poderia bloquear próximos dias até o dia correto
+    });
+
+    // Inicializa a primeira vez
+    loadExercises();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Fitness VIP</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f2f2f2; }
+    .container { max-width: 400px; margin: 0 auto; padding: 20px; }
+    .section { margin-bottom: 20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .vip { background:#000; color:#FFD700; font-weight:bold; }
+    .btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-top:10px; }
+    .btn-vip { background:#FFD700; color:#000; font-weight:bold; }
+    .day-blocked { opacity:0.5; pointer-events:none; }
+    .completed { text-decoration: line-through; color:green; }
+    .message { margin-top:10px; font-style:italic; color:#333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>Escolha sua Meta</h2>
+      <select id="goalSelect">
+        <option value="emagrecer">Emagrecer</option>
+        <option value="massa">Ganhar Massa</option>
+        <option value="definir">Definir Corpo</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2>Alimentação Recomendada</h2>
+      <div id="nutrition">Dicas de alimentação de acordo com sua meta.</div>
+    </div>
+
+    <div class="section vip">
+      <h2>Treinamentos Recomendados (VIP)</h2>
+      <div id="trainingDay">
+        <strong>Dia 1:</strong>
+        <ul id="exercises">
+          <!-- Exercícios do dia aparecem aqui -->
+        </ul>
+        <button class="btn btn-vip" id="completeBtn">Concluir treino do dia</button>
+        <div class="message" id="message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const goalSelect = document.getElementById('goalSelect');
+    const exercisesEl = document.getElementById('exercises');
+    const messageEl = document.getElementById('message');
+    const completeBtn = document.getElementById('completeBtn');
+
+    const exercisesByGoal = {
+      emagrecer: ["Corrida 20min", "Pular corda 10min", "Abdominal 3x15"],
+      massa: ["Supino 3x12", "Agachamento 3x15", "Rosca bíceps 3x12"],
+      definir: ["Prancha 3x1min", "Flexão 3x12", "Burpee 3x10"]
+    };
+
+    // Simula progresso salvo
+    let currentDay = 1;
+    let completedDays = [];
+
+    function loadExercises() {
+      const goal = goalSelect.value;
+      const exercises = exercisesByGoal[goal];
+      exercisesEl.innerHTML = '';
+      exercises.forEach(ex => {
+        const li = document.createElement('li');
+        li.textContent = ex;
+        exercisesEl.appendChild(li);
+      });
+      messageEl.textContent = '';
+    }
+
+    goalSelect.addEventListener('change', () => {
+      currentDay = 1; // resetar dia atual se mudar meta
+      loadExercises();
+    });
+
+    completeBtn.addEventListener('click', () => {
+      // Marca os exercícios do dia como concluídos
+      Array.from(exercisesEl.children).forEach(li => li.classList.add('completed'));
+      messageEl.textContent = `Parabéns! Você completou o treino do dia ${currentDay}. Próximo treino aparecerá no dia que você escolher.`;
+      completedDays.push(currentDay);
+      currentDay++;
+      // Aqui você poderia bloquear próximos dias até o dia correto
+    });
+
+    // Inicializa a primeira vez
+    loadExercises();
+  </script>
+</body>
+          </html>
