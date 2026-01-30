@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Fitness VIP + Grátis Melhorado</title>
+<title>App Fitness VIP + Grátis Chamativo</title>
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
 .container { max-width: 420px; margin:0 auto; padding:20px; }
@@ -14,7 +14,8 @@ body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; 
 .tab:hover { transform: scale(1.05); }
 select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
 .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; transition: opacity 0.5s; }
-.card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
+.card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; cursor:pointer; }
+.card:hover { transform: scale(1.05); box-shadow:0 0 12px rgba(255,215,0,0.5); }
 .card.completed { background:#d4edda; color:green; text-decoration:line-through; transform: scale(1.05); box-shadow:0 4px 12px rgba(0,0,0,0.25); animation: pulse 0.8s ease-in-out; }
 @keyframes pulse {0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); } 50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(255,215,0,0.5); } 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }}
 .vip-card { background:#000; color:#FFD700; font-weight:bold; position:relative; overflow:hidden; animation: glow 2s infinite; border:2px solid #FFD700; padding:15px; border-radius:12px; transition: transform 0.3s; }
@@ -74,19 +75,19 @@ h3.vip::before { content: '⭐ '; }
       <div class="progressBar"><div id="progressFill"></div></div>
 
       <h3 class="vip">Alimentação VIP</h3>
-      <div id="nutritionVIP" class="vip-card">💰 Desbloqueie o VIP para ver a alimentação!</div>
+      <div id="nutritionVIP" class="vip-card">💰 Compre o VIP para ver a alimentação!</div>
 
       <h3 class="vip">Treinos VIP</h3>
       <div id="trainingVIP" class="vip-card card">
         <strong id="dayTitleVIP">Dia -</strong>
         <ul id="exercisesVIP">
-          <li>💰 Desbloqueie o VIP para acessar os treinos!</li>
+          <li>💰 Compre o VIP para acessar os treinos!</li>
         </ul>
         <button class="btn btn-vip" id="completeBtnVIP" disabled>Concluir treino do dia</button>
         <div class="message" id="messageVIP"></div>
       </div>
 
-      <button class="btn btn-vip" id="unlockBtn">Desbloquear VIP</button>
+      <button class="btn btn-vip" id="unlockBtn">Comprar VIP</button>
     </div>
   </div>
 </div>
@@ -112,7 +113,7 @@ const nutritionFree = {
   definir:["Proteínas magras, vegetais e baixa gordura","Frutas","Peito de frango"]
 };
 
-// VIP (30 dias)
+// VIP 30 dias
 const exercisesVIP = { emagrecer:[], massa:[], definir:[] };
 const nutritionVIP = { emagrecer:[], massa:[], definir:[] };
 for(let i=1;i<=30;i++){
@@ -137,6 +138,7 @@ const progressFill = document.getElementById('progressFill');
 
 let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
 let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
+
 function isVIPUnlocked(){ return localStorage.getItem('vipUnlocked')==='true'; }
 
 function loadFree(){
@@ -159,8 +161,8 @@ function loadFree(){
 
 function loadVIP(){
   if(!isVIPUnlocked()){
-    nutritionVIPEl.textContent="💰 Desbloqueie o VIP para ver a alimentação!";
-    exercisesVIPEl.innerHTML="<li>💰 Desbloqueie o VIP para acessar os treinos!</li>";
+    nutritionVIPEl.textContent="💰 Compre o VIP para ver a alimentação!";
+    exercisesVIPEl.innerHTML="<li>💰 Compre o VIP para acessar os treinos!</li>";
     dayTitleVIP.textContent="Dia -";
     vipProgress.textContent="Dias completados: -";
     progressFill.style.width="0%";
@@ -197,17 +199,17 @@ completeBtnVIP.addEventListener('click',()=>{
   loadVIP(); loadFree();
 });
 
-// Botão VIP
+// Botão VIP pago
 document.getElementById("unlockBtn").addEventListener("click", function() {
   const goal = goalSelect.value;
-  if (!goal) { alert("Selecione sua meta primeiro para ver a alimentação e treinos VIP!"); return; }
-  const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
-  if (confirmUnlock) {
+  if (!goal) { alert("Selecione sua meta primeiro!"); return; }
+  const confirmBuy = confirm("Deseja comprar o VIP por R$9,90 e desbloquear todos os treinos e alimentação?");
+  if (confirmBuy) {
     localStorage.setItem('vipUnlocked', 'true');
-    alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-    loadVIP(); // atualiza alimentação e treinos VIP imediatamente
+    alert("🎉 VIP comprado com sucesso! Aproveite todos os recursos!");
+    loadVIP();
   } else {
-    alert("VIP não desbloqueado. Continue no plano grátis.");
+    alert("VIP não comprado. Continue no plano grátis.");
   }
 });
 
