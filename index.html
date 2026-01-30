@@ -5,41 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>App Fitness VIP + Grátis Completo</title>
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
-.container { max-width: 420px; margin:0 auto; padding:20px; }
-.section { margin-bottom:20px; padding:15px; border-radius:10px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-.tabs { display:flex; margin-bottom:10px; }
-.tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; border-radius:5px 5px 0 0; transition: all 0.3s; }
-.tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; background:#000; }
-.tab:hover { transform: scale(1.05); }
-select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; transition: opacity 0.5s; }
-.card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
-.card.completed { background:#d4edda; color:green; text-decoration:line-through; transform: scale(1.05); box-shadow:0 4px 12px rgba(0,0,0,0.25); animation: pulse 0.8s ease-in-out; }
-@keyframes pulse {0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); } 50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(255,215,0,0.5); } 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }}
-.vip-card { background:#000; color:#FFD700; font-weight:bold; position:relative; overflow:hidden; animation: glow 2s infinite; border:2px solid #FFD700; padding:15px; border-radius:12px; transition: transform 0.3s; }
-.vip-card:hover { transform: scale(1.03); }
-@keyframes glow {0%,100%{box-shadow:0 0 10px #FFD700;}50%{box-shadow:0 0 25px #FFD700;}}
-.vip-card::after { content:''; position:absolute; top:0; left:-50%; width:50%; height:100%; background:rgba(255,255,255,0.3); transform: skewX(-20deg); transition: all 0.7s ease-in-out; }
-.vip-card.shine::after { left:100%; }
-.btn { margin-top:10px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; transition: all 0.3s; }
-.btn:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-.btn-vip { background:#FFD700; color:#000; font-weight:bold; width:100%; animation: pulseBtn 2s infinite; }
-@keyframes pulseBtn {0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
-.message { margin-top:10px; font-style:italic; color:#333; transition: opacity 0.5s; }
-h3.gratis::before { content: '💪 '; }
-h3.vip::before { content: '⭐ '; }
-@media(max-width: 360px){
-  .container { padding:10px; }
-  .card, .vip-card { font-size:14px; padding:8px; }
-  select { font-size:14px; }
-}
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
+    .container { max-width: 420px; margin:0 auto; padding:20px; }
+    .section { margin-bottom:20px; padding:15px; border-radius:10px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    .tabs { display:flex; margin-bottom:10px; }
+    .tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; border-radius:5px 5px 0 0; transition: all 0.3s; }
+    .tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; background:#000; }
+    .tab:hover { transform: scale(1.05); }
+    select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; transition: opacity 0.5s; }
+    .card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
+    
+    /* Correção da Barra de Progresso que faltava */
+    .progressBar { width: 100%; background: #eee; border-radius: 10px; height: 10px; margin: 10px 0; overflow: hidden; }
+    #progressFill { height: 100%; background: #FFD700; width: 0%; transition: width 0.5s; }
+    
+    .vip-card { background:#000; color:#FFD700; font-weight:bold; position:relative; overflow:hidden; animation: glow 2s infinite; border:2px solid #FFD700; padding:15px; border-radius:12px; transition: transform 0.3s; }
+    @keyframes glow {0%,100%{box-shadow:0 0 10px #FFD700;}50%{box-shadow:0 0 25px #FFD700;}}
+    
+    .btn { margin-top:10px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; transition: all 0.3s; }
+    .btn-vip { background:#FFD700; color:#000; font-weight:bold; width:100%; cursor: pointer; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Meta -->
   <div class="section">
     <h2>Escolha sua Meta</h2>
     <select id="goalSelect">
@@ -50,180 +41,135 @@ h3.vip::before { content: '⭐ '; }
     </select>
   </div>
 
-  <!-- Tabs Grátis / VIP -->
   <div class="section">
     <div class="tabs">
       <div class="tab active" id="tabFree">Grátis</div>
       <div class="tab" id="tabVIP">VIP</div>
     </div>
 
-    <!-- Grátis -->
     <div id="contentFree">
       <h3 class="gratis">Alimentação Recomendada</h3>
-      <div id="nutritionFree" class="card">Selecione sua meta para ver a alimentação.</div>
-
+      <div id="nutritionFree" class="card">Selecione sua meta.</div>
       <h3 class="gratis">Treinos Recomendados</h3>
-      <div id="trainingFree" class="grid">
-        <div class="card">Selecione sua meta para ver os treinos.</div>
-      </div>
+      <div id="trainingFree" class="grid"><div class="card">Selecione sua meta.</div></div>
     </div>
 
-    <!-- VIP -->
     <div id="contentVIP" style="display:none;">
       <div class="progress" id="vipProgress">Dias completados: 0/30</div>
       <div class="progressBar"><div id="progressFill"></div></div>
-
       <h3 class="vip">Alimentação VIP</h3>
-      <div id="nutritionVIP" class="vip-card">💰 Compre o VIP para ver a alimentação!</div>
-
+      <div id="nutritionVIP" class="vip-card">💰 Compre o VIP!</div>
       <h3 class="vip">Treinos VIP</h3>
       <div id="trainingVIP" class="vip-card card">
         <strong id="dayTitleVIP">Dia -</strong>
-        <ul id="exercisesVIP">
-          <li>💰 Compre o VIP para acessar os treinos!</li>
-        </ul>
+        <ul id="exercisesVIP"><li>💰 Compre o VIP!</li></ul>
         <button class="btn btn-vip" id="completeBtnVIP" disabled>Concluir treino do dia</button>
         <div class="message" id="messageVIP"></div>
       </div>
-
       <button class="btn btn-vip" id="unlockBtn">Comprar VIP</button>
     </div>
   </div>
 </div>
 
 <script>
-// Tabs
-const tabFree = document.getElementById('tabFree');
-const tabVIP = document.getElementById('tabVIP');
-const contentFree = document.getElementById('contentFree');
-const contentVIP = document.getElementById('contentVIP');
-tabFree.addEventListener('click', ()=>{ tabFree.classList.add('active'); tabVIP.classList.remove('active'); contentFree.style.display='block'; contentVIP.style.display='none'; });
-tabVIP.addEventListener('click', ()=>{ tabVIP.classList.add('active'); tabFree.classList.remove('active'); contentVIP.style.display='block'; contentFree.style.display='none'; });
+// Aguarda o carregamento total do DOM
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const tabFree = document.getElementById('tabFree');
+    const tabVIP = document.getElementById('tabVIP');
+    const contentFree = document.getElementById('contentFree');
+    const contentVIP = document.getElementById('contentVIP');
+    const goalSelect = document.getElementById('goalSelect');
+    const trainingFreeEl = document.getElementById('trainingFree');
+    const nutritionFreeEl = document.getElementById('nutritionFree');
+    const exercisesVIPEl = document.getElementById('exercisesVIP');
+    const nutritionVIPEl = document.getElementById('nutritionVIP');
+    const completeBtnVIP = document.getElementById('completeBtnVIP');
+    const dayTitleVIP = document.getElementById('dayTitleVIP');
+    const vipProgress = document.getElementById('vipProgress');
+    const progressFill = document.getElementById('progressFill');
+    const unlockBtn = document.getElementById('unlockBtn');
 
-// Dados Grátis
-const exercisesFree = {
-  emagrecer:["Caminhada 15min","Abdominal 2/15","Agachamento 2/12"],
-  massa:["Flexão 3/10","Agachamento 3/12","Prancha 2/1min"],
-  definir:["Burpee 2/10","Prancha 2/1min","Abdominal 2/20"]
-};
-const nutritionFree = {
-  emagrecer:["Frutas, vegetais e proteína magra","Suco detox","Salada leve"],
-  massa:["Proteínas, carboidratos e vegetais","Ovos","Batata doce"],
-  definir:["Proteínas magras, vegetais e baixa gordura","Frutas","Peito de frango"]
-};
+    // Estado do App
+    let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
+    let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
 
-// Dados VIP diários (30 dias)
-const exercisesVIP = { emagrecer:[], massa:[], definir:[] };
-const nutritionVIP = { emagrecer:[], massa:[], definir:[] };
-for(let i=1;i<=30;i++){
-  exercisesVIP.emagrecer.push({manha:`Caminhada ${15+i}min`, tarde:`Abdominal 3/15 + Agachamento 3/12`, noite:`Prancha 2/1min`});
-  exercisesVIP.massa.push({manha:`Supino 3/12`, tarde:`Agachamento 3/15 + Rosca bíceps 3/12`, noite:`Prancha 2/1min`});
-  exercisesVIP.definir.push({manha:`Prancha 3/1min`, tarde:`Flexão 3/12 + Burpee 3/10`, noite:`Abdominal 2/20`});
-  nutritionVIP.emagrecer.push(`Frutas, vegetais e proteína magra do dia ${i}`);
-  nutritionVIP.massa.push(`Proteínas e carboidratos do dia ${i}`);
-  nutritionVIP.definir.push(`Proteínas magras e vegetais do dia ${i}`);
-}
+    // Dados
+    const exercisesFree = {
+        emagrecer:["Caminhada 15min","Abdominal 2/15","Agachamento 2/12"],
+        massa:["Flexão 3/10","Agachamento 3/12","Prancha 2/1min"],
+        definir:["Burpee 2/10","Prancha 2/1min","Abdominal 2/20"]
+    };
 
-const goalSelect = document.getElementById('goalSelect');
-const trainingFreeEl = document.getElementById('trainingFree');
-const nutritionFreeEl = document.getElementById('nutritionFree');
-const exercisesVIPEl = document.getElementById('exercisesVIP');
-const nutritionVIPEl = document.getElementById('nutritionVIP');
-const messageVIP = document.getElementById('messageVIP');
-const completeBtnVIP = document.getElementById('completeBtnVIP');
-const dayTitleVIP = document.getElementById('dayTitleVIP');
-const vipProgress = document.getElementById('vipProgress');
-const progressFill = document.getElementById('progressFill');
-const unlockBtn = document.getElementById('unlockBtn');
+    const nutritionFree = {
+        emagrecer:["Frutas e Proteína","Suco detox","Salada leve"],
+        massa:["Ovos e Batata Doce","Frango","Arroz e Feijão"],
+        definir:["Vegetais e Peixe","Frutas","Omelete"]
+    };
 
-let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
-let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
-
-// Verifica se VIP comprado
-function isVIPUnlocked(){ return localStorage.getItem('vipUnlocked')==='true'; }
-
-// Carrega plano grátis
-function loadFree(){
-  const goal = goalSelect.value; 
-  if(!goal) return;
-  nutritionFreeEl.style.opacity=0;
-  trainingFreeEl.style.opacity=0;
-  setTimeout(()=>{
-    const dayIndex = (currentDayVIP-1)%nutritionFree[goal].length;
-    nutritionFreeEl.textContent = nutritionFree[goal][dayIndex];
-    trainingFreeEl.innerHTML='';
-    exercisesFree[goal].forEach(ex=>{
-      const div=document.createElement('div'); div.className='card'; div.textContent=ex;
-      trainingFreeEl.appendChild(div);
+    // Tabs Eventos
+    tabFree.addEventListener('click', ()=>{ 
+        tabFree.classList.add('active'); tabVIP.classList.remove('active'); 
+        contentFree.style.display='block'; contentVIP.style.display='none'; 
     });
-    nutritionFreeEl.style.opacity=1;
-    trainingFreeEl.style.opacity=1;
-  },200);
-}
+    
+    tabVIP.addEventListener('click', ()=>{ 
+        tabVIP.classList.add('active'); tabFree.classList.remove('active'); 
+        contentVIP.style.display='block'; contentFree.style.display='none'; 
+        loadVIP();
+    });
 
-// Carrega VIP
-function loadVIP(){
-  const goal = goalSelect.value;
-  if(!goal){
-    exercisesVIPEl.innerHTML="<li>💰 Escolha sua meta primeiro!</li>";
-    nutritionVIPEl.textContent="💰 Escolha sua meta primeiro!";
-    return;
-  }
-  if(!isVIPUnlocked()){
-    exercisesVIPEl.innerHTML="<li>💰 Compre o VIP para acessar os treinos!</li>";
-    nutritionVIPEl.textContent="💰 Compre o VIP para ver a alimentação!";
-    dayTitleVIP.textContent="Dia -";
-    vipProgress.textContent="Dias completados: -";
-    progressFill.style.width="0%";
-    completeBtnVIP.disabled=true;
-    return;
-  }
-  const dayIndex = currentDayVIP-1;
-  const dayExercises = exercisesVIP[goal][dayIndex];
-  exercisesVIPEl.innerHTML='';
-  for(const [period, ex] of Object.entries(dayExercises)){
-    const li=document.createElement('li');
-    li.textContent=`${period.toUpperCase()}: ${ex}`;
-    exercisesVIPEl.appendChild(li);
-  }
-  nutritionVIPEl.textContent = nutritionVIP[goal][dayIndex];
-  nutritionVIPEl.classList.add('shine'); setTimeout(()=>{nutritionVIPEl.classList.remove('shine');},700);
-  dayTitleVIP.textContent = `Dia ${currentDayVIP}`;
-  vipProgress.textContent = `Dias completados: ${completedDaysVIP.length}/30`;
-  progressFill.style.width = (completedDaysVIP.length/30*100)+'%';
-  completeBtnVIP.disabled=false;
-}
+    function loadFree(){
+        const goal = goalSelect.value;
+        if(!goal) return;
+        nutritionFreeEl.textContent = nutritionFree[goal][0];
+        trainingFreeEl.innerHTML = '';
+        exercisesFree[goal].forEach(ex => {
+            const div = document.createElement('div'); div.className = 'card'; div.textContent = ex;
+            trainingFreeEl.appendChild(div);
+        });
+    }
 
-// Seleção da meta
-goalSelect.addEventListener('change',()=>{ loadFree(); loadVIP(); });
+    function loadVIP(){
+        const goal = goalSelect.value;
+        const isUnlocked = localStorage.getItem('vipUnlocked') === 'true';
 
-// Completar treino VIP
-completeBtnVIP.addEventListener('click',()=>{
-  const dayDone = currentDayVIP;
-  if(!completedDaysVIP.includes(dayDone)) completedDaysVIP.push(dayDone);
-  localStorage.setItem('completedDaysVIP',JSON.stringify(completedDaysVIP));
-  messageVIP.textContent=`🎉 Parabéns! Treino do dia ${dayDone} concluído!`;
-  messageVIP.style.opacity=1;
-  currentDayVIP++;
-  localStorage.setItem('currentDayVIP',currentDayVIP);
-  loadVIP(); loadFree();
+        if(!isUnlocked){
+            completeBtnVIP.disabled = true;
+            unlockBtn.style.display = 'block';
+            return;
+        }
+
+        unlockBtn.style.display = 'none';
+        completeBtnVIP.disabled = false;
+        
+        if(goal){
+            dayTitleVIP.textContent = `Dia ${currentDayVIP}`;
+            nutritionVIPEl.textContent = `Plano Especial Dia ${currentDayVIP} para ${goal}`;
+            exercisesVIPEl.innerHTML = `<li>Treino Intensivo de ${goal}</li><li>Foco no Dia ${currentDayVIP}</li>`;
+            vipProgress.textContent = `Dias completados: ${completedDaysVIP.length}/30`;
+            progressFill.style.width = (completedDaysVIP.length / 30 * 100) + '%';
+        }
+    }
+
+    goalSelect.addEventListener('change', () => { loadFree(); loadVIP(); });
+
+    unlockBtn.addEventListener('click', () => {
+        localStorage.setItem('vipUnlocked', 'true');
+        alert("🎉 VIP Ativado!");
+        loadVIP();
+    });
+
+    completeBtnVIP.addEventListener('click', () => {
+        if(currentDayVIP <= 30){
+            completedDaysVIP.push(currentDayVIP);
+            currentDayVIP++;
+            localStorage.setItem('currentDayVIP', currentDayVIP);
+            localStorage.setItem('completedDaysVIP', JSON.stringify(completedDaysVIP));
+            loadVIP();
+        }
+    });
 });
-
-// Botão comprar VIP (simulado)
-unlockBtn.addEventListener('click',()=>{
-  const confirmUnlock = confirm("Deseja comprar o VIP e acessar todos os treinos e alimentação?");
-  if(confirmUnlock){
-    localStorage.setItem('vipUnlocked','true');
-    alert("🎉 VIP comprado! Agora você pode ver os treinos e alimentação.");
-    loadVIP();
-  } else {
-    alert("VIP não comprado. Continue no plano grátis.");
-  }
-});
-
-// Inicializa
-window.onload=()=>{ loadFree(); loadVIP(); }
-
 </script>
 </body>
 </html>
