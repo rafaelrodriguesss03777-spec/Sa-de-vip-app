@@ -130,42 +130,42 @@ ul li {
   <option value="massa">Ganhar massa</option>
   <option value="definir">Definir corpo</option>
 </select>
-</div>
 
-<div class="section">
-<h3>🆓 Plano Grátis</h3>
-<ul id="treinosGratis"></ul>
-<ul id="alimentacaoGratis"></ul>
-</div>
-
-<div class="section vip">
-<h3>⭐ Plano VIP</h3>
-
-<label>📅 Meta de dias</label>
-<select id="diasMeta">
-  <option value="7">7 dias</option>
-  <option value="14">14 dias</option>
-  <option value="21">21 dias</option>
-  <option value="30">30 dias</option>
-</select>
-
-<p id="progresso">Progresso: 0 / 7</p>
-
-<button onclick="concluirTreino()">Concluir treino do dia</button>
-
-<div class="calendar" id="calendario"></div>
-
-<div id="mensagem" class="success" style="display:none;">
-  <p id="textoMensagem"></p>
-  <button onclick="novaMeta()">Criar nova meta</button>
-</div>
-</div>
 
 <div class="section">
 <h3>🏆 Ranking</h3>
 <p>🥇 Você — <span id="ranking">0</span> dias</p>
 </div>
+<div class="section vip">
+  <h3>⭐ Plano VIP</h3>
 
+  <p><strong>Treinos VIP da Semana</strong></p>
+  <ul id="treinosVip">
+    <li>Segunda — Treino completo</li>
+    <li>Terça — Cardio + Abdômen</li>
+    <li>Quarta — Pernas</li>
+    <li>Quinta — Superior</li>
+    <li>Sexta — Funcional</li>
+  </ul>
+
+  <label>📅 Meta de dias</label>
+  <select id="diasMeta">
+    <option value="7">7 dias</option>
+    <option value="14">14 dias</option>
+    <option value="21">21 dias</option>
+    <option value="30">30 dias</option>
+  </select>
+
+  <p id="progresso">Progresso: 0 / 7</p>
+
+  <button onclick="concluirTreino()">Concluir treino do dia</button>
+
+  <div class="calendar" id="calendario"></div>
+
+  <div id="mensagem" class="success" style="display:none;">
+    <p id="textoMensagem"></p>
+    <button onclick="novaMeta()">Criar nova meta</button>
+  </div>
 </div>
 
 <script>
