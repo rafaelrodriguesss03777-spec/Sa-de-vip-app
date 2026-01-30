@@ -2,87 +2,80 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Saúde VIP App</title>
+<title>Saúde VIP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
   background: linear-gradient(180deg, #0f9d58, #34a853);
   padding: 20px;
 }
 
-.box {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 18px;
+.app {
+  background: #fff;
   max-width: 420px;
   margin: auto;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
 }
 
 h2 {
   text-align: center;
   color: #0f9d58;
-  font-weight: bold;
 }
 
-h3 {
-  margin-bottom: 10px;
-  color: #333;
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: #0f9d58;
+  color: white;
 }
 
 .section {
-  margin-top: 20px;
+  display: none;
+}
+
+.section.active {
+  display: block;
 }
 
 select, button {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   margin-top: 10px;
-  border-radius: 14px;
-  font-size: 16px;
-}
-
-select {
-  border: 2px solid #0f9d58;
-  background: #f9fff9;
+  border-radius: 12px;
+  font-size: 15px;
 }
 
 button {
-  background: linear-gradient(90deg, #0f9d58, #34a853);
-  color: #fff;
+  background: #0f9d58;
+  color: white;
   border: none;
   font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-button:active {
-  transform: scale(0.97);
 }
 
 .vip {
-  margin-top: 25px;
-  background: linear-gradient(135deg, #fff8e1, #fff3c4);
-  border: 3px solid #ffd700;
+  background: linear-gradient(135deg, #fff8e1, #fff1b8);
+  border: 3px solid gold;
   border-radius: 18px;
-  box-shadow: 0 6px 15px rgba(255,215,0,0.4);
-}
-
-.success {
-  background: #e6ffed;
-  border-left: 6px solid #34a853;
   padding: 15px;
-  border-radius: 10px;
-  margin-top: 15px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.calendar {
   margin-top: 10px;
-  text-align: center;
 }
 
 .calendar span {
@@ -92,79 +85,81 @@ button:active {
   line-height: 38px;
   margin: 4px;
   border-radius: 50%;
-  background: #e0e0e0;
+  background: #ddd;
   font-weight: bold;
 }
 
 .calendar .done {
   background: #0f9d58;
-  color: #fff;
+  color: white;
 }
 
-ul {
-  padding-left: 18px;
-}
-
-ul li {
-  margin-bottom: 6px;
-}
-
-.ranking {
-  margin-top: 15px;
+.success {
+  background: #e6ffed;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
   text-align: center;
-  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-<h2>💪 Saúde VIP</h2>
+<div class="app">
+  <h2>💪 Saúde VIP</h2>
 
-<div class="section">
-<h3>🎯 Escolha sua meta</h3>
-<select id="meta">
-  <option value="">Selecione</option>
-  <option value="emagrecer">Emagrecer</option>
-  <option value="massa">Ganhar massa</option>
-  <option value="definir">Definir corpo</option>
-</select>
+  <div class="tabs">
+    <button id="btnGratis" class="active" onclick="abrir('gratis')">🆓 Grátis</button>
+    <button id="btnVip" onclick="abrir('vip')">⭐ VIP</button>
+  </div>
 
-
-<div class="section">
-<h3>🏆 Ranking</h3>
-<p>🥇 Você — <span id="ranking">0</span> dias</p>
-</div>
-<div class="section vip">
-  <h3>⭐ Plano VIP</h3>
-
-  <p><strong>Treinos VIP da Semana</strong></p>
-  <ul id="treinosVip">
-    <li>Segunda — Treino completo</li>
-    <li>Terça — Cardio + Abdômen</li>
-    <li>Quarta — Pernas</li>
-    <li>Quinta — Superior</li>
-    <li>Sexta — Funcional</li>
-  </ul>
-
-  <label>📅 Meta de dias</label>
-  <select id="diasMeta">
-    <option value="7">7 dias</option>
-    <option value="14">14 dias</option>
-    <option value="21">21 dias</option>
-    <option value="30">30 dias</option>
+  <h3>🎯 Escolha sua meta</h3>
+  <select id="meta" onchange="atualizarConteudo()">
+    <option value="">Selecione</option>
+    <option value="emagrecer">Emagrecer</option>
+    <option value="massa">Ganhar massa</option>
+    <option value="definir">Definir corpo</option>
   </select>
 
-  <p id="progresso">Progresso: 0 / 7</p>
+  <!-- GRÁTIS -->
+  <div id="gratis" class="section active">
+    <h3>Treinos Grátis</h3>
+    <ul id="treinosGratis"></ul>
 
-  <button onclick="concluirTreino()">Concluir treino do dia</button>
+    <h3>Alimentação</h3>
+    <ul id="alimentacaoGratis"></ul>
+  </div>
 
-  <div class="calendar" id="calendario"></div>
+  <!-- VIP -->
+  <div id="vip" class="section">
+    <div class="vip">
+      <h3>⭐ Treinos VIP</h3>
+      <ul>
+        <li>Segunda — Corpo inteiro</li>
+        <li>Terça — Cardio</li>
+        <li>Quarta — Pernas</li>
+        <li>Quinta — Superior</li>
+        <li>Sexta — Funcional</li>
+      </ul>
 
-  <div id="mensagem" class="success" style="display:none;">
-    <p id="textoMensagem"></p>
-    <button onclick="novaMeta()">Criar nova meta</button>
+      <label>Meta de dias</label>
+      <select id="diasMeta">
+        <option value="7">7 dias</option>
+        <option value="14">14 dias</option>
+        <option value="21">21 dias</option>
+        <option value="30">30 dias</option>
+      </select>
+
+      <p id="progresso">Progresso: 0 / 7</p>
+      <button onclick="concluirTreino()">Concluir treino</button>
+
+      <div class="calendar" id="calendario"></div>
+
+      <div id="mensagem" class="success" style="display:none;">
+        🎉 Parabéns! Meta concluída!
+      </div>
+    </div>
   </div>
 </div>
 
@@ -176,85 +171,64 @@ const treinos = {
 };
 
 const alimentos = {
-  emagrecer: ["Salada", "Frango grelhado", "Ovos"],
+  emagrecer: ["Salada", "Frango", "Ovos"],
   massa: ["Arroz", "Carne", "Batata doce"],
   definir: ["Peixe", "Legumes", "Ovos"]
 };
 
-let dados = JSON.parse(localStorage.getItem("saudeVIP")) || {
+let dados = JSON.parse(localStorage.getItem("vipApp")) || {
   meta: "",
   diasMeta: 7,
-  diasConcluidos: 0,
-  ultimoDia: ""
+  dias: 0,
+  ultimo: ""
 };
 
-document.getElementById("meta").value = dados.meta;
-document.getElementById("diasMeta").value = dados.diasMeta;
-
-document.getElementById("meta").addEventListener("change", atualizarConteudo);
-document.getElementById("diasMeta").addEventListener("change", salvar);
-
-atualizarConteudo();
-atualizarTela();
+function abrir(sec) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(sec).classList.add('active');
+  document.getElementById("btnGratis").classList.remove("active");
+  document.getElementById("btnVip").classList.remove("active");
+  document.getElementById(sec === "gratis" ? "btnGratis" : "btnVip").classList.add("active");
+}
 
 function atualizarConteudo() {
-  const meta = document.getElementById("meta").value;
-  const t = document.getElementById("treinosGratis");
-  const a = document.getElementById("alimentacaoGratis");
-  t.innerHTML = a.innerHTML = "";
-
-  if (!meta) return;
-
-  treinos[meta].forEach(x => t.innerHTML += `<li>🏋️ ${x}</li>`);
-  alimentos[meta].forEach(x => a.innerHTML += `<li>🥗 ${x}</li>`);
-
+  const m = meta.value;
+  treinosGratis.innerHTML = "";
+  alimentacaoGratis.innerHTML = "";
+  if (!m) return;
+  treinos[m].forEach(t => treinosGratis.innerHTML += `<li>${t}</li>`);
+  alimentos[m].forEach(a => alimentacaoGratis.innerHTML += `<li>${a}</li>`);
   salvar();
 }
 
 function concluirTreino() {
   const hoje = new Date().toDateString();
-  if (dados.ultimoDia === hoje) {
-    alert("Você já concluiu hoje 💪");
-    return;
-  }
-  dados.diasConcluidos++;
-  dados.ultimoDia = hoje;
+  if (dados.ultimo === hoje) return alert("Já concluiu hoje");
+  dados.dias++;
+  dados.ultimo = hoje;
   salvar();
-
-  if (dados.diasConcluidos >= dados.diasMeta) {
-    document.getElementById("textoMensagem").innerText =
-      `🎉 Parabéns! Você concluiu sua meta de ${dados.diasMeta} dias!`;
-    document.getElementById("mensagem").style.display = "block";
-  }
-
-  atualizarTela();
+  atualizarVip();
 }
 
-function novaMeta() {
-  dados.diasConcluidos = 0;
-  dados.ultimoDia = "";
-  document.getElementById("mensagem").style.display = "none";
-  salvar();
-  atualizarTela();
+function atualizarVip() {
+  progresso.innerText = `Progresso: ${dados.dias} / ${dados.diasMeta}`;
+  calendario.innerHTML = "";
+  for (let i = 1; i <= dados.diasMeta; i++) {
+    calendario.innerHTML += `<span class="${i <= dados.dias ? 'done':''}">${i}</span>`;
+  }
+  if (dados.dias >= dados.diasMeta) mensagem.style.display = "block";
 }
 
 function salvar() {
-  dados.meta = document.getElementById("meta").value;
-  dados.diasMeta = Number(document.getElementById("diasMeta").value);
-  localStorage.setItem("saudeVIP", JSON.stringify(dados));
+  dados.meta = meta.value;
+  dados.diasMeta = Number(diasMeta.value);
+  localStorage.setItem("vipApp", JSON.stringify(dados));
 }
 
-function atualizarTela() {
-  document.getElementById("progresso").innerText =
-    `Progresso: ${dados.diasConcluidos} / ${dados.diasMeta}`;
-  document.getElementById("ranking").innerText = dados.diasConcluidos;
-
-  const cal = document.getElementById("calendario");
-  cal.innerHTML = "";
-  for (let i = 1; i <= dados.diasMeta; i++) {
-    cal.innerHTML += `<span class="${i <= dados.diasConcluidos ? 'done' : ''}">${i}</span>`;
-  }
-}
+meta.value = dados.meta;
+diasMeta.value = dados.diasMeta;
+atualizarConteudo();
+atualizarVip();
 </script>
 
 </body>
