@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Fitness VIP + Grátis Chamativo</title>
+<title>App Fitness VIP + Grátis Melhorado</title>
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
 .container { max-width: 420px; margin:0 auto; padding:20px; }
@@ -113,7 +113,7 @@ const nutritionFree = {
   definir:["Proteínas magras, vegetais e baixa gordura","Frutas","Peito de frango"]
 };
 
-// VIP 30 dias
+// VIP
 const exercisesVIP = { emagrecer:[], massa:[], definir:[] };
 const nutritionVIP = { emagrecer:[], massa:[], definir:[] };
 for(let i=1;i<=30;i++){
@@ -160,6 +160,9 @@ function loadFree(){
 }
 
 function loadVIP(){
+  const goal = goalSelect.value;
+  if(!goal) return;
+
   if(!isVIPUnlocked()){
     nutritionVIPEl.textContent="💰 Compre o VIP para ver a alimentação!";
     exercisesVIPEl.innerHTML="<li>💰 Compre o VIP para acessar os treinos!</li>";
@@ -169,7 +172,7 @@ function loadVIP(){
     completeBtnVIP.disabled=true;
     return;
   }
-  const goal = goalSelect.value; if(!goal) return;
+
   const dayIndex = currentDayVIP-1;
   const dayExercises = exercisesVIP[goal][dayIndex];
   exercisesVIPEl.innerHTML='';
@@ -178,6 +181,8 @@ function loadVIP(){
     li.textContent=`${period.toUpperCase()}: ${ex}`;
     exercisesVIPEl.appendChild(li);
   }
+
+  // Alimentação VIP agora aparece
   nutritionVIPEl.textContent = nutritionVIP[goal][dayIndex];
   nutritionVIPEl.classList.add('shine'); setTimeout(()=>{nutritionVIPEl.classList.remove('shine');},700);
   dayTitleVIP.textContent = `Dia ${currentDayVIP}`;
