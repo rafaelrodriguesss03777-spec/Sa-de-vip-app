@@ -203,10 +203,18 @@ function unlockVIP(){
   if(confirmUnlock){
     localStorage.setItem('vipUnlocked','true');
     alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-    loadVIP();
-  } else { alert("VIP não desbloqueado. Continue no plano grátis."); }
-}
 
+    // Atualiza imediatamente a visualização do VIP
+    const goal = goalSelect.value;
+    if(goal){
+      loadVIP(); // Atualiza treinos e alimentação do VIP
+    } else {
+      alert("Selecione sua meta primeiro para ver os treinos e alimentação VIP!");
+    }
+  } else {
+    alert("VIP não desbloqueado. Continue no plano grátis.");
+  }
+}
 window.onload=()=>{ loadFree(); loadVIP(); }
 </script>
 
