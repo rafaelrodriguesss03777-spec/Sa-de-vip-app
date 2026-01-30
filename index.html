@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Fitness VIP + Grátis Melhorado</title>
+<title>App Fitness VIP + Grátis Corrigido</title>
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
 .container { max-width: 420px; margin:0 auto; padding:20px; }
@@ -29,7 +29,9 @@ select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
 .message { margin-top:10px; font-style:italic; color:#333; transition: opacity 0.5s; }
 h3.gratis::before { content: '💪 '; }
 h3.vip::before { content: '⭐ '; }
-
+.progressBar { background:#ddd; border-radius:4px; height:8px; margin-top:5px; }
+#progressFill { width:0%; background:#FFD700; height:100%; border-radius:4px; transition: width 0.5s; }
+.progress { margin-top:5px; font-weight:bold; color:#FFD700; text-align:right; }
 @media(max-width: 360px){
   .container { padding:10px; }
   .card, .vip-card { font-size:14px; padding:8px; }
@@ -38,7 +40,9 @@ h3.vip::before { content: '⭐ '; }
 </style>
 </head>
 <body>
+
 <div class="container">
+
   <!-- Meta -->
   <div class="section">
     <h2>Escolha sua Meta</h2>
@@ -86,9 +90,9 @@ h3.vip::before { content: '⭐ '; }
         <div class="message" id="messageVIP"></div>
       </div>
 
-      <button class="btn btn-vip" id="unlockBtn">Desbloquear VIP</button>
+      <button class="btn btn-vip" onclick="unlockVIP()" id="unlockBtn">Desbloquear VIP</button>
     </div>
-  </div>
+
 </div>
 
 <script>
@@ -100,7 +104,7 @@ const contentVIP = document.getElementById('contentVIP');
 tabFree.addEventListener('click', ()=>{ tabFree.classList.add('active'); tabVIP.classList.remove('active'); contentFree.style.display='block'; contentVIP.style.display='none'; });
 tabVIP.addEventListener('click', ()=>{ tabVIP.classList.add('active'); tabFree.classList.remove('active'); contentVIP.style.display='block'; contentFree.style.display='none'; });
 
-// Dados Grátis
+// Grátis
 const exercisesFree = {
   emagrecer:["Caminhada 15min","Abdominal 2/15","Agachamento 2/12"],
   massa:["Flexão 3/10","Agachamento 3/12","Prancha 2/1min"],
@@ -112,7 +116,7 @@ const nutritionFree = {
   definir:["Proteínas magras, vegetais e baixa gordura","Frutas","Peito de frango"]
 };
 
-// Dados VIP
+// VIP
 const exercisesVIP = { emagrecer:[], massa:[], definir:[] };
 const nutritionVIP = { emagrecer:[], massa:[], definir:[] };
 for(let i=1;i<=30;i++){
@@ -124,7 +128,6 @@ for(let i=1;i<=30;i++){
   nutritionVIP.definir.push(`Proteínas magras e vegetais do dia ${i}`);
 }
 
-// Elementos
 const goalSelect = document.getElementById('goalSelect');
 const trainingFreeEl = document.getElementById('trainingFree');
 const nutritionFreeEl = document.getElementById('nutritionFree');
@@ -135,13 +138,12 @@ const completeBtnVIP = document.getElementById('completeBtnVIP');
 const dayTitleVIP = document.getElementById('dayTitleVIP');
 const vipProgress = document.getElementById('vipProgress');
 const progressFill = document.getElementById('progressFill');
-const unlockBtn = document.getElementById('unlockBtn');
 
 let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
 let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
+
 function isVIPUnlocked(){ return localStorage.getItem('vipUnlocked')==='true'; }
 
-// Funções Grátis
 function loadFree(){
   const goal = goalSelect.value; 
   if(!goal) return;
@@ -160,8 +162,8 @@ function loadFree(){
   },200);
 }
 
-// Funções VIP
 function loadVIP(){
+  const goal = goalSelect.value; 
   if(!isVIPUnlocked()){
     nutritionVIPEl.textContent="💰 Desbloqueie o VIP para ver a alimentação!";
     exercisesVIPEl.innerHTML="<li>💰 Desbloqueie o VIP para acessar os treinos!</li>";
@@ -171,7 +173,12 @@ function loadVIP(){
     completeBtnVIP.disabled=true;
     return;
   }
-  const goal = goalSelect.value; if(!goal) return;
+  if(!goal){
+    nutritionVIPEl.textContent="Selecione sua meta para ver VIP!";
+    exercisesVIPEl.innerHTML="<li>Selecione sua meta primeiro!</li>";
+    completeBtnVIP.disabled=true;
+    return;
+  }
   const dayIndex = currentDayVIP-1;
   const dayExercises = exercisesVIP[goal][dayIndex];
   exercisesVIPEl.innerHTML='';
@@ -188,7 +195,6 @@ function loadVIP(){
   completeBtnVIP.disabled=false;
 }
 
-// Eventos
 goalSelect.addEventListener('change',()=>{ loadFree(); loadVIP(); });
 
 completeBtnVIP.addEventListener('click',()=>{
@@ -202,24 +208,15 @@ completeBtnVIP.addEventListener('click',()=>{
   loadVIP(); loadFree();
 });
 
-unlockBtn.addEventListener('click', () => {
-  const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
-  if(confirmUnlock){
-    localStorage.setItem('vipUnlocked','true');
-    alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-    const goal = goalSelect.value;
-    if(goal){
-      loadVIP();
-    } else {
-      alert("Selecione sua meta primeiro para ver os treinos e alimentação VIP!");
-    }
-  } else {
-    alert("VIP não desbloqueado. Continue no plano grátis.");
-  }
-});
+function unlockVIP(){
+  localStorage.setItem('vipUnlocked','true');
+  alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
+  loadVIP();
+}
 
-// Inicialização
-window.onload = () => { loadFree(); loadVIP(); }
+window.onload=()=>{ loadFree(); loadVIP(); }
+
 </script>
+
 </body>
 </html>
