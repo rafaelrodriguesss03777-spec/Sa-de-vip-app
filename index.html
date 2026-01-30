@@ -208,10 +208,19 @@ completeBtnVIP.addEventListener('click',()=>{
   loadVIP(); loadFree();
 });
 
-function unlockVIP(){
-  localStorage.setItem('vipUnlocked','true');
-  alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-  loadVIP();
+function unlockVIP() {
+  const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
+  if (confirmUnlock) {
+    // Marca VIP como desbloqueado no navegador
+    localStorage.setItem('vipUnlocked', 'true');
+    
+    alert("🎉 VIP desbloqueado! Agora você pode ver treinos e alimentação VIP!");
+
+    // Atualiza imediatamente a visualização
+    loadVIP();
+  } else {
+    alert("VIP não desbloqueado. Continue no plano grátis.");
+  }
 }
 
 window.onload=()=>{ loadFree(); loadVIP(); }
