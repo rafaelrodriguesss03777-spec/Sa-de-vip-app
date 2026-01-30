@@ -9,17 +9,18 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, #0f9d58, #34a853);
+  background: linear-gradient(180deg, #0f9d58, #1b1b1b);
   padding: 20px;
 }
 
 .app {
-  background: #fff;
+  background: #111;
+  color: #fff;
   max-width: 420px;
   margin: auto;
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.3);
+  box-shadow: 0 15px 30px rgba(0,0,0,.5);
 }
 
 h2 {
@@ -29,22 +30,44 @@ h2 {
 
 .tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin: 15px 0;
 }
 
 .tabs button {
   flex: 1;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 14px;
   border: none;
   font-weight: bold;
   cursor: pointer;
+  background: #1f1f1f;
+  color: #fff;
 }
 
 .tabs .active {
   background: #0f9d58;
-  color: white;
+}
+
+select, button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 14px;
+  font-size: 15px;
+  border: none;
+}
+
+select {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+button {
+  background: #0f9d58;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .section {
@@ -55,51 +78,39 @@ h2 {
   display: block;
 }
 
-select, button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 12px;
-  font-size: 15px;
-}
-
-button {
-  background: #0f9d58;
-  color: white;
-  border: none;
-  font-weight: bold;
-}
-
-.vip {
-  background: linear-gradient(135deg, #fff8e1, #fff1b8);
+.vipBox {
+  background: linear-gradient(135deg, #2a2400, #111);
   border: 3px solid gold;
   border-radius: 18px;
   padding: 15px;
   margin-top: 10px;
 }
 
+ul {
+  padding-left: 18px;
+}
+
 .calendar span {
   display: inline-block;
-  width: 38px;
-  height: 38px;
-  line-height: 38px;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
   margin: 4px;
   border-radius: 50%;
-  background: #ddd;
+  background: #333;
   font-weight: bold;
 }
 
 .calendar .done {
   background: #0f9d58;
-  color: white;
 }
 
 .success {
-  background: #e6ffed;
+  background: #0f9d58;
   padding: 12px;
-  border-radius: 10px;
-  margin-top: 10px;
+  border-radius: 12px;
   text-align: center;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -114,8 +125,8 @@ button {
     <button id="btnVip" onclick="abrir('vip')">⭐ VIP</button>
   </div>
 
-  <h3>🎯 Escolha sua meta</h3>
-  <select id="meta" onchange="atualizarConteudo()">
+  <label>🎯 Escolha sua meta</label>
+  <select id="meta" onchange="atualizarGratis(); atualizarVipDiario();">
     <option value="">Selecione</option>
     <option value="emagrecer">Emagrecer</option>
     <option value="massa">Ganhar massa</option>
@@ -127,87 +138,145 @@ button {
     <h3>Treinos Grátis</h3>
     <ul id="treinosGratis"></ul>
 
-    <h3>Alimentação</h3>
+    <h3>Alimentação Grátis</h3>
     <ul id="alimentacaoGratis"></ul>
   </div>
 
   <!-- VIP -->
   <div id="vip" class="section">
-    <div class="vip">
-      <h3>⭐ Treinos VIP</h3>
-      <h4>🔥 Treino VIP do Dia</h4>
-<ul id="treinoVipDia"></ul>
+    <div class="vipBox">
+      <h3>⭐ Treino VIP do Dia</h3>
+      <ul id="treinoVipDia"></ul>
 
-<h4>🥗 Alimentação VIP Recomendada</h4>
-<ul id="alimentacaoVipDia"></ul><div class="section vip">
-  
+      <h3>🥗 Alimentação VIP do Dia</h3>
+      <ul id="alimentacaoVipDia"></ul>
 
       <label>Meta de dias</label>
-      <select id="diasMeta">
+      <select id="diasMeta" onchange="salvar()">
         <option value="7">7 dias</option>
         <option value="14">14 dias</option>
         <option value="21">21 dias</option>
         <option value="30">30 dias</option>
       </select>
 
-      <p id="progresso">Progresso: 0 / 7</p>
+      <p id="progresso"></p>
       <button onclick="concluirTreino()">Concluir treino</button>
 
       <div class="calendar" id="calendario"></div>
 
       <div id="mensagem" class="success" style="display:none;">
-        🎉 Parabéns! Meta concluída!
+        🎉 Parabéns! Você concluiu sua meta!
       </div>
     </div>
   </div>
 </div>
-  
 
 <script>
-const treinos = {
-  emagrecer: ["Caminhada", "Corrida leve", "Abdominal"],
-  massa: ["Agachamento", "Flexão", "Supino"],
-  definir: ["Prancha", "Abdominal", "Flexão"]
+const treinosGratis = {
+  emagrecer: ["Caminhada", "Abdominal"],
+  massa: ["Agachamento", "Flexão"],
+  definir: ["Prancha", "Abdominal"]
 };
 
-const alimentos = {
-  emagrecer: ["Salada", "Frango", "Ovos"],
-  massa: ["Arroz", "Carne", "Batata doce"],
-  definir: ["Peixe", "Legumes", "Ovos"]
+const alimentosGratis = {
+  emagrecer: ["Salada", "Ovos"],
+  massa: ["Arroz", "Frango"],
+  definir: ["Peixe", "Legumes"]
+};
+
+const treinosVip = {
+  emagrecer: [
+    ["Caminhada 30min", "Abdominal", "Agachamento"],
+    ["Corrida leve", "Prancha", "Polichinelo"],
+    ["Bicicleta", "Abdominal infra"],
+    ["Cardio HIIT", "Agachamento"],
+    ["Caminhada rápida", "Prancha"]
+  ],
+  massa: [
+    ["Agachamento", "Flexão"],
+    ["Afundo", "Flexão"],
+    ["Agachamento lento"],
+    ["Flexão inclinada"],
+    ["Circuito força"]
+  ],
+  definir: [
+    ["Prancha", "Flexão"],
+    ["Abdominal", "Prancha lateral"],
+    ["Flexão", "Abdominal infra"],
+    ["Circuito funcional"],
+    ["Prancha", "Abdominal"]
+  ]
+};
+
+const alimentosVip = {
+  emagrecer: [
+    ["Ovos", "Salada", "Frango"],
+    ["Peixe", "Legumes"],
+    ["Omelete", "Fruta"],
+    ["Frango", "Legumes"],
+    ["Peixe", "Salada"]
+  ],
+  massa: [
+    ["Arroz", "Carne"],
+    ["Macarrão", "Frango"],
+    ["Arroz", "Ovos"],
+    ["Carne", "Batata doce"],
+    ["Frango", "Arroz"]
+  ],
+  definir: [
+    ["Peixe", "Legumes"],
+    ["Frango", "Salada"],
+    ["Ovos", "Legumes"],
+    ["Peixe", "Salada"],
+    ["Frango", "Ovos"]
+  ]
 };
 
 let dados = JSON.parse(localStorage.getItem("vipApp")) || {
   meta: "",
-  diasMeta: 7,
   dias: 0,
+  diasMeta: 7,
   ultimo: ""
 };
 
 function abrir(sec) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(sec).classList.add('active');
-  document.getElementById("btnGratis").classList.remove("active");
-  document.getElementById("btnVip").classList.remove("active");
-  document.getElementById(sec === "gratis" ? "btnGratis" : "btnVip").classList.add("active");
+  btnGratis.classList.remove("active");
+  btnVip.classList.remove("active");
+  (sec === "gratis" ? btnGratis : btnVip).classList.add("active");
 }
 
-function atualizarConteudo() {
-  const m = meta.value;
+function atualizarGratis() {
+  treinosGratisEl.innerHTML = "";
+}
+
+function atualizarGratis() {
   treinosGratis.innerHTML = "";
   alimentacaoGratis.innerHTML = "";
-  if (!m) return;
-  treinos[m].forEach(t => treinosGratis.innerHTML += `<li>${t}</li>`);
-  alimentos[m].forEach(a => alimentacaoGratis.innerHTML += `<li>${a}</li>`);
+  if (!meta.value) return;
+  treinosGratis[meta.value].forEach(t => treinosGratis.innerHTML += `<li>${t}</li>`);
+  alimentosGratis[meta.value].forEach(a => alimentacaoGratis.innerHTML += `<li>${a}</li>`);
   salvar();
+}
+
+function atualizarVipDiario() {
+  if (!dados.meta) return;
+  const idx = dados.dias % treinosVip[dados.meta].length;
+  treinoVipDia.innerHTML = "";
+  alimentacaoVipDia.innerHTML = "";
+  treinosVip[dados.meta][idx].forEach(t => treinoVipDia.innerHTML += `<li>${t}</li>`);
+  alimentosVip[dados.meta][idx].forEach(a => alimentacaoVipDia.innerHTML += `<li>${a}</li>`);
 }
 
 function concluirTreino() {
   const hoje = new Date().toDateString();
-  if (dados.ultimo === hoje) return alert("Já concluiu hoje");
+  if (dados.ultimo === hoje) return alert("Você já concluiu hoje!");
   dados.dias++;
   dados.ultimo = hoje;
   salvar();
   atualizarVip();
+  atualizarVipDiario();
 }
 
 function atualizarVip() {
@@ -227,8 +296,9 @@ function salvar() {
 
 meta.value = dados.meta;
 diasMeta.value = dados.diasMeta;
-atualizarConteudo();
+atualizarGratis();
 atualizarVip();
+atualizarVipDiario();
 </script>
 
 </body>
