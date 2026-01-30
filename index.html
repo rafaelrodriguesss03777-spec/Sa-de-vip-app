@@ -2,216 +2,211 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<title>Saúde VIP App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Fitness VIP Final Polido</title>
-<style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; }
-.container { max-width: 420px; margin:0 auto; padding:20px; }
-.section { margin-bottom:20px; padding:15px; border-radius:10px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-.tabs { display:flex; margin-bottom:10px; }
-.tab { flex:1; padding:10px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; border-radius:5px 5px 0 0; transition: all 0.3s; }
-.tab.active { border-bottom:3px solid #FFD700; font-weight:bold; color:#FFD700; background:#000; }
-.tab:hover { transform: scale(1.05); }
-select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; transition: opacity 0.5s; }
-.card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
-.card.completed { background:#d4edda; color:green; text-decoration:line-through; transform: scale(1.05); box-shadow:0 4px 12px rgba(0,0,0,0.25); animation: pulse 0.8s ease-in-out; }
-@keyframes pulse {0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); } 50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(255,215,0,0.5); } 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }}
-.vip-card { background:#000; color:#FFD700; font-weight:bold; position:relative; overflow:hidden; animation: glow 2s infinite; border:2px solid #FFD700; padding:15px; border-radius:12px; transition: transform 0.3s; }
-.vip-card:hover { transform: scale(1.03); }
-@keyframes glow {0%,100%{box-shadow:0 0 8px #FFD700;}50%{box-shadow:0 0 20px #FFD700;}}
-.vip-card::after { content:''; position:absolute; top:0; left:-50%; width:50%; height:100%; background:rgba(255,255,255,0.3); transform: skewX(-20deg); transition: all 0.7s ease-in-out; }
-.vip-card.shine::after { left:100%; }
-.btn { margin-top:10px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; transition: all 0.3s; }
-.btn:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-.btn-vip { background:#FFD700; color:#000; font-weight:bold; width:100%; animation: pulseBtn 2s infinite; }
-@keyframes pulseBtn {0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
-.message { margin-top:10px; font-style:italic; color:#333; transition: opacity 0.5s; }
-.calendar { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-top:10px; }
-.calendar .day { padding:8px; border-radius:5px; background:#e0e0e0; text-align:center; cursor:pointer; transition: transform 0.2s, background 0.3s; }
-.calendar .day.blocked { opacity:0.5; pointer-events:none; }
-.calendar .day.completed { background:#FFD700; color:#000; font-weight:bold; }
-.calendar .day:hover { transform: scale(1.05); }
-.progressBar { background:#ddd; border-radius:4px; height:8px; margin-top:5px; }
-#progressFill { width:0%; background:#FFD700; height:100%; border-radius:4px; transition: width 0.5s; }
-.progress { margin-top:5px; font-weight:bold; color:#FFD700; text-align:right; }
-h3.gratis::before { content: '💪 '; }
-h3.vip::before { content: '⭐ '; }
 
-@media(max-width: 360px){
-  .container { padding:10px; }
-  .card, .vip-card { font-size:14px; padding:8px; }
-  select { font-size:14px; }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 15px;
+}
+.box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 420px;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+h2, h3 {
+  text-align: center;
+}
+.section {
+  margin-top: 20px;
+}
+button, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+button {
+  background: #28a745;
+  color: #fff;
+  border: none;
+}
+.vip {
+  background: #fff8e1;
+  border: 2px solid gold;
+}
+.lock {
+  color: #999;
+  text-align: center;
+}
+.success {
+  background: #d4edda;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 15px;
+}
+.calendar span {
+  display: inline-block;
+  width: 40px;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 6px;
+  background: #eee;
+}
+.done {
+  background: #28a745;
+  color: white;
 }
 </style>
 </head>
+
 <body>
-<div class="container">
 
-  <!-- Meta -->
-  <div class="section">
-    <h2>Escolha sua Meta</h2>
-    <select id="goalSelect">
-      <option value="" selected disabled>Selecione sua meta</option>
-      <option value="emagrecer">Emagrecer</option>
-      <option value="massa">Ganhar Massa</option>
-      <option value="definir">Definir Corpo</option>
-    </select>
-  </div>
+<div class="box">
+<h2>💪 Saúde VIP</h2>
 
-  <!-- Tabs Grátis / VIP -->
-  <div class="section">
-    <div class="tabs">
-      <div class="tab active" id="tabFree">Grátis</div>
-      <div class="tab" id="tabVIP">VIP</div>
-    </div>
+<div class="section">
+<h3>🎯 Escolha sua meta</h3>
+<select id="meta">
+  <option value="">Selecione</option>
+  <option value="emagrecer">Emagrecer</option>
+  <option value="massa">Ganhar massa</option>
+  <option value="definir">Definir corpo</option>
+</select>
+</div>
 
-    <!-- Grátis -->
-    <div id="contentFree">
-      <h3 class="gratis">Alimentação Recomendada</h3>
-      <div id="nutritionFree" class="card">Selecione sua meta para ver a alimentação.</div>
+<div class="section">
+<h3>🆓 Plano Grátis</h3>
+<ul id="treinosGratis"></ul>
+<ul id="alimentacaoGratis"></ul>
+</div>
 
-      <h3 class="gratis">Treinamentos Recomendados</h3>
-      <div id="trainingFree" class="grid">
-        <div class="card">Selecione sua meta para ver os treinos.</div>
-      </div>
-    </div>
+<div class="section vip">
+<h3>⭐ Plano VIP</h3>
 
-    <!-- VIP -->
-    <div id="contentVIP" style="display:none;">
-      <div class="progress" id="vipProgress">Dias completados: 0/5</div>
-      <div class="progressBar"><div id="progressFill"></div></div>
+<label>📅 Meta de dias</label>
+<select id="diasMeta">
+  <option value="7">7 dias</option>
+  <option value="14">14 dias</option>
+  <option value="21">21 dias</option>
+  <option value="30">30 dias</option>
+</select>
 
-      <h3 class="vip">Alimentação Recomendada</h3>
-      <div id="nutritionVIP" class="vip-card">💰 Desbloqueie o VIP para ver a alimentação!</div>
+<p id="progresso">Progresso: 0 / 7</p>
 
-      <h3 class="vip">Treinamentos Recomendados</h3>
-      <div id="trainingVIP" class="vip-card card">
-        <strong id="dayTitleVIP">Dia -</strong>
-        <ul id="exercisesVIP"><li>💰 Desbloqueie o VIP para acessar os treinos!</li></ul>
-        <button class="btn btn-vip" id="completeBtnVIP" disabled>Concluir treino do dia</button>
-        <div class="message" id="messageVIP"></div>
-      </div>
+<button onclick="concluirTreino()">Concluir treino do dia</button>
 
-      <h4>Calendário (Seg-Sex)</h4>
-      <div class="calendar">
-        <div class="day" id="dayMon">Seg</div>
-        <div class="day" id="dayTue">Ter</div>
-        <div class="day" id="dayWed">Qua</div>
-        <div class="day" id="dayThu">Qui</div>
-        <div class="day" id="dayFri">Sex</div>
-      </div>
+<div class="calendar" id="calendario"></div>
 
-      <button class="btn btn-vip" onclick="unlockVIP()" id="unlockBtn">Desbloquear VIP</button>
-    </div>
-  </div>
+<div id="mensagem" class="success" style="display:none;">
+  <p id="textoMensagem"></p>
+  <button onclick="novaMeta()">Criar nova meta</button>
+</div>
+</div>
+
+<div class="section">
+<h3>🏆 Ranking</h3>
+<p>🥇 Você — <span id="ranking">0</span> dias</p>
+</div>
+
 </div>
 
 <script>
-const tabFree = document.getElementById('tabFree');
-const tabVIP = document.getElementById('tabVIP');
-const contentFree = document.getElementById('contentFree');
-const contentVIP = document.getElementById('contentVIP');
+const treinos = {
+  emagrecer: ["Caminhada", "Corrida leve", "Abdominal"],
+  massa: ["Agachamento", "Flexão", "Supino"],
+  definir: ["Prancha", "Abdominal", "Flexão"]
+};
 
-tabFree.addEventListener('click', ()=>{ tabFree.classList.add('active'); tabVIP.classList.remove('active'); contentFree.style.display='block'; contentVIP.style.display='none'; });
-tabVIP.addEventListener('click', ()=>{ tabVIP.classList.add('active'); tabFree.classList.remove('active'); contentVIP.style.display='block'; contentFree.style.display='none'; });
+const alimentos = {
+  emagrecer: ["Salada", "Frango grelhado", "Ovos"],
+  massa: ["Arroz", "Carne", "Batata doce"],
+  definir: ["Peixe", "Legumes", "Ovos"]
+};
 
-const exercisesFree = { emagrecer:["Caminhada 15min","Abdominal 2x15","Agachamento 2x12"], massa:["Flexão 3x10","Agachamento 3x12","Prancha 2x1min"], definir:["Burpee 2x10","Prancha 2x1min","Abdominal 2x20"] };
-const nutritionFree = { emagrecer:"Frutas, vegetais e proteína magra.", massa:"Proteínas, carboidratos e vegetais.", definir:"Proteínas magras, vegetais e baixa gordura." };
-const exercisesVIP = { emagrecer:["Corrida 20min","Pular corda 10min","Abdominal 3x15"], massa:["Supino 3x12","Agachamento 3x15","Rosca bíceps 3x12"], definir:["Prancha 3x1min","Flexão 3x12","Burpee 3x10"] };
-const nutritionVIP = { emagrecer:"Dieta restrita, cardio e proteínas.", massa:"Hipertrofia: proteína e carboidrato.", definir:"Dieta equilibrada para definição." };
+let dados = JSON.parse(localStorage.getItem("saudeVIP")) || {
+  meta: "",
+  diasMeta: 7,
+  diasConcluidos: 0,
+  ultimoDia: ""
+};
 
-const goalSelect = document.getElementById('goalSelect');
-const trainingFreeEl = document.getElementById('trainingFree');
-const nutritionFreeEl = document.getElementById('nutritionFree');
-const exercisesVIPEl = document.getElementById('exercisesVIP');
-const nutritionVIPEl = document.getElementById('nutritionVIP');
-const messageVIP = document.getElementById('messageVIP');
-const completeBtnVIP = document.getElementById('completeBtnVIP');
-const dayTitleVIP = document.getElementById('dayTitleVIP');
-const vipProgress = document.getElementById('vipProgress');
-const progressFill = document.getElementById('progressFill');
-const calendarDays = [ document.getElementById('dayMon'), document.getElementById('dayTue'), document.getElementById('dayWed'), document.getElementById('dayThu'), document.getElementById('dayFri') ];
-const unlockBtn = document.getElementById('unlockBtn');
+document.getElementById("meta").value = dados.meta;
+document.getElementById("diasMeta").value = dados.diasMeta;
 
-let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
-let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
-let selectedDayVIP = null;
+document.getElementById("meta").addEventListener("change", atualizarConteudo);
+document.getElementById("diasMeta").addEventListener("change", salvar);
 
-function isVIPUnlocked(){ return localStorage.getItem('vipUnlocked')==='true'; }
+atualizarConteudo();
+atualizarTela();
 
-function loadFree(){ 
-  const goal = goalSelect.value; 
-  if(!goal) return; 
-  nutritionFreeEl.style.opacity=0;
-  trainingFreeEl.style.opacity=0;
-  setTimeout(()=>{
-    nutritionFreeEl.textContent = nutritionFree[goal]; 
-    trainingFreeEl.innerHTML=''; 
-    exercisesFree[goal].forEach(ex=>{
-      const div=document.createElement('div'); 
-      div.className='card'; 
-      div.textContent=ex; 
-      trainingFreeEl.appendChild(div); 
-    });
-    nutritionFreeEl.style.opacity=1;
-    trainingFreeEl.style.opacity=1;
-  },200);
+function atualizarConteudo() {
+  const meta = document.getElementById("meta").value;
+  const t = document.getElementById("treinosGratis");
+  const a = document.getElementById("alimentacaoGratis");
+  t.innerHTML = a.innerHTML = "";
+
+  if (!meta) return;
+
+  treinos[meta].forEach(x => t.innerHTML += `<li>🏋️ ${x}</li>`);
+  alimentos[meta].forEach(x => a.innerHTML += `<li>🥗 ${x}</li>`);
+
+  salvar();
 }
 
-function loadVIP(){
-    if(!isVIPUnlocked()){
-        nutritionVIPEl.textContent="💰 Desbloqueie o VIP para ver a alimentação!";
-        exercisesVIPEl.innerHTML="<li>💰 Desbloqueie o VIP para acessar os treinos!</li>";
-        dayTitleVIP.textContent="Dia -";
-        vipProgress.textContent="Dias completados: -";
-        progressFill.style.width="0%";
-        completeBtnVIP.disabled=true;
-        return;
-    }
+function concluirTreino() {
+  const hoje = new Date().toDateString();
+  if (dados.ultimoDia === hoje) {
+    alert("Você já concluiu hoje 💪");
+    return;
+  }
+  dados.diasConcluidos++;
+  dados.ultimoDia = hoje;
+  salvar();
 
-    const goal = goalSelect.value; if(!goal) return;
-    nutritionVIPEl.textContent = nutritionVIP[goal];
-    nutritionVIPEl.classList.add('shine'); setTimeout(()=>{nutritionVIPEl.classList.remove('shine');},700);
-    exercisesVIPEl.innerHTML='';
-    exercisesVIP[goal].forEach(ex=>{ const li=document.createElement('li'); li.textContent=ex; exercisesVIPEl.appendChild(li); });
-    dayTitleVIP.textContent=selectedDayVIP?`Dia ${selectedDayVIP}`:`Dia ${currentDayVIP}`;
-    highlightCalendar();
-    messageVIP.style.opacity=0;
-    vipProgress.textContent = `Dias completados: ${completedDaysVIP.length}/5`;
-    progressFill.style.width = (completedDaysVIP.length/5*100)+'%';
-    completeBtnVIP.disabled=false;
+  if (dados.diasConcluidos >= dados.diasMeta) {
+    document.getElementById("textoMensagem").innerText =
+      `🎉 Parabéns! Você concluiu sua meta de ${dados.diasMeta} dias!`;
+    document.getElementById("mensagem").style.display = "block";
+  }
+
+  atualizarTela();
 }
 
-function highlightCalendar(){ calendarDays.forEach((day,index)=>{ day.classList.remove('blocked','completed'); if(completedDaysVIP.includes(index+1)) day.classList.add('completed'); else if(selectedDayVIP && selectedDayVIP!==index+1) day.classList.add('blocked'); }); }
-
-goalSelect.addEventListener('change',()=>{ loadFree(); loadVIP(); });
-
-completeBtnVIP.addEventListener('click',()=>{
-    Array.from(exercisesVIPEl.children).forEach(li=>li.classList.add('completed'));
-    exercisesVIPEl.parentElement.classList.add('shine'); setTimeout(()=>{exercisesVIPEl.parentElement.classList.remove('shine');},700);
-    const dayDone = selectedDayVIP || currentDayVIP;
-    if(!completedDaysVIP.includes(dayDone)) completedDaysVIP.push(dayDone);
-    localStorage.setItem('completedDaysVIP',JSON.stringify(completedDaysVIP));
-    messageVIP.textContent=`🎉 Parabéns! Treino do dia ${dayDone} concluído!`;
-    messageVIP.style.opacity=1;
-    selectedDayVIP=null;
-    currentDayVIP++; localStorage.setItem('currentDayVIP',currentDayVIP);
-    loadVIP();
-});
-
-calendarDays.forEach((day,index)=>{ day.addEventListener('click',()=>{ if(!isVIPUnlocked()) return; selectedDayVIP=index+1; loadVIP(); messageVIP.textContent = `✅ Treino do dia ${selectedDayVIP} selecionado!`; messageVIP.style.opacity=1; setTimeout(()=>{ messageVIP.style.opacity=0; },2000); }); });
-
-function unlockVIP(){
-    const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
-    if(confirmUnlock){
-        localStorage.setItem('vipUnlocked','true');
-        alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-        loadVIP();
-    } else { alert("VIP não desbloqueado. Continue no plano grátis."); }
+function novaMeta() {
+  dados.diasConcluidos = 0;
+  dados.ultimoDia = "";
+  document.getElementById("mensagem").style.display = "none";
+  salvar();
+  atualizarTela();
 }
 
-window.onload=()=>{ loadFree(); loadVIP(); if(currentDayVIP>1 && !completedDaysVIP.includes(currentDayVIP-1)){ alert("Ei! Você não completou o treino do dia anterior. Bora voltar a treinar?"); } }
+function salvar() {
+  dados.meta = document.getElementById("meta").value;
+  dados.diasMeta = Number(document.getElementById("diasMeta").value);
+  localStorage.setItem("saudeVIP", JSON.stringify(dados));
+}
+
+function atualizarTela() {
+  document.getElementById("progresso").innerText =
+    `Progresso: ${dados.diasConcluidos} / ${dados.diasMeta}`;
+  document.getElementById("ranking").innerText = dados.diasConcluidos;
+
+  const cal = document.getElementById("calendario");
+  cal.innerHTML = "";
+  for (let i = 1; i <= dados.diasMeta; i++) {
+    cal.innerHTML += `<span class="${i <= dados.diasConcluidos ? 'done' : ''}">${i}</span>`;
+  }
+}
 </script>
+
 </body>
 </html>
