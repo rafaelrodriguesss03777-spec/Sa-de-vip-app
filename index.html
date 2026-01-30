@@ -14,7 +14,7 @@ body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f0f0; 
 .tab:hover { transform: scale(1.05); }
 select { width:100%; padding:10px; border-radius:5px; margin-top:10px; }
 .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; transition: opacity 0.5s; }
-.card { padding:10px; border-radius:10px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
+.card { padding:10px; border-radius:10px; background:#ffe5b4; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.3s, background 0.3s; }
 .card.completed { background:#d4edda; color:green; text-decoration:line-through; transform: scale(1.05); box-shadow:0 4px 12px rgba(0,0,0,0.25); animation: pulse 0.8s ease-in-out; }
 @keyframes pulse {0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); } 50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(255,215,0,0.5); } 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }}
 .vip-card { background:#000; color:#FFD700; font-weight:bold; position:relative; overflow:hidden; animation: glow 2s infinite; border:2px solid #FFD700; padding:15px; border-radius:12px; transition: transform 0.3s; }
@@ -138,23 +138,24 @@ const progressFill = document.getElementById('progressFill');
 
 let currentDayVIP = parseInt(localStorage.getItem('currentDayVIP')) || 1;
 let completedDaysVIP = JSON.parse(localStorage.getItem('completedDaysVIP')) || [];
-function isVIPUnlocked(){ return localStorage.getItem('vipUnlocked')==='true'; }
 
-function unlockVIP(){
-  const goal = goalSelect.value;
-  if(!goal){
-    alert("Selecione sua meta antes de desbloquear o VIP!");
-    return;
-  }
-  const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
-  if(confirmUnlock){
-    localStorage.setItem('vipUnlocked','true');
-    alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
-    loadVIP(); // garante que os treinos e alimentação apareçam
-  } else { 
-    alert("VIP não desbloqueado. Continue no plano grátis."); 
-  }
+function isVIPUnlocked(){ 
+  return localStorage.getItem('vipUnlocked')==='true'; 
 }
+
+function loadFree(){
+  const goal = goalSelect.value; 
+  if(!goal) return;
+  nutritionFreeEl.style.opacity=0;
+  trainingFreeEl.style.opacity=0;
+  setTimeout(()=>{
+    const dayIndex = (currentDayVIP-1)%nutritionFree[goal].length;
+    nutritionFreeEl.textContent = nutritionFree[goal][dayIndex];
+    trainingFreeEl.innerHTML='';
+    exercisesFree[goal].forEach(ex=>{
+      const div=document.createElement('div'); div.className='card'; div.textContent=ex;
+      trainingFreeEl.appendChild(div);
+    });
     nutritionFreeEl.style.opacity=1;
     trainingFreeEl.style.opacity=1;
   },200);
@@ -176,7 +177,7 @@ function loadVIP(){
   exercisesVIPEl.innerHTML='';
   for(const [period, ex] of Object.entries(dayExercises)){
     const li=document.createElement('li');
-    li.textContent=`${period.toUpperCase()}: ${ex}`;
+    li.innerHTML=`<span style="color:#FFD700;">${period.toUpperCase()}:</span> ${ex}`;
     exercisesVIPEl.appendChild(li);
   }
   nutritionVIPEl.textContent = nutritionVIP[goal][dayIndex];
@@ -200,13 +201,21 @@ completeBtnVIP.addEventListener('click',()=>{
   loadVIP(); loadFree();
 });
 
+// NOVA FUNÇÃO CORRIGIDA DO VIP
 function unlockVIP(){
+  const goal = goalSelect.value;
+  if(!goal){
+    alert("Selecione sua meta antes de desbloquear o VIP!");
+    return;
+  }
   const confirmUnlock = confirm("Deseja desbloquear o VIP e acessar todos os treinos e recursos?");
   if(confirmUnlock){
     localStorage.setItem('vipUnlocked','true');
     alert("🎉 VIP desbloqueado! Aproveite todos os recursos!");
     loadVIP();
-  } else { alert("VIP não desbloqueado. Continue no plano grátis."); }
+  } else { 
+    alert("VIP não desbloqueado. Continue no plano grátis."); 
+  }
 }
 
 window.onload=()=>{ loadFree(); loadVIP(); }
