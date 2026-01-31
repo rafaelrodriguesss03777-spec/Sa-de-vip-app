@@ -54,26 +54,27 @@ button{
   height:100%;
   background:gold;
 }
+
+/* CALENDÁRIO */
 .grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:6px;
+  gap:8px;
 }
-
-/* CALENDÁRIO */
 .day{
-  padding:12px 0;
   background:#000;
-  border-radius:8px;
-  text-align:center;
-  font-size:14px;
+  border-radius:10px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:#fff;
   font-weight:bold;
+  font-size:14px;
 }
 .day.done{
-  background:#000;
   color:#00ff5a;
-  font-size:18px;
+  font-size:20px;
 }
 
 .hidden{display:none;}
@@ -134,26 +135,26 @@ button{
 </div>
 
 <script>
-// ====== DADOS ======
-const foods = {
+// ===== DADOS =====
+const foods={
   emagrecer:[
-    ["🍳 Ovos","🥗 Frango grelhado","🌙 Salada leve"],
-    ["🥣 Aveia","🐟 Peixe","🌙 Sopa detox"],
-    ["🍞 Integral","🥗 Salada proteica","🌙 Omelete"]
+    ["🍳 Ovos","🥗 Frango","🌙 Salada"],
+    ["🥣 Aveia","🐟 Peixe","🌙 Sopa"],
+    ["🍞 Integral","🥗 Proteína","🌙 Omelete"]
   ],
   ganhar:[
-    ["🥞 Panqueca","🍛 Arroz + frango","🌙 Vitamina"],
-    ["🥣 Aveia + banana","🍝 Macarrão","🌙 Ovos"],
-    ["🍞 Pão + ovos","🍛 Carne","🌙 Shake"]
+    ["🥞 Panqueca","🍛 Arroz + frango","🌙 Shake"],
+    ["🥣 Aveia + banana","🍝 Massa","🌙 Ovos"],
+    ["🍞 Pão + ovos","🍛 Carne","🌙 Vitamina"]
   ],
   definir:[
-    ["🍳 Ovos + aveia","🥗 Frango + salada","🌙 Omelete"],
-    ["🥣 Iogurte + fruta","🍛 Carne + arroz","🌙 Sopa"],
-    ["🍞 Integral + ovos","🐟 Peixe","🌙 Salada"]
+    ["🍳 Ovos + aveia","🥗 Frango","🌙 Omelete"],
+    ["🥣 Iogurte","🍛 Carne + arroz","🌙 Salada"],
+    ["🍞 Integral","🐟 Peixe","🌙 Sopa"]
   ]
 };
 
-const workouts = {
+const workouts={
   emagrecer:[
     ["🚶 Caminhada 30min","🔥 Polichinelo","🧘 Alongamento"],
     ["🚴 Bike 20min","🔥 Agachamento","🧘 Prancha"],
@@ -165,19 +166,19 @@ const workouts = {
     ["🏋️ Braços","💪 Rosca","🧘 Alongamento"]
   ],
   definir:[
-    ["🔥 Circuito leve","💪 Flexão","🧘 Prancha"],
-    ["🏃 Cardio + core","🔥 Agachamento","🧘 Alongamento"],
+    ["🔥 Circuito","💪 Flexão","🧘 Prancha"],
+    ["🏃 Cardio","🔥 Agachamento","🧘 Alongamento"],
     ["💪 Corpo inteiro","🔥 Abdominal","🧘 Yoga"]
   ]
 };
 
-// ====== ESTADO ======
+// ===== ESTADO =====
 let vip = localStorage.getItem("vip")==="true";
 let day = Number(localStorage.getItem("day")||1);
 let doneDays = JSON.parse(localStorage.getItem("doneDays")||"[]");
-let progressChart = null;
+let chart=null;
 
-// ====== VIP ======
+// ===== FUNÇÕES =====
 function unlockVIP(){
   localStorage.setItem("vip","true");
   vip=true;
@@ -187,7 +188,7 @@ function unlockVIP(){
 
 function loadVIP(){
   if(!vip) return;
-  const goal = document.getElementById("goal").value;
+  const goal=document.getElementById("goal").value;
   if(!goal) return;
 
   document.getElementById("vipContent").classList.remove("hidden");
@@ -196,17 +197,15 @@ function loadVIP(){
   document.getElementById("dayCount").innerText=day;
   document.getElementById("bar").style.width=(day/30*100)+"%";
 
-  const f = foods[goal][(day-1)%foods[goal].length];
-  const w = workouts[goal][(day-1)%workouts[goal].length];
-
-  document.getElementById("food").innerHTML=f.join("<br>");
-  document.getElementById("workout").innerHTML=w.join("<br>");
+  document.getElementById("food").innerHTML=
+    foods[goal][(day-1)%foods[goal].length].join("<br>");
+  document.getElementById("workout").innerHTML=
+    workouts[goal][(day-1)%workouts[goal].length].join("<br>");
 
   renderCalendar();
   renderChart();
 }
 
-// ====== CONCLUIR DIA ======
 function finishDay(){
   if(!doneDays.includes(day)){
     doneDays.push(day);
@@ -219,46 +218,38 @@ function finishDay(){
   }
 }
 
-// ====== CALENDÁRIO ======
 function renderCalendar(){
-  const cal = document.getElementById("calendar");
-  cal.innerHTML = "";
-
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
     d.className="day";
-
     if(doneDays.includes(i)){
       d.classList.add("done");
-      d.innerHTML="✔️";
+      d.textContent="✔️";
     }else{
-      d.innerText=i;
+      d.textContent=i;
     }
-
     cal.appendChild(d);
   }
 }
 
-// ====== GRÁFICO ======
 function renderChart(){
   const ctx=document.getElementById("chart");
-  if(progressChart) progressChart.destroy();
-
-  progressChart = new Chart(ctx,{
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{
     type:"line",
     data:{
-      labels:Array.from({length:30},(_,i)=>i+1),
+      labels:[...Array(30)].map((_,i)=>i+1),
       datasets:[{
         label:"Dias concluídos",
-        data:Array.from({length:30},(_,i)=>doneDays.includes(i+1)?1:0),
+        data:[...Array(30)].map((_,i)=>doneDays.includes(i+1)?1:0),
         borderColor:"gold",
         backgroundColor:"rgba(255,215,0,0.2)",
         tension:0.4
       }]
     },
-    options:{
-      scales:{y:{min:0,max:1,ticks:{stepSize:1}}}
-    }
+    options:{scales:{y:{min:0,max:1}}}
   });
 }
 
