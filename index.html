@@ -88,6 +88,16 @@ button.sec{background:#333;color:#fff; margin-right:8px;}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px}
 .hidden{display:none;}
+
+/* EFEITO PLANO GRÁTIS VERDE */
+.freeEffect{
+  color:#0f0;
+  text-shadow:
+    0 0 5px #0f0,
+    0 0 10px #0f0,
+    0 0 15px #0f0;
+  font-weight:bold;
+}
 </style>
 </head>
 <body>
@@ -110,7 +120,7 @@ button.sec{background:#333;color:#fff; margin-right:8px;}
 
 <!-- GRÁTIS -->
 <div id="pageFree" class="card">
-<h2>🆓 Plano Grátis</h2>
+<h2 class="freeEffect">🆓 Plano Grátis</h2>
 <div class="box">
 <h3>🥗 Alimentação</h3>
 <div id="foodFree"></div>
@@ -180,7 +190,7 @@ for(let i=1;i<=30;i++){
   foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
   foodVIP.definir.push({manha:`🥣 Café ${i}: aveia`,tarde:`🥗 Almoço ${i}: frango e vegetais`,noite:`🍵 Jantar ${i}: salada leve`});
 
-  workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30min, 🏃 Corrida leve 20min`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
+  workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30min, 🏃 Corrida leve 25min`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
   workoutVIP.ganhar.push({manha:`🏋️ Supino 3x${10+i}, Flexão 3x${12+i}`,tarde:`🏋️ Agachamento 3x${12+i}, Rosca 3x${10+i}`,noite:`🧘 Prancha 40s`});
   workoutVIP.definir.push({manha:`🔥 HIIT 3x${10+i}, Corrida 20min`,tarde:`🏋️ Abdômen 3x15, Agachamento 3x12`,noite:`🧘 Yoga 10min`});
 }
@@ -200,7 +210,7 @@ function unlockVIP(){
   loadAll();
 }
 
-// CALCULA O DIA ATUAL VIP
+// DIA ATUAL
 function getCurrentDayIndex(){
   let startDate=new Date(localStorage.getItem("vipStart")||new Date().toISOString());
   if(!localStorage.getItem("vipStart")) localStorage.setItem("vipStart",startDate);
@@ -258,7 +268,7 @@ document.getElementById("finishBtn").addEventListener("click",()=>{
   }
   doneDays.push(todayIndex);
   localStorage.setItem("doneDays",JSON.stringify(doneDays));
-  alert("🎉 Parabéns! Exercícios do dia concluídos!");
+  alert("✅ Parabéns! Exercícios do dia concluídos!");
   loadAll();
 });
 
@@ -300,7 +310,6 @@ function renderChart(){
       plugins:{legend:{display:false}}
     }
   });
-
   if("Notification" in window){ Notification.requestPermission(); }
 }
 
