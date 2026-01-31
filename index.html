@@ -90,11 +90,16 @@ button.sec{background:#333;color:#fff;}
 .period{margin-bottom:8px}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px;justify-content:center;}
-
-/* GRÁTIS */
+/* Grátis */
 .free h2{
   color:#00ff00;
   text-shadow:0 0 8px #00ff00;
+}
+#resetCount{
+  margin-top:10px;
+  text-align:center;
+  font-size:14px;
+  color:#FFD700;
 }
 </style>
 </head>
@@ -155,6 +160,7 @@ button.sec{background:#333;color:#fff;}
 <div class="grid" id="calendar"></div>
 <h3 style="margin-top:16px;">📊 Gráfico</h3>
 <canvas id="chart"></canvas>
+<div id="resetCount">Reiniciou 0 vezes</div>
 </div>
 
 <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
@@ -196,6 +202,8 @@ for(let i=1;i<=30;i++){
 // Estado
 let vip=localStorage.getItem("vip")==="true";
 let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
+let resetCounter=Number(localStorage.getItem("resetCounter")||0);
+document.getElementById("resetCount").innerText=`Reiniciou ${resetCounter} vezes`;
 
 // Carregar todos
 document.getElementById("goal").addEventListener("change",loadAll);
@@ -252,6 +260,7 @@ function loadAll(){
 
   renderCalendar();
   renderChart();
+  document.getElementById("resetCount").innerText=`Reiniciou ${resetCounter} vezes`;
 }
 
 // Concluir treino
@@ -272,6 +281,8 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   localStorage.removeItem("vipStart");
   doneDays=[];
   localStorage.setItem("doneDays","[]");
+  resetCounter++;
+  localStorage.setItem("resetCounter",resetCounter);
   loadAll();
 });
 
@@ -296,15 +307,9 @@ function renderChart(){
     type:"bar",
     data:{
       labels:[...Array(30).keys()].map(i=>i+1),
-      datasets:[{
-        data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
-        backgroundColor:"gold"
-      }]
+      datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),backgroundColor:"gold"}]
     },
-    options:{
-      scales:{y:{min:0,max:1}},
-      plugins:{legend:{display:false}}
-    }
+    options:{scales:{y:{min:0,max:1}},plugins:{legend:{display:false}}}
   });
 
   if("Notification" in window){ Notification.requestPermission(); }
