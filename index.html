@@ -59,18 +59,23 @@ button{
   grid-template-columns:repeat(7,1fr);
   gap:6px;
 }
+
+/* CALENDÁRIO */
 .day{
-  padding:10px 0;
-  background:#222;
+  padding:12px 0;
+  background:#000;
   border-radius:8px;
   text-align:center;
-  font-size:12px;
-}
-.day.done{
-  background:gold;
-  color:#000;
+  font-size:14px;
+  color:#fff;
   font-weight:bold;
 }
+.day.done{
+  background:#000;
+  color:#00ff5a;
+  font-size:18px;
+}
+
 .hidden{display:none;}
 .box{
   background:#1f1f1f;
@@ -142,9 +147,9 @@ const foods = {
     ["🍞 Pão + ovos","🍛 Carne","🌙 Shake"]
   ],
   definir:[
-    ["🍳 Ovos + fruta","🥗 Frango + legumes","🌙 Salada"],
-    ["🥣 Iogurte + aveia","🐟 Peixe grelhado","🌙 Omelete"],
-    ["🍞 Integral + ovos","🥗 Carne magra","🌙 Sopa leve"]
+    ["🍳 Ovos + aveia","🥗 Frango + salada","🌙 Omelete"],
+    ["🥣 Iogurte + fruta","🍛 Carne + arroz","🌙 Sopa"],
+    ["🍞 Integral + ovos","🐟 Peixe","🌙 Salada"]
   ]
 };
 
@@ -160,9 +165,9 @@ const workouts = {
     ["🏋️ Braços","💪 Rosca","🧘 Alongamento"]
   ],
   definir:[
-    ["🔥 HIIT","💪 Flexão","🧘 Prancha"],
-    ["🏋️ Pernas + core","🔥 Agachamento","🧘 Alongamento"],
-    ["🏃 Cardio leve","💪 Abdominal","🧘 Yoga"]
+    ["🔥 Circuito leve","💪 Flexão","🧘 Prancha"],
+    ["🏃 Cardio + core","🔥 Agachamento","🧘 Alongamento"],
+    ["💪 Corpo inteiro","🔥 Abdominal","🧘 Yoga"]
   ]
 };
 
@@ -182,7 +187,6 @@ function unlockVIP(){
 
 function loadVIP(){
   if(!vip) return;
-
   const goal = document.getElementById("goal").value;
   if(!goal) return;
 
@@ -200,9 +204,9 @@ function loadVIP(){
 
   renderCalendar();
   renderChart();
-  dailyNotification();
 }
 
+// ====== CONCLUIR DIA ======
 function finishDay(){
   if(!doneDays.includes(day)){
     doneDays.push(day);
@@ -217,12 +221,20 @@ function finishDay(){
 
 // ====== CALENDÁRIO ======
 function renderCalendar(){
-  const cal=document.getElementById("calendar");
-  cal.innerHTML="";
+  const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
+
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
-    d.className="day"+(doneDays.includes(i)?" done":"");
-    d.innerText=i;
+    d.className="day";
+
+    if(doneDays.includes(i)){
+      d.classList.add("done");
+      d.innerHTML="✔️";
+    }else{
+      d.innerText=i;
+    }
+
     cal.appendChild(d);
   }
 }
@@ -246,24 +258,6 @@ function renderChart(){
     },
     options:{
       scales:{y:{min:0,max:1,ticks:{stepSize:1}}}
-    }
-  });
-}
-
-// ====== NOTIFICAÇÃO ======
-function dailyNotification(){
-  if(!vip) return;
-  if(!("Notification" in window)) return;
-
-  Notification.requestPermission().then(p=>{
-    if(p==="granted"){
-      const today=new Date().toDateString();
-      if(localStorage.getItem("lastNotify")!==today){
-        new Notification("💪 Hora do treino VIP!",{
-          body:"Conclua seu treino de hoje!"
-        });
-        localStorage.setItem("lastNotify",today);
-      }
     }
   });
 }
