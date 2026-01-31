@@ -85,20 +85,6 @@ button.sec{background:#333;color:#fff;}
   font-size:14px;
   background:#0a0;
 }
-.day.todayDone{
-  color:#fff;
-  font-weight:bold;
-  font-size:14px;
-  background:linear-gradient(45deg,#FFD700,#FFEA00,#FFD700);
-  background-size:400% 400%;
-  animation:glowDay 2s ease infinite;
-  border:2px solid gold;
-}
-@keyframes glowDay{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
 .period{margin-bottom:8px}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px;justify-content:center;}
@@ -306,13 +292,8 @@ function renderCalendar(){
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
     if(doneDays.includes(i)){
-      if(i===todayIndex){
-        d.className="day todayDone";
-        d.innerHTML="✅";
-      } else {
-        d.className="day done";
-        d.innerHTML="✔️";
-      }
+      d.className="day done";
+      d.innerHTML="✅"; // Apenas o ✅ sem efeito
     } else d.innerHTML=i;
     cal.appendChild(d);
   }
@@ -331,7 +312,6 @@ function renderChart(){
     },
     options:{scales:{y:{min:0,max:1}},plugins:{legend:{display:false}}}
   });
-
   if("Notification" in window){ Notification.requestPermission(); }
 }
 
