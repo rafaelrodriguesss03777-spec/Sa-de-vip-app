@@ -6,21 +6,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{margin:0;font-family:Arial;background:#0e0e0e;color:#fff}
-.container{max-width:420px;margin:auto;padding:16px}
-.card{background:#151515;border-radius:16px;padding:16px;margin-bottom:16px}
-.vip{border:2px solid gold}
-h2,h3{margin:0 0 10px}
-select,button{width:100%;padding:14px;border-radius:12px;border:none;font-size:16px}
-button{background:gold;color:#000;font-weight:bold;cursor:pointer}
-.sec{background:#333;color:#fff}
-.box{background:#1f1f1f;padding:12px;border-radius:12px;margin-bottom:12px}
-.progress{height:10px;background:#333;border-radius:10px;overflow:hidden;margin-bottom:10px}
-.progress span{display:block;height:100%;background:gold}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.day{background:#000;color:#fff;border-radius:8px;text-align:center;padding:10px 0;font-size:12px}
-.day.done{color:#0f0;font-weight:bold}
-.hidden{display:none}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0e0e0e;
+  color:#fff;
+}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:16px;
+}
+.card{
+  background:#151515;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 0 20px rgba(255,215,0,0.05);
+  transition: all 0.3s;
+}
+.card:hover{box-shadow:0 0 30px rgba(255,215,0,0.2);}
+.vip{border:2px solid gold; animation:pulse 2s infinite;}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 10px gold;}
+  50%{box-shadow:0 0 25px gold;}
+}
+h2,h3{margin:0 0 10px;text-shadow:0 0 4px #FFD700;}
+select,button{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+}
+button{
+  background:linear-gradient(90deg,#FFD700,#FFEA00);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+  transition: all 0.3s;
+}
+button:hover{transform:scale(1.05);box-shadow:0 0 10px gold;}
+button.sec{background:#333;color:#fff}
+.box{
+  background:#1f1f1f;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+  border:1px solid gold;
+  transition: all 0.3s;
+}
+.box:hover{box-shadow:0 0 15px gold;}
+.progress{
+  height:10px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+.progress span{display:block;height:100%;background:gold;transition:width 0.5s;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.day{
+  background:#000;
+  color:#fff;
+  border-radius:8px;
+  text-align:center;
+  padding:10px 0;
+  font-size:12px;
+  transition: all 0.3s;
+}
+.day.done{
+  color:#0f0;
+  font-weight:bold;
+  font-size:14px;
+  background:#0a0;
+  animation:flash 0.5s;
+}
+@keyframes flash{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 .period{margin-bottom:8px}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px}
@@ -29,13 +95,11 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <body>
 <div class="container">
 
-<!-- NAVEGAÇÃO -->
 <div class="nav">
 <button class="sec" onclick="showPage('free')">🆓 Plano Grátis</button>
 <button onclick="showPage('vip')">⭐ VIP</button>
 </div>
 
-<!-- META -->
 <div class="card">
 <h2>🎯 Escolha sua meta</h2>
 <select id="goal">
@@ -46,7 +110,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 </select>
 </div>
 
-<!-- PÁGINA GRÁTIS -->
 <div id="pageFree" class="card">
 <h2>🆓 Plano Grátis</h2>
 <div class="box">
@@ -59,7 +122,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 </div>
 </div>
 
-<!-- PÁGINA VIP -->
 <div id="pageVIP" class="hidden">
 <div class="card vip">
 <h2>⭐ VIP</h2>
@@ -67,39 +129,34 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <div class="progress"><span id="bar"></span></div>
 
 <div id="vipContent" class="hidden">
-
 <div class="box">
 <h3>🥗 Alimentação VIP do Dia</h3>
 <div id="foodVIP"></div>
 </div>
-
 <div class="box">
 <h3>🔥 Treino VIP do Dia</h3>
 <div id="workoutVIP"></div>
 </div>
-
 <button id="finishBtn">✅ Concluir treino do dia</button>
 <button class="sec" onclick="resetProgress()">🔄 Reiniciar 30 dias</button>
-
 <h3 style="margin-top:16px">📅 Progresso</h3>
 <div class="grid" id="calendar"></div>
-
 <h3>📊 Gráfico</h3>
 <canvas id="chart"></canvas>
-
 </div>
+
 <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
 </div>
 </div>
 
 <script>
-// ===== NAVEGAÇÃO =====
+// ===== FUNÇÕES DE NAVEGAÇÃO =====
 function showPage(p){
 document.getElementById("pageFree").style.display=p==="free"?"block":"none";
 document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
 }
 
-// ===== DADOS =====
+// ===== DADOS GRÁTIS =====
 const foodFree={
 emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
 ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
@@ -111,16 +168,16 @@ ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
 definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-// ===== VIP 30 dias =====
+// ===== DADOS VIP =====
 function generateVIPData(){
 const foodVIP={},workoutVIP={};
 ["emagrecer","ganhar","definir"].forEach(meta=>{
 foodVIP[meta]=[]; workoutVIP[meta]=[];
 for(let i=1;i<=30;i++){
 foodVIP[meta].push({
-manha:`🥚 Café ${i} - Ovos, Fruta, Aveia`,
-tarde:`🍗 Almoço ${i} - Frango, Arroz, Salada`,
-noite:`🌙 Jantar ${i} - Sopa, Legumes, Proteína`
+manha:`🥚 Café ${i}: ovos, fruta, aveia`,
+tarde:`🍗 Almoço ${i}: frango, arroz, salada`,
+noite:`🌙 Jantar ${i}: sopa, legumes, proteína`
 });
 workoutVIP[meta].push({
 manha:`🚶 Caminhada ${20+i}min, 🏃 Corrida ${10+i}min, 🏋️ Flexão 3x${10+i}`,
@@ -143,13 +200,13 @@ document.getElementById("goal").addEventListener("change",loadAll);
 function unlockVIP(){
 localStorage.setItem("vip","true");
 vip=true;
-loadAll();
 alert("🎉 VIP desbloqueado!");
+loadAll();
 }
 
 function getCurrentDayIndex(){
 const startDate=new Date(localStorage.getItem("vipStart")||new Date().toISOString());
-localStorage.setItem("vipStart",startDate);
+if(!localStorage.getItem("vipStart")) localStorage.setItem("vipStart",startDate);
 const today=new Date();
 const diff=Math.floor((today-startDate)/(1000*60*60*24));
 return Math.min(diff,29);
@@ -157,7 +214,7 @@ return Math.min(diff,29);
 
 function loadAll(){
 const goal=document.getElementById("goal").value;
-if(!goal)return;
+if(!goal) return;
 
 // GRÁTIS
 document.getElementById("foodFree").innerHTML=
@@ -170,7 +227,7 @@ document.getElementById("workoutFree").innerHTML=
 <div class="period"><b>Noite:</b> ${workoutFree[goal].noite}</div>`;
 
 // VIP
-if(!vip)return;
+if(!vip) return;
 document.getElementById("vipContent").classList.remove("hidden");
 document.getElementById("unlockBtn").style.display="none";
 
@@ -185,17 +242,16 @@ document.getElementById("foodVIP").innerHTML=
 `<div class="period"><b>Manhã:</b> ${f.manha}</div>
 <div class="period"><b>Tarde:</b> ${f.tarde}</div>
 <div class="period"><b>Noite:</b> ${f.noite}</div>`;
-
 document.getElementById("workoutVIP").innerHTML=
 `<div class="period"><b>Manhã:</b> ${w.manha}</div>
 <div class="period"><b>Tarde:</b> ${w.tarde}</div>
 <div class="period"><b>Noite:</b> ${w.noite}</div>`;
 
-renderCalendar(dayIndex+1);
+renderCalendar();
 renderChart();
 }
 
-// ===== DIA =====
+// CONCLUIR DIA
 document.getElementById("finishBtn").addEventListener("click",()=>{
 const todayIndex=getCurrentDayIndex()+1;
 if(doneDays.includes(todayIndex)){
@@ -205,9 +261,10 @@ return;
 doneDays.push(todayIndex);
 localStorage.setItem("doneDays",JSON.stringify(doneDays));
 alert("🎉 Parabéns! Exercícios do dia concluídos!");
-loadAll();
+loadAll(); // <- Atualiza barra, calendário e gráfico imediatamente
 });
 
+// RESET
 function resetProgress(){
 localStorage.removeItem("vipStart");
 doneDays=[];
@@ -215,8 +272,8 @@ localStorage.setItem("doneDays","[]");
 loadAll();
 }
 
-// ===== CALENDÁRIO =====
-function renderCalendar(currentDay){
+// CALENDÁRIO
+function renderCalendar(){
 const cal=document.getElementById("calendar");
 cal.innerHTML="";
 for(let i=1;i<=30;i++){
@@ -227,11 +284,11 @@ cal.appendChild(d);
 }
 }
 
-// ===== GRÁFICO =====
+// GRÁFICO
 let chart=null;
 function renderChart(){
 const ctx=document.getElementById("chart");
-if(chart)chart.destroy();
+if(chart) chart.destroy();
 chart=new Chart(ctx,{
 type:"bar",
 data:{labels:[...Array(30).keys()].map(i=>i+1),
@@ -240,7 +297,7 @@ backgroundColor:"gold"}]},
 options:{scales:{y:{min:0,max:1}}}
 });
 
-// ===== NOTIFICAÇÃO =====
+// NOTIFICAÇÃO
 if("Notification" in window){ Notification.requestPermission(); }
 }
 
