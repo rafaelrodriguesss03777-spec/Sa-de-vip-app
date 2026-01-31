@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Saúde VIP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde VIP</title>
 
 <style>
 body{
@@ -16,198 +16,213 @@ body{
   margin:auto;
   padding:15px;
 }
-.box{
+.section{
   background:#fff;
   padding:15px;
-  border-radius:10px;
+  border-radius:14px;
   margin-bottom:15px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  box-shadow:0 6px 14px rgba(0,0,0,.12);
+}
+.tabs{
+  display:flex;
+}
+.tab{
+  flex:1;
+  padding:10px;
+  text-align:center;
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+}
+.tab.active{
+  background:#000;
+  color:#FFD700;
+  font-weight:bold;
+  border-bottom:3px solid #FFD700;
+}
+.card{
+  background:#fff;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  box-shadow:0 3px 8px rgba(0,0,0,.15);
+}
+.vip{
+  background:linear-gradient(135deg,#000,#1a1a1a);
+  color:#FFD700;
+  border:2px solid #FFD700;
+  box-shadow:0 0 18px rgba(255,215,0,.6);
+  animation: glow 2s infinite alternate;
+}
+@keyframes glow{
+  from{ box-shadow:0 0 10px rgba(255,215,0,.4); }
+  to{ box-shadow:0 0 25px rgba(255,215,0,.9); }
 }
 button{
   width:100%;
   padding:12px;
-  margin-top:10px;
   border:none;
-  border-radius:8px;
-  font-weight:bold;
+  border-radius:10px;
   cursor:pointer;
+  margin-top:10px;
+  font-weight:bold;
+  font-size:15px;
 }
-.btn-free{background:#2ecc71;color:#fff;}
-.btn-vip{background:#f1c40f;color:#000;}
-.hidden{display:none;}
-.vip-box{
-  background:#000;
-  color:#f1c40f;
-  border:2px solid #f1c40f;
+.btnVip{
+  background:#FFD700;
+  color:#000;
 }
-ul{padding-left:20px;}
-.food-list li{margin-bottom:6px;}
+.done{
+  background:#d4edda;
+  color:green;
+  text-align:center;
+}
+select{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<div class="box">
-<h2>Escolha sua meta</h2>
-<select id="meta">
+<div class="section">
+<h3>🎯 Escolha sua meta</h3>
+<select id="goal">
   <option value="">Selecione</option>
   <option value="emagrecer">Emagrecer</option>
-  <option value="massa">Ganhar Massa</option>
+  <option value="massa">Ganhar massa</option>
   <option value="definir">Definir</option>
 </select>
 </div>
 
-<div class="box">
-<button class="btn-free" onclick="mostrarGratis()">Plano Grátis</button>
-<button class="btn-vip" onclick="comprarVIP()">Comprar VIP</button>
+<div class="section">
+<div class="tabs">
+  <div class="tab active" onclick="openTab('free')">Grátis</div>
+  <div class="tab" onclick="openTab('vip')">VIP ⭐</div>
 </div>
 
-<div id="gratis" class="box hidden">
-<h3>🔥 Grátis</h3>
-<div id="gratisConteudo"></div>
+<!-- GRATIS -->
+<div id="free">
+<h3>🍽️ Alimentação Grátis</h3>
+<div class="card" id="foodFree">Selecione a meta</div>
+
+<h3>💪 Treino Grátis</h3>
+<div id="trainFree"></div>
 </div>
 
-<div id="vip" class="box vip-box hidden">
-<h3>⭐ VIP</h3>
-<div id="vipConteudo"></div>
-</div>
+<!-- VIP -->
+<div id="vip" style="display:none">
+<h3>📆 Progresso VIP</h3>
+<div class="card" id="progress">Dia - /30</div>
 
+<h3>🍽️ Alimentação VIP</h3>
+<div id="foodVIP" class="card vip">🔒 Compre o VIP para ver</div>
+
+<h3>💪 Treino VIP</h3>
+<div id="trainVIP" class="card vip">🔒 Compre o VIP para ver</div>
+
+<button class="btnVip" onclick="completeDay()" id="doneBtn" disabled>
+✅ Concluir treino do dia
+</button>
+
+<div id="msg"></div>
+
+<button class="btnVip" onclick="buyVIP()">💰 Comprar VIP (Pix)</button>
+<button onclick="unlockVIP()">✅ Já paguei – liberar VIP</button>
+</div>
+</div>
 </div>
 
 <script>
-let vipAtivo = localStorage.getItem("vip") === "true";
+let vip = localStorage.getItem("vip")==="true";
+let day = Number(localStorage.getItem("day")) || 1;
 
-const dados = {
-  emagrecer:{
-    gratis:{
-      treino:[
-        "Manhã: Caminhada 20min",
-        "Tarde: Abdominal 3/20",
-        "Noite: Agachamento 3/20"
-      ],
-      comida:[
-        "Café: fruta + água",
-        "Almoço: arroz + frango",
-        "Jantar: salada leve"
-      ]
-    },
-    vip:{
-      treino:[
-        "Manhã: Caminhada 40min",
-        "Tarde: Abdominal 4/25",
-        "Noite: HIIT 20min"
-      ],
-      comida:[
-        "Café: ovos + aveia",
-        "Almoço: frango + arroz + legumes",
-        "Lanche: fruta ou iogurte",
-        "Jantar: salada + proteína"
-      ]
-    }
-  },
-
-  massa:{
-    gratis:{
-      treino:[
-        "Manhã: Flexão 3/15",
-        "Tarde: Agachamento 3/20",
-        "Noite: Prancha 2min"
-      ],
-      comida:[
-        "Café: pão + ovo",
-        "Almoço: arroz + carne",
-        "Jantar: macarrão simples"
-      ]
-    },
-    vip:{
-      treino:[
-        "Manhã: Flexão 4/20",
-        "Tarde: Agachamento 4/25",
-        "Noite: Bíceps + tríceps"
-      ],
-      comida:[
-        "Café: ovos + aveia",
-        "Almoço: carne + arroz + feijão",
-        "Lanche: vitamina",
-        "Jantar: batata doce + frango"
-      ]
-    }
-  },
-
-  definir:{
-    gratis:{
-      treino:[
-        "Manhã: Burpee 3/10",
-        "Tarde: Prancha 2min",
-        "Noite: Abdominal 3/20"
-      ],
-      comida:[
-        "Café: fruta",
-        "Almoço: proteína + legumes",
-        "Jantar: refeição leve"
-      ]
-    },
-    vip:{
-      treino:[
-        "Manhã: HIIT 25min",
-        "Tarde: Core completo",
-        "Noite: Cardio 30min"
-      ],
-      comida:[
-        "Café: ovos + frutas",
-        "Almoço: frango + legumes",
-        "Lanche: castanhas",
-        "Jantar: proteína leve"
-      ]
-    }
-  }
+const freeData={
+  emagrecer:{food:"Frutas, ovos e salada",train:["Caminhada 15min","Agachamento 2/15"]},
+  massa:{food:"Arroz, ovo e frango",train:["Flexão 2/10","Agachamento 2/15"]},
+  definir:{food:"Proteína e legumes",train:["Prancha 2/30s","Abdominal 2/20"]}
 };
 
-function mostrarGratis(){
-  const meta = document.getElementById("meta").value;
-  if(!meta){ alert("Escolha a meta"); return; }
+function vipFood(d){
+return `
+<b>☀️ Café da manhã</b><br>
+Ovo + fruta<br><br>
 
-  document.getElementById("gratis").classList.remove("hidden");
-  let g = dados[meta].gratis;
+<b>🍛 Almoço</b><br>
+Frango + arroz + salada<br><br>
 
-  document.getElementById("gratisConteudo").innerHTML = `
-    <strong>Treino:</strong>
-    <ul>${g.treino.map(t=>`<li>${t}</li>`).join("")}</ul>
-    <strong>Alimentação:</strong>
-    <ul class="food-list">${g.comida.map(c=>`<li>${c}</li>`).join("")}</ul>
-  `;
+<b>🍎 Lanche</b><br>
+Fruta ou iogurte<br><br>
+
+<b>🌙 Jantar</b><br>
+Proteína leve + legumes<br><br>
+
+<small>📆 Dia ${d} do plano VIP</small>`;
 }
 
-function comprarVIP(){
-  const meta = document.getElementById("meta").value;
-  if(!meta){ alert("Escolha a meta"); return; }
+function vipTrain(d){
+return `
+<b>🌅 Manhã</b><br>
+Caminhada ${20+d} min<br><br>
 
-  if(confirm("Confirmar compra do VIP?")){
-    vipAtivo = true;
-    localStorage.setItem("vip","true");
-    mostrarVIP();
-  }
+<b>🌞 Tarde</b><br>
+Agachamento 3/${12+d}<br>
+Flexão 3/${10+d}<br><br>
+
+<b>🌙 Noite</b><br>
+Abdominal 3/${15+d}<br>
+Prancha 2/${30+d}s`;
 }
 
-function mostrarVIP(){
-  const meta = document.getElementById("meta").value;
-  if(!vipAtivo || !meta) return;
-
-  document.getElementById("vip").classList.remove("hidden");
-  let v = dados[meta].vip;
-
-  document.getElementById("vipConteudo").innerHTML = `
-    <strong>Treino VIP:</strong>
-    <ul>${v.treino.map(t=>`<li>${t}</li>`).join("")}</ul>
-    <strong>Alimentação VIP:</strong>
-    <ul class="food-list">${v.comida.map(c=>`<li>${c}</li>`).join("")}</ul>
-  `;
+function openTab(tab){
+free.style.display=tab==="free"?"block":"none";
+vipDiv.style.display=tab==="vip"?"block":"none";
 }
 
-if(vipAtivo){
-  mostrarVIP();
+goal.onchange=load;
+
+function load(){
+const g=goal.value;
+if(!g)return;
+
+foodFree.innerHTML=freeData[g].food;
+trainFree.innerHTML="";
+freeData[g].train.forEach(t=>{
+trainFree.innerHTML+=`<div class="card">${t}</div>`;
+});
+
+if(vip){
+foodVIP.innerHTML=vipFood(day);
+trainVIP.innerHTML=vipTrain(day);
+progress.innerHTML=`Dia ${day}/30`;
+doneBtn.disabled=false;
 }
+}
+
+function buyVIP(){
+alert("Pagamento Pix\nChave: SEU-PIX-AQUI");
+}
+
+function unlockVIP(){
+vip=true;
+localStorage.setItem("vip","true");
+alert("VIP liberado com sucesso!");
+load();
+}
+
+function completeDay(){
+msg.innerHTML=`<div class="card done">🔥 Parabéns! Meta concluída.<br>Volte amanhã!</div>`;
+day++;
+if(day>30)day=30;
+localStorage.setItem("day",day);
+load();
+}
+
+const free=document.getElementById("free");
+const vipDiv=document.getElementById("vip");
+load();
 </script>
 
 </body>
