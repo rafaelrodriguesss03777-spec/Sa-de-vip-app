@@ -90,6 +90,18 @@ button.sec{background:#333;color:#fff}
 .period{margin-bottom:8px}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px}
+
+/* GRÁTIS */
+.free h2{
+  color: #00ff00;
+  text-shadow: 0 0 4px #00ff00, 0 0 10px #00ff00;
+  animation: glowGreenText 2s infinite alternate;
+}
+@keyframes glowGreenText {
+  0% { text-shadow: 0 0 4px #00ff00, 0 0 10px #00ff00; }
+  50% { text-shadow: 0 0 8px #00ff00, 0 0 20px #00ff00; }
+  100% { text-shadow: 0 0 4px #00ff00, 0 0 10px #00ff00; }
+}
 </style>
 </head>
 <body>
@@ -110,7 +122,8 @@ button.sec{background:#333;color:#fff}
 </select>
 </div>
 
-<div id="pageFree" class="card">
+<!-- PÁGINA GRÁTIS -->
+<div id="pageFree" class="card free">
 <h2>🆓 Plano Grátis</h2>
 <div class="box">
 <h3>🥗 Alimentação</h3>
@@ -122,6 +135,7 @@ button.sec{background:#333;color:#fff}
 </div>
 </div>
 
+<!-- PÁGINA VIP -->
 <div id="pageVIP" class="hidden">
 <div class="card vip">
 <h2>⭐ VIP</h2>
@@ -168,17 +182,9 @@ ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
 definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-// DADOS VIP COM EXERCÍCIOS POR META E DIA
-const foodVIP={
-emagrecer:[],
-ganhar:[],
-definir:[]
-};
-const workoutVIP={
-emagrecer:[],
-ganhar:[],
-definir:[]
-};
+// DADOS VIP
+const foodVIP={emagrecer:[],ganhar:[],definir:[]};
+const workoutVIP={emagrecer:[],ganhar:[],definir:[]};
 for(let i=1;i<=30;i++){
 foodVIP.emagrecer.push({manha:`🥚 Café ${i}: ovos e frutas`,tarde:`🍗 Almoço ${i}: frango, arroz`,noite:`🌙 Jantar ${i}: sopa e legumes`});
 foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
@@ -295,11 +301,9 @@ datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
 backgroundColor:"gold"}]},
 options:{scales:{y:{min:0,max:1}}}
 });
-
-// NOTIFICAÇÃO
-if("Notification" in window){ Notification.requestPermission(); }
 }
 
+// INICIALIZAÇÃO
 showPage("free");
 loadAll();
 </script>
