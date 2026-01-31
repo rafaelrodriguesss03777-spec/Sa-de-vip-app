@@ -86,6 +86,13 @@ button.sec{background:#333;color:#fff;}
   background:#0a0;
   animation:flash 0.5s;
 }
+.day.todayDone{
+  color:#fff;
+  font-weight:bold;
+  font-size:14px;
+  background:#28a745;
+  animation:flash 0.5s;
+}
 @keyframes flash{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 .period{margin-bottom:8px}
 .period b{color:gold}
@@ -290,10 +297,14 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
 function renderCalendar(){
   const cal=document.getElementById("calendar");
   cal.innerHTML="";
+  const todayIndex=getCurrentDayIndex()+1;
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
-    d.className="day";
-    d.innerHTML=doneDays.includes(i)?"✔️":i;
+    if(doneDays.includes(i)){
+      d.className="day done";
+      d.innerHTML=i===todayIndex?"✅":"✔️";
+      if(i===todayIndex) d.className="day todayDone";
+    } else d.innerHTML=i;
     cal.appendChild(d);
   }
 }
