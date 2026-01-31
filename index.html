@@ -45,6 +45,7 @@ button{
   font-weight:bold;
   cursor:pointer;
   transition: all 0.3s;
+  margin-top:10px;
 }
 button:hover{transform:scale(1.05);box-shadow:0 0 10px gold;}
 button.sec{background:#333;color:#fff}
@@ -145,8 +146,11 @@ button.sec{background:#333;color:#fff}
 <h3>🔥 Treino VIP do Dia</h3>
 <div id="workoutVIP"></div>
 </div>
+
+<!-- BOTÕES SEPARADOS -->
 <button id="finishBtn">✅ Concluir treino do dia</button>
 <button id="resetBtn">🔄 Reiniciar 30 dias</button>
+
 <h3 style="margin-top:16px">📅 Progresso</h3>
 <div class="grid" id="calendar"></div>
 <h3 style="margin-top:20px;">📊 Gráfico</h3>
@@ -306,7 +310,7 @@ backgroundColor:"gold"
 options:{
 plugins:{legend:{display:false}},
 scales:{y:{min:0,max:1,ticks:{stepSize:1}}},
-layout:{padding:{top:20}}
+layout:{padding:{top:30}}
 }
 });
 
