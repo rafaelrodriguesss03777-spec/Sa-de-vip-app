@@ -12,113 +12,96 @@ body{
   background:#0e0e0e;
   color:#fff;
 }
-.container{
-  max-width:420px;
-  margin:auto;
-  padding:16px;
-}
-h2,h3{margin:0 0 10px;}
+.container{max-width:420px;margin:auto;padding:16px;}
 .card{
   background:#151515;
   border-radius:16px;
   padding:16px;
   margin-bottom:16px;
-  box-shadow:0 0 20px rgba(255,255,255,0.05);
+  transition: all 0.3s;
 }
-select,button{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  font-size:16px;
-}
-button{
-  cursor:pointer;
-  font-weight:bold;
-  transition: transform 0.2s, box-shadow 0.3s;
-}
+h2,h3{margin:0 0 10px;}
+select,button{width:100%;padding:14px;border-radius:12px;border:none;font-size:16px;cursor:pointer;}
+button{transition:all 0.3s;}
 button:hover{transform:scale(1.05);}
-.progress{
-  height:10px;
-  background:#333;
-  border-radius:10px;
-  overflow:hidden;
-  margin-bottom:10px;
-}
-.progress span{display:block;height:100%;transition:width 0.5s;}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-}
-.day{
-  background:#000;
-  color:#fff;
-  border-radius:8px;
-  text-align:center;
-  padding:10px 0;
-  font-size:12px;
-}
-.day.done{
-  color:#0f0;
-  background:#0a0;
-  font-weight:bold;
-}
 .box{
   background:#1f1f1f;
   padding:12px;
   border-radius:12px;
   margin-bottom:12px;
-  border:1px solid #444;
+  transition:all 0.3s;
 }
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.day{background:#000;color:#fff;border-radius:8px;text-align:center;padding:10px 0;font-size:12px;}
+.day.done{color:#0f0;background:#000;font-weight:bold;}
+.progress{height:10px;background:#333;border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.progress span{display:block;height:100%;background:gold;transition:width 0.5s;}
 .nav{display:flex;gap:10px;margin-bottom:16px;}
-/* Botões de navegação */
-.btn-free{background:#00ff00;color:#000;box-shadow:0 0 15px #00ff00;}
-.btn-vip{background:gold;color:#000;box-shadow:0 0 15px gold;}
+.hidden{display:none;}
 
-/* VIP efeitos */
-.vip{border:2px solid gold;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{box-shadow:0 0 10px gold;}50%{box-shadow:0 0 25px gold;}}
+/* VIP */
+.vip{
+  border:3px solid gold;
+  background: linear-gradient(145deg, #1a1a1a, #222);
+  box-shadow:0 0 20px gold;
+  animation: glowGold 2s infinite alternate;
+}
+@keyframes glowGold{
+  0%{box-shadow:0 0 15px gold;}
+  50%{box-shadow:0 0 30px gold;}
+  100%{box-shadow:0 0 15px gold;}
+}
+.vip button{background:gold;color:#000;font-weight:bold;}
 
-button.internal{background:gold;color:#000;margin-bottom:10px;}
-button.internal:hover{box-shadow:0 0 15px gold;}
-button.sec{background:#333;color:#fff;margin-bottom:10px;}
+/* GRÁTIS */
+.free{
+  border:3px solid #00ff00;
+  background: linear-gradient(145deg,#0a0a0a,#111);
+  box-shadow:0 0 20px #00ff00;
+  animation: glowGreen 2s infinite alternate;
+}
+@keyframes glowGreen{
+  0%{box-shadow:0 0 15px #00ff00;}
+  50%{box-shadow:0 0 30px #00ff00;}
+  100%{box-shadow:0 0 15px #00ff00;}
+}
+.free button{background:#00ff00;color:#000;font-weight:bold;}
 </style>
 </head>
 <body>
 <div class="container">
 
-<!-- Navegação entre páginas -->
+<!-- Navegação páginas -->
 <div class="nav">
-  <button class="btn-free" onclick="showPage('free')">🆓 Plano Grátis</button>
-  <button class="btn-vip" onclick="showPage('vip')">⭐ VIP</button>
+<button onclick="showPage('free')" style="background:#00ff00;color:#000;font-weight:bold;">🆓 Plano Grátis</button>
+<button onclick="showPage('vip')" style="background:gold;color:#000;font-weight:bold;">⭐ VIP</button>
 </div>
 
-<!-- Seleção de meta -->
+<!-- Meta -->
 <div class="card">
 <h2>🎯 Escolha sua meta</h2>
 <select id="goal">
-  <option value="">Selecione</option>
-  <option value="emagrecer">Emagrecer</option>
-  <option value="ganhar">Ganhar massa</option>
-  <option value="definir">Definir corpo</option>
+<option value="">Selecione</option>
+<option value="emagrecer">Emagrecer</option>
+<option value="ganhar">Ganhar massa</option>
+<option value="definir">Definir corpo</option>
 </select>
 </div>
 
-<!-- Página Grátis -->
-<div id="pageFree" class="card">
+<!-- Plano Grátis -->
+<div id="pageFree" class="card free">
 <h2>🆓 Plano Grátis</h2>
 <div class="box">
-  <h3>🥗 Alimentação do Dia</h3>
-  <div id="foodFree"></div>
+<h3>🥗 Alimentação</h3>
+<div id="foodFree"></div>
 </div>
 <div class="box">
-  <h3>🔥 Treino do Dia</h3>
-  <div id="workoutFree"></div>
+<h3>🔥 Treino</h3>
+<div id="workoutFree"></div>
 </div>
 </div>
 
-<!-- Página VIP -->
+<!-- VIP -->
 <div id="pageVIP" class="hidden">
 <div class="card vip">
 <h2>⭐ VIP</h2>
@@ -134,58 +117,69 @@ button.sec{background:#333;color:#fff;margin-bottom:10px;}
 <h3>🔥 Treino VIP do Dia</h3>
 <div id="workoutVIP"></div>
 </div>
+<button id="finishBtn">✅ Concluir treino do dia</button>
+<button id="resetBtn">🔄 Reiniciar 30 dias</button>
 
-<button id="finishBtn" class="internal">✅ Concluir treino do dia</button>
-<button id="resetBtn" class="internal">🔄 Reiniciar 30 dias</button>
-
-<h3 style="margin-top:16px">📅 Progresso</h3>
+<h3 style="margin-top:16px;">📅 Progresso</h3>
 <div class="grid" id="calendar"></div>
-
-<h3 style="margin-top:16px">📊 Gráfico</h3>
+<h3 style="margin-top:16px;">📊 Gráfico</h3>
 <canvas id="chart"></canvas>
 </div>
 
-<button id="unlockBtn" class="internal btn-vip" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
+<button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
 </div>
 </div>
 
 <script>
-// NAVEGAÇÃO PÁGINAS
+// Navegação páginas
 function showPage(p){
-  document.getElementById("pageFree").style.display=p==="free"?"block":"none";
-  document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
+  document.getElementById("pageFree").style.display = p==="free"?"block":"none";
+  document.getElementById("pageVIP").style.display = p==="vip"?"block":"none";
 }
 
-// DADOS
+// Dados Grátis
 const foodFree={
-emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
-ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
-definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
+  emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
+  ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
+  definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
 };
 const workoutFree={
-emagrecer:{manha:"🚶 Caminhada",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
-ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
-definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
+  emagrecer:{manha:"🚶 Caminhada",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
+  ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
+  definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-const foodVIP={emagrecer:[],ganhar:[],definir:[]};
-const workoutVIP={emagrecer:[],ganhar:[],definir:[]};
-for(let i=1;i<=30;i++){
-foodVIP.emagrecer.push({manha:`🥚 Café ${i}: ovos e frutas`,tarde:`🍗 Almoço ${i}: frango, arroz`,noite:`🌙 Jantar ${i}: sopa e legumes`});
-foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
-foodVIP.definir.push({manha:`🥣 Café ${i}: aveia`,tarde:`🥗 Almoço ${i}: frango e vegetais`,noite:`🍵 Jantar ${i}: salada leve`});
+// Dados VIP progressivo
+const baseWorkoutVIP={
+  emagrecer:[
+    ["🚶 Caminhada 20min","🔥 Polichinelo 3x10","🧘 Alongamento 5min"],
+    ["🚶 Caminhada 25min","🔥 Polichinelo 3x12","🧘 Alongamento 7min"],
+    ["🚶 Caminhada 30min","🔥 Polichinelo 3x15","🧘 Alongamento 10min"],
+    ["🚶 Caminhada 35min","🔥 Polichinelo 3x18","🧘 Alongamento 12min"]
+  ],
+  ganhar:[
+    ["🏋️ Supino 3x10","🏋️ Agachamento 3x10","🧘 Prancha 30s"],
+    ["🏋️ Supino 3x12","🏋️ Agachamento 3x12","🧘 Prancha 40s"],
+    ["🏋️ Supino 3x15","🏋️ Agachamento 3x15","🧘 Prancha 50s"],
+    ["🏋️ Supino 3x18","🏋️ Agachamento 3x18","🧘 Prancha 60s"]
+  ],
+  definir:[
+    ["🔥 HIIT 3x10","🏋️ Abdômen 3x10","🧘 Yoga 5min"],
+    ["🔥 HIIT 3x12","🏋️ Abdômen 3x12","🧘 Yoga 7min"],
+    ["🔥 HIIT 3x15","🏋️ Abdômen 3x15","🧘 Yoga 10min"],
+    ["🔥 HIIT 3x18","🏋️ Abdômen 3x18","🧘 Yoga 12min"]
+  ]
+};
 
-workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30min`,tarde:`🔥 Polichinelo 3x15`,noite:`🧘 Alongamento 5min`});
-workoutVIP.ganhar.push({manha:`🏋️ Supino 3x12`,tarde:`🏋️ Agachamento 3x12`,noite:`🧘 Prancha 40s`});
-workoutVIP.definir.push({manha:`🔥 HIIT 3x12`,tarde:`🏋️ Abdômen 3x15`,noite:`🧘 Yoga 10min`});
-}
+// Estado VIP
+let vip = localStorage.getItem("vip")==="true";
+let doneDays = JSON.parse(localStorage.getItem("doneDays")||"[]");
+let chart = null;
 
-// ESTADO
-let vip=localStorage.getItem("vip")==="true";
-let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
-
-// FUNÇÕES
+// Eventos
 document.getElementById("goal").addEventListener("change",loadAll);
+document.getElementById("finishBtn").addEventListener("click",finishDay);
+document.getElementById("resetBtn").addEventListener("click",resetProgress);
 
 function unlockVIP(){
   localStorage.setItem("vip","true");
@@ -194,102 +188,98 @@ function unlockVIP(){
   loadAll();
 }
 
+// Dia atual baseado no progresso
 function getCurrentDayIndex(){
-  const startDate=new Date(localStorage.getItem("vipStart")||new Date().toISOString());
+  let startDate = new Date(localStorage.getItem("vipStart")||new Date().toISOString());
   if(!localStorage.getItem("vipStart")) localStorage.setItem("vipStart",startDate);
-  const today=new Date();
-  const diff=Math.floor((today-startDate)/(1000*60*60*24));
+  let today = new Date();
+  let diff = Math.floor((today-startDate)/(1000*60*60*24));
   return Math.min(diff,29);
 }
 
-// CARREGA TUDO
+// Carrega dados
 function loadAll(){
-  const goal=document.getElementById("goal").value;
+  const goal = document.getElementById("goal").value;
   if(!goal) return;
 
-  // GRÁTIS
+  // Grátis
   document.getElementById("foodFree").innerHTML=
-  `<div class="period"><b>Manhã:</b> ${foodFree[goal].manha}</div>
-   <div class="period"><b>Tarde:</b> ${foodFree[goal].tarde}</div>
-   <div class="period"><b>Noite:</b> ${foodFree[goal].noite}</div>`;
+  `<b>Manhã:</b> ${foodFree[goal].manha}<br>
+   <b>Tarde:</b> ${foodFree[goal].tarde}<br>
+   <b>Noite:</b> ${foodFree[goal].noite}`;
   document.getElementById("workoutFree").innerHTML=
-  `<div class="period"><b>Manhã:</b> ${workoutFree[goal].manha}</div>
-   <div class="period"><b>Tarde:</b> ${workoutFree[goal].tarde}</div>
-   <div class="period"><b>Noite:</b> ${workoutFree[goal].noite}</div>`;
+  `<b>Manhã:</b> ${workoutFree[goal].manha}<br>
+   <b>Tarde:</b> ${workoutFree[goal].tarde}<br>
+   <b>Noite:</b> ${workoutFree[goal].noite}`;
 
   // VIP
   if(!vip) return;
   document.getElementById("vipContent").classList.remove("hidden");
   document.getElementById("unlockBtn").style.display="none";
 
-  const dayIndex=getCurrentDayIndex();
-  document.getElementById("dayCount").innerText=dayIndex+1;
-  document.getElementById("bar").style.width=((dayIndex+1)/30*100)+"%";
+  const dayIndex = getCurrentDayIndex();
+  document.getElementById("dayCount").innerText = dayIndex+1;
+  document.getElementById("bar").style.width = ((dayIndex+1)/30*100)+"%";
 
-  const f=foodVIP[goal][dayIndex];
-  const w=workoutVIP[goal][dayIndex];
-
+  const fVIP = baseWorkoutVIP[goal][Math.min(dayIndex,3)]; // progressivo
   document.getElementById("foodVIP").innerHTML=
-  `<div class="period"><b>Manhã:</b> ${f.manha}</div>
-   <div class="period"><b>Tarde:</b> ${f.tarde}</div>
-   <div class="period"><b>Noite:</b> ${f.noite}</div>`;
+  `<b>Manhã:</b> ${fVIP[0]}<br>
+   <b>Tarde:</b> ${fVIP[1]}<br>
+   <b>Noite:</b> ${fVIP[2]}`;
   document.getElementById("workoutVIP").innerHTML=
-  `<div class="period"><b>Manhã:</b> ${w.manha}</div>
-   <div class="period"><b>Tarde:</b> ${w.tarde}</div>
-   <div class="period"><b>Noite:</b> ${w.noite}</div>`;
+  `<b>Manhã:</b> ${fVIP[0]}<br>
+   <b>Tarde:</b> ${fVIP[1]}<br>
+   <b>Noite:</b> ${fVIP[2]}`;
 
   renderCalendar();
   renderChart();
 }
 
-// CONCLUIR DIA
-document.getElementById("finishBtn").addEventListener("click",()=>{
-  const todayIndex=getCurrentDayIndex()+1;
-  if(doneDays.includes(todayIndex)){
-    alert("✅ Você já concluiu os exercícios de hoje!");
-    return;
-  }
+// Concluir dia
+function finishDay(){
+  const todayIndex = getCurrentDayIndex()+1;
+  if(doneDays.includes(todayIndex)) return alert("✅ Você já concluiu os exercícios de hoje!");
   doneDays.push(todayIndex);
   localStorage.setItem("doneDays",JSON.stringify(doneDays));
-  alert("🎉 Parabéns! Exercícios do dia concluídos!");
+  alert("✅ Exercícios do dia concluídos!");
   loadAll();
-});
+}
 
-// RESET
-document.getElementById("resetBtn").addEventListener("click",()=>{
+// Reset VIP
+function resetProgress(){
   localStorage.removeItem("vipStart");
   doneDays=[];
   localStorage.setItem("doneDays","[]");
   loadAll();
-});
+}
 
-// CALENDÁRIO
+// Calendário
 function renderCalendar(){
   const cal=document.getElementById("calendar");
   cal.innerHTML="";
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
     d.className="day";
-    d.innerHTML=doneDays.includes(i)?"✅":i;
+    d.innerText = doneDays.includes(i)?"✅":i;
     cal.appendChild(d);
   }
 }
 
-// GRÁFICO
-let chart=null;
+// Gráfico
 function renderChart(){
   const ctx=document.getElementById("chart");
   if(chart) chart.destroy();
-  chart=new Chart(ctx,{
+  chart = new Chart(ctx,{
     type:"bar",
-    data:{labels:[...Array(30).keys()].map(i=>i+1),
-    datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
-    backgroundColor:"gold"}]},
+    data:{
+      labels:[...Array(30).keys()].map(i=>i+1),
+      datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),backgroundColor:"gold"}]
+    },
     options:{scales:{y:{min:0,max:1}}}
   });
 }
 
-// INICIAL
+// Inicial
 showPage("free");
 loadAll();
 </script>
