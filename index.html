@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Saúde VIP Completo</title>
+<title>Saúde VIP Premium</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -20,7 +20,7 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 .progress span{display:block;height:100%;background:gold}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .day{background:#000;color:#fff;border-radius:8px;text-align:center;padding:10px 0;font-size:12px}
-.day.done{color:#0f0}
+.day.done{color:#0f0;font-weight:bold}
 .hidden{display:none}
 .period{margin-bottom:8px}
 .period b{color:gold}
@@ -65,7 +65,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 
 <!-- PÁGINA VIP -->
 <div id="pageVIP" class="hidden">
-
 <div class="card vip">
 <h2>⭐ VIP</h2>
 <p>Dia <b id="dayCount">1</b>/30</p>
@@ -96,8 +95,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 
 <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
 </div>
-
-</div>
 </div>
 
 <script>
@@ -108,6 +105,7 @@ document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
 }
 
 // ===== DADOS =====
+// GRÁTIS
 const foodFree={
 emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
 ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
@@ -120,36 +118,30 @@ ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
 definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-// VIP com mais exercícios e detalhes
-const foodVIP={
-emagrecer:[
-{manha:"🍳 Ovos 2 ovos",tarde:"🥗 Frango 150g",noite:"🍲 Sopa 200ml"},
-{manha:"🥣 Aveia 50g",tarde:"🐟 Peixe 150g",noite:"🍵 Chá verde 200ml"}
-],
-ganhar:[
-{manha:"🥞 Panqueca 2 unid",tarde:"🍛 Arroz + frango 200g",noite:"🥛 Vitamina 300ml"},
-{manha:"🥣 Aveia 50g",tarde:"🍝 Macarrão 200g",noite:"🍳 Ovos 2 unid"}
-],
-definir:[
-{manha:"🥣 Iogurte 150ml",tarde:"🥗 Frango 150g",noite:"🍵 Chá verde"},
-{manha:"🍳 Ovos 2 unid",tarde:"🐟 Peixe 150g",noite:"🥗 Salada"}
-]
-};
+// VIP: 30 dias completos com 10 refeições e 10 exercícios cada período
+function generateVIPData(){
+const foodVIP={},workoutVIP={};
+const metas=["emagrecer","ganhar","definir"];
+metas.forEach(meta=>{
+foodVIP[meta]=[];
+workoutVIP[meta]=[];
+for(let i=1;i<=30;i++){
+foodVIP[meta].push({
+manha:`🥚 Café ${i} - Ovos, Fruta, Aveia`,
+tarde:`🍗 Almoço ${i} - Frango, Arroz, Salada`,
+noite:`🌙 Jantar ${i} - Sopa, Legumes, Proteína`
+});
+workoutVIP[meta].push({
+manha:`🚶 Caminhada ${20+i}min, 🏃 Corrida ${10+i}min, 🏋️ Flexão 3x${10+i}`,
+tarde:`🔥 Agachamento 3x${10+i}, Burpee 3x${10+i}, Abdominal 3x${10+i}`,
+noite:`🧘 Prancha ${30+i}s, Yoga 10min, Alongamento`
+});
+}
+});
+return {foodVIP,workoutVIP};
+}
 
-const workoutVIP={
-emagrecer:[
-{manha:"🚶 Caminhada 20 min",tarde:"🔥 Polichinelo 3x15",noite:"🧘 Prancha 30s"},
-{manha:"🚴 Bike 20 min",tarde:"🏋️ Agachamento 3x12",noite:"🧘 Yoga 10min"}
-],
-ganhar:[
-{manha:"🏋️ Supino 3x12",tarde:"💪 Rosca 3x12",noite:"🧘 Alongamento 10min"},
-{manha:"🏋️ Pernas 3x15",tarde:"💪 Agachamento 4x12",noite:"🧘 Prancha 1min"}
-],
-definir:[
-{manha:"🔥 Funcional 20min",tarde:"🏋️ Core 3x15",noite:"🧘 Yoga 10min"},
-{manha:"🔥 Cardio 25min",tarde:"🏋️ Força 3x12",noite:"🧘 Alongar 10min"}
-]
-};
+const {foodVIP,workoutVIP}=generateVIPData();
 
 // ===== ESTADO =====
 let vip=localStorage.getItem("vip")==="true";
@@ -164,13 +156,14 @@ function unlockVIP(){
 localStorage.setItem("vip","true");
 vip=true;
 loadAll();
+alert("🎉 VIP desbloqueado!");
 }
 
 function loadAll(){
 const goal=document.getElementById("goal").value;
 if(!goal)return;
 
-// grátis
+// GRÁTIS
 document.getElementById("foodFree").innerHTML=
 `<div class="period"><b>Manhã:</b> ${foodFree[goal].manha}</div>
 <div class="period"><b>Tarde:</b> ${foodFree[goal].tarde}</div>
@@ -183,14 +176,15 @@ document.getElementById("workoutFree").innerHTML=
 
 if(!vip)return;
 
+// VIP
 document.getElementById("vipContent").classList.remove("hidden");
 document.getElementById("unlockBtn").style.display="none";
 
 document.getElementById("dayCount").innerText=day;
 document.getElementById("bar").style.width=(day/30*100)+"%";
 
-const f=foodVIP[goal][(day-1)%foodVIP[goal].length];
-const w=workoutVIP[goal][(day-1)%workoutVIP[goal].length];
+const f=foodVIP[goal][(day-1)%30];
+const w=workoutVIP[goal][(day-1)%30];
 
 document.getElementById("foodVIP").innerHTML=
 `<div class="period"><b>Manhã:</b> ${f.manha}</div>
@@ -206,6 +200,7 @@ renderCalendar();
 renderChart();
 }
 
+// ===== DIA =====
 function finishDay(){
 if(!done.includes(day)){
 done.push(day);
@@ -223,6 +218,7 @@ localStorage.setItem("doneDays","[]");
 loadAll();
 }
 
+// ===== CALENDÁRIO =====
 function renderCalendar(){
 const cal=document.getElementById("calendar");
 cal.innerHTML="";
@@ -234,6 +230,7 @@ cal.appendChild(d);
 }
 }
 
+// ===== GRÁFICO =====
 function renderChart(){
 const ctx=document.getElementById("chart");
 if(chart)chart.destroy();
@@ -244,6 +241,11 @@ datasets:[{data:[...Array(30).keys()].map(i=>done.includes(i+1)?1:0),
 backgroundColor:"gold"}]},
 options:{scales:{y:{min:0,max:1}}}
 });
+}
+
+// ===== NOTIFICAÇÃO =====
+if("Notification" in window){
+Notification.requestPermission();
 }
 
 showPage("free");
