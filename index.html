@@ -6,209 +6,248 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://kit.fontawesome.com/a2d9d6b1c6.js" crossorigin="anonymous"></script>
 
 <style>
-body {
-  background: #0d0d0d;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 15px;
-  padding-bottom: 90px;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0e0e0e;
+  color:#fff;
 }
-
-.card {
-  background: #151515;
-  border-radius: 15px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid #222;
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:16px;
 }
-
-h2 {
-  margin: 0 0 10px;
+.card{
+  background:#151515;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
 }
-
-.btn {
-  width: 100%;
-  padding: 15px;
-  border-radius: 12px;
-  border: none;
-  background: #ffd400;
-  color: #000;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+.vip{
+  border:2px solid gold;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+h2,h3{
+  margin:0 0 10px;
 }
-
-.day {
-  height: 45px;
-  border-radius: 10px;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #fff;
+select,button{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
 }
-
-.day.done {
-  color: #00ff6a;
-  font-size: 18px;
+button{
+  background:gold;
+  font-weight:bold;
+  cursor:pointer;
 }
-
-/* MENU INFERIOR */
-.bottom-menu {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #000;
-  border-top: 1px solid #222;
-  display: flex;
-  justify-content: space-around;
-  padding: 12px 0;
+.progress{
+  height:10px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:10px;
 }
-
-.bottom-menu i {
-  color: #888;
-  font-size: 22px;
+.progress span{
+  height:100%;
+  display:block;
+  background:gold;
 }
+.box{
+  background:#1f1f1f;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+.hidden{display:none;}
 
-.bottom-menu i.active {
-  color: #ffd400;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.day{
+  background:#000;
+  border-radius:8px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:13px;
+}
+.day.done{
+  background:#000;
+  color:#00ff66;
+  font-size:18px;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
+<!-- META -->
 <div class="card">
-  <h2>🎯 Meta</h2>
-  <p>Definir corpo</p>
+  <h2>🎯 Escolha sua meta</h2>
+  <select id="goal">
+    <option value="">Selecione</option>
+    <option value="emagrecer">Emagrecer</option>
+    <option value="ganhar">Ganhar massa</option>
+    <option value="definir">Definir corpo</option>
+  </select>
 </div>
 
-<div class="card">
-  <h2>🍽️ Alimentação do Dia</h2>
-  <ul id="food"></ul>
+<!-- VIP -->
+<div class="card vip">
+  <h2>⭐ VIP</h2>
+  <p>Dia <b id="dayCount">1</b>/30</p>
+  <div class="progress"><span id="bar"></span></div>
+
+  <div id="vipContent" class="hidden">
+
+    <div class="box">
+      <h3>🥗 Alimentação VIP do dia</h3>
+      <div id="food"></div>
+    </div>
+
+    <div class="box">
+      <h3>🔥 Treino VIP do dia</h3>
+      <div id="workout"></div>
+    </div>
+
+    <button onclick="finishDay()">✅ Concluir dia</button>
+
+    <h3 style="margin-top:14px;">📅 Progresso</h3>
+    <div class="grid" id="calendar"></div>
+
+    <h3>📊 Gráfico</h3>
+    <canvas id="chart"></canvas>
+
+  </div>
+
+  <button id="unlockBtn" onclick="unlockVIP()">🔓 Comprar VIP (Pix)</button>
 </div>
 
-<div class="card">
-  <h2>🔥 Treino VIP do Dia</h2>
-  <ul id="workout"></ul>
-  <br>
-  <button class="btn" onclick="finishDay()">✅ Concluir treino do dia</button>
-</div>
-
-<div class="card">
-  <h2>📅 Seu progresso</h2>
-  <div class="grid" id="days"></div>
-</div>
-
-<div class="card">
-  <h2>📊 Gráfico de Progresso</h2>
-  <canvas id="chart"></canvas>
-</div>
-
-<!-- MENU INFERIOR SEM TEXTO -->
-<div class="bottom-menu">
-  <i class="fas fa-home active"></i>
-  <i class="fas fa-dumbbell"></i>
-  <i class="fas fa-apple-alt"></i>
-  <i class="fas fa-chart-line"></i>
-  <i class="fas fa-user"></i>
 </div>
 
 <script>
-const foods = [
-  ["Ovos", "Aveia", "Banana"],
-  ["Arroz", "Frango", "Salada"],
-  ["Macarrão integral", "Carne", "Legumes"],
-  ["Cuscuz", "Ovo", "Fruta"],
-  ["Arroz", "Peixe", "Salada"],
-  ["Batata doce", "Frango", "Legumes"],
-  ["Omelete", "Pão integral", "Fruta"]
-];
+// ===== DADOS =====
+const foods={
+  emagrecer:[
+    ["🍳 Ovos","🥗 Frango","🌙 Salada"],
+    ["🥣 Aveia","🐟 Peixe","🌙 Sopa"],
+    ["🍞 Integral","🥗 Atum","🌙 Omelete"]
+  ],
+  ganhar:[
+    ["🥞 Panqueca","🍛 Arroz + frango","🌙 Shake"],
+    ["🥣 Aveia + banana","🍝 Macarrão","🌙 Ovos"],
+    ["🍞 Pão + ovos","🍖 Carne","🌙 Vitamina"]
+  ],
+  definir:[
+    ["🍳 Ovos + aveia","🥗 Frango","🌙 Salada"],
+    ["🥣 Iogurte","🍛 Carne","🌙 Omelete"],
+    ["🍞 Integral","🐟 Peixe","🌙 Legumes"]
+  ]
+};
 
-const workouts = [
-  ["Caminhada 30 min", "Polichinelo", "Alongamento"],
-  ["Agachamento", "Abdominal", "Prancha"],
-  ["Corrida leve", "Flexão", "Alongamento"],
-  ["Corda", "Agachamento", "Abdominal"],
-  ["Caminhada", "Flexão", "Prancha"],
-  ["Bicicleta", "Abdominal", "Alongamento"],
-  ["Descanso ativo"]
-];
+const workouts={
+  emagrecer:[
+    ["🚶 Caminhada","🔥 Polichinelo","🧘 Alongar"],
+    ["🏃 Corrida","🔥 Burpee","🧘 Prancha"],
+    ["🚴 Bike","🔥 Agacho","🧘 Yoga"]
+  ],
+  ganhar:[
+    ["🏋️ Peito","💪 Flexão","🧘 Alongar"],
+    ["🏋️ Pernas","💪 Agacho","🧘 Prancha"],
+    ["🏋️ Braços","💪 Rosca","🧘 Alongar"]
+  ],
+  definir:[
+    ["🏋️ Corpo todo","🔥 Funcional","🧘 Alongar"],
+    ["💪 Abdômen","🔥 HIIT","🧘 Prancha"],
+    ["🏋️ Resistência","🔥 Cardio","🧘 Yoga"]
+  ]
+};
 
-const today = new Date().getDate();
-let progress = JSON.parse(localStorage.getItem("progress")) || Array(30).fill(false);
+// ===== ESTADO =====
+let vip=localStorage.getItem("vip")==="true";
+let day=Number(localStorage.getItem("day")||1);
+let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
+let chart=null;
 
-function loadFood() {
-  document.getElementById("food").innerHTML =
-    foods[today % foods.length].map(i => `<li>${i}</li>`).join("");
+// ===== FUNÇÕES =====
+function unlockVIP(){
+  localStorage.setItem("vip","true");
+  vip=true;
+  alert("🎉 VIP desbloqueado!");
+  loadVIP();
 }
 
-function loadWorkout() {
-  document.getElementById("workout").innerHTML =
-    workouts[today % workouts.length].map(i => `<li>${i}</li>`).join("");
+function loadVIP(){
+  const goal=document.getElementById("goal").value;
+  if(!vip || !goal) return;
+
+  document.getElementById("vipContent").classList.remove("hidden");
+  document.getElementById("unlockBtn").style.display="none";
+
+  document.getElementById("dayCount").innerText=day;
+  document.getElementById("bar").style.width=(day/30*100)+"%";
+
+  document.getElementById("food").innerHTML=
+    foods[goal][(day-1)%foods[goal].length].join("<br>");
+  document.getElementById("workout").innerHTML=
+    workouts[goal][(day-1)%workouts[goal].length].join("<br>");
+
+  renderCalendar();
+  renderChart();
 }
 
-function loadDays() {
-  const c = document.getElementById("days");
-  c.innerHTML = "";
-  progress.forEach((d, i) => {
-    const el = document.createElement("div");
-    el.className = "day" + (d ? " done" : "");
-    el.innerHTML = d ? "✔️" : i + 1;
-    c.appendChild(el);
-  });
+function finishDay(){
+  if(doneDays.includes(day)) return;
+  doneDays.push(day);
+  localStorage.setItem("doneDays",JSON.stringify(doneDays));
+  alert("🎉 Parabéns! Volte amanhã.");
+  day++;
+  if(day>30) day=1;
+  localStorage.setItem("day",day);
+  loadVIP();
 }
 
-function finishDay() {
-  const i = today - 1;
-  if (!progress[i]) {
-    progress[i] = true;
-    localStorage.setItem("progress", JSON.stringify(progress));
-    alert("🎉 Parabéns! Você concluiu o dia!");
-    loadDays();
-    updateChart();
+function renderCalendar(){
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
+  for(let i=1;i<=30;i++){
+    const d=document.createElement("div");
+    d.className="day";
+    d.innerHTML=doneDays.includes(i)?"✔️":i;
+    if(doneDays.includes(i)) d.classList.add("done");
+    cal.appendChild(d);
   }
 }
 
-let chart;
-function updateChart() {
-  const ctx = document.getElementById("chart").getContext("2d");
-  if (chart) chart.destroy();
-  chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: [...Array(30)].map((_, i) => i + 1),
-      datasets: [{
-        data: progress.map(p => p ? 1 : 0),
-        borderWidth: 2,
-        tension: 0.3
+function renderChart(){
+  const ctx=document.getElementById("chart");
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:Array.from({length:30},(_,i)=>i+1),
+      datasets:[{
+        label:"Concluído",
+        data:Array.from({length:30},(_,i)=>doneDays.includes(i+1)?1:0),
+        backgroundColor:"gold"
       }]
     },
-    options: {
-      scales: {
-        y: { min: 0, max: 1 }
-      }
+    options:{
+      scales:{y:{min:0,max:1,ticks:{stepSize:1}}}
     }
   });
 }
 
-loadFood();
-loadWorkout();
-loadDays();
-updateChart();
+document.getElementById("goal").addEventListener("change",loadVIP);
+loadVIP();
 </script>
-
 </body>
 </html>
