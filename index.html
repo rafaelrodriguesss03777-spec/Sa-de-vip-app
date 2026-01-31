@@ -155,7 +155,6 @@ button.sec{background:#333;color:#fff}
 <div class="grid" id="calendar"></div>
 <h3 style="margin-top:20px;">📊 Gráfico</h3>
 <canvas id="chart"></canvas>
-<p id="restarts" style="margin-top:10px;">🔁 Reiniciou 0 vezes</p>
 </div>
 
 <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
@@ -197,7 +196,6 @@ workoutVIP.definir.push({manha:`🔥 HIIT 3x${10+i}, Corrida leve 20+${i}min`,ta
 // ESTADO
 let vip=localStorage.getItem("vip")==="true";
 let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
-let restarts=Number(localStorage.getItem("restarts")||0);
 
 // FUNÇÕES
 document.getElementById("goal").addEventListener("change",loadAll);
@@ -254,7 +252,6 @@ document.getElementById("workoutVIP").innerHTML=
 
 renderCalendar();
 renderChart();
-document.getElementById("restarts").innerText=`🔁 Reiniciou ${restarts} vezes`;
 }
 
 // CONCLUIR DIA
@@ -270,13 +267,11 @@ alert("✅ Exercícios do dia concluídos!");
 loadAll();
 });
 
-// REINICIAR 30 DIAS
+// REINICIAR 30 DIAS (apenas remove dados, não reinicia antes de 30 dias)
 document.getElementById("resetBtn").addEventListener("click",()=>{
 localStorage.removeItem("vipStart");
 doneDays=[];
 localStorage.setItem("doneDays","[]");
-restarts++;
-localStorage.setItem("restarts",restarts);
 loadAll();
 });
 
