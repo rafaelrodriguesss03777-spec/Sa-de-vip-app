@@ -91,19 +91,18 @@ button.sec{background:#333;color:#fff}
 .period b{color:gold}
 .nav{display:flex;gap:10px;margin-bottom:16px}
 
-/* GRÁTIS - efeito de glow ao redor */
-.free{
-  border:2px solid #00ff00;
-  border-radius:16px;
-  box-shadow:0 0 15px #00ff00;
-  animation: glowGreenCard 2s infinite alternate;
+/* Texto Grátis verde com glow */
+#pageFree h2 {
+  color: #00ff00;
+  text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+  animation: glowText 2s infinite alternate;
 }
-@keyframes glowGreenCard {
-  0% { box-shadow: 0 0 10px #00ff00; }
-  50% { box-shadow: 0 0 25px #00ff00; }
-  100% { box-shadow: 0 0 10px #00ff00; }
+@keyframes glowText {
+  0% { text-shadow: 0 0 5px #00ff00,0 0 10px #00ff00,0 0 20px #00ff00; }
+  50% { text-shadow: 0 0 10px #00ff00,0 0 20px #00ff00,0 0 30px #00ff00; }
+  100% { text-shadow: 0 0 5px #00ff00,0 0 10px #00ff00,0 0 20px #00ff00; }
 }
-
+.hidden{display:none;}
 </style>
 </head>
 <body>
@@ -124,7 +123,8 @@ button.sec{background:#333;color:#fff}
 </select>
 </div>
 
-<div id="pageFree" class="card free">
+<!-- Página Grátis -->
+<div id="pageFree" class="card">
 <h2>🆓 Plano Grátis</h2>
 <div class="box">
 <h3>🥗 Alimentação</h3>
@@ -136,6 +136,7 @@ button.sec{background:#333;color:#fff}
 </div>
 </div>
 
+<!-- Página VIP -->
 <div id="pageVIP" class="hidden">
 <div class="card vip">
 <h2>⭐ VIP</h2>
@@ -164,7 +165,7 @@ button.sec{background:#333;color:#fff}
 </div>
 
 <script>
-// FUNÇÃO NAVEGAÇÃO
+// Navegação
 function showPage(p){
   document.getElementById("pageFree").style.display=p==="free"?"block":"none";
   document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
@@ -172,14 +173,14 @@ function showPage(p){
 
 // DADOS GRÁTIS
 const foodFree={
-  emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
-  ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
-  definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
+emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
+ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
+definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
 };
 const workoutFree={
-  emagrecer:{manha:"🚶 Caminhada",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
-  ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
-  definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
+emagrecer:{manha:"🚶 Caminhada",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
+ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
+definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
 // DADOS VIP
@@ -190,7 +191,7 @@ for(let i=1;i<=30;i++){
   foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
   foodVIP.definir.push({manha:`🥣 Café ${i}: aveia`,tarde:`🥗 Almoço ${i}: frango e vegetais`,noite:`🍵 Jantar ${i}: salada leve`});
 
-  workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30+${i} min, 🏃 Corrida leve`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
+  workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30+${i}min, 🏃 Corrida leve`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
   workoutVIP.ganhar.push({manha:`🏋️ Supino 3x${10+i}, Flexão 3x${12+i}`,tarde:`🏋️ Agachamento 3x${12+i}, Rosca 3x${10+i}`,noite:`🧘 Prancha 40s`});
   workoutVIP.definir.push({manha:`🔥 HIIT 3x${10+i}, Corrida leve 20+${i}min`,tarde:`🏋️ Abdômen 3x15, Agachamento 3x12`,noite:`🧘 Yoga 10min`});
 }
@@ -289,23 +290,47 @@ function renderCalendar(){
   }
 }
 
-// GRÁFICO
+// GRÁFICO VIP MELHORADO
 let chart=null;
 function renderChart(){
   const ctx=document.getElementById("chart");
   if(chart) chart.destroy();
   chart=new Chart(ctx,{
-    type:"bar",
-    data:{labels:[...Array(30).keys()].map(i=>i+1),
-    datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
-    backgroundColor:"gold"}]},
-    options:{scales:{y:{min:0,max:1}}}
+    type:'bar',
+    data:{
+      labels:[...Array(30).keys()].map(i=>i+1),
+      datasets:[{
+        label:'Progresso VIP',
+        data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
+        backgroundColor:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?'limegreen':'#222'),
+        borderColor:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?'green':'#555'),
+        borderWidth:1,
+        borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        tooltip:{
+          callbacks:{
+            label:function(context){
+              const day=context.dataIndex+1;
+              return doneDays.includes(day)?`Dia ${day}: ✅ Concluído`:`Dia ${day}: ❌ Pendente`;
+            }
+          }
+        },
+        legend:{display:false}
+      },
+      scales:{
+        y:{min:0,max:1,ticks:{stepSize:1}},
+        x:{title:{display:true,text:'Dias do mês',color:'gold'}}
+      },
+      animation:{duration:800,easing:'easeOutBounce'}
+    }
   });
-
-  if("Notification" in window){ Notification.requestPermission(); }
 }
 
-// INICIAL
+// Mostrar Grátis por padrão
 showPage("free");
 loadAll();
 </script>
