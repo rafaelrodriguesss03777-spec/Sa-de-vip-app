@@ -330,27 +330,30 @@ function renderCalendar(){
   }
 }
 
-// Gráfico
+// Gráfico colorido
 let chart=null;
 function renderChart(){
   const ctx=document.getElementById("chart");
   if(chart) chart.destroy();
   const dataArr=[];
+  const bgArr=[];
   for(let i=0;i<30;i++){
-    dataArr.push(completedExercises[i]?completedExercises[i].length/3:0);
+    const done=completedExercises[i]?completedExercises[i].length/3:0;
+    dataArr.push(done);
+    if(done>=1) bgArr.push("green");
+    else if(done>=0.5) bgArr.push("yellow");
+    else bgArr.push("red");
   }
   chart=new Chart(ctx,{
     type:"bar",
     data:{
       labels:[...Array(30).keys()].map(i=>i+1),
-      datasets:[{
-        data:dataArr,
-        backgroundColor:"gold"
-      }]
+      datasets:[{data:dataArr, backgroundColor:bgArr}]
     },
     options:{
       scales:{y:{min:0,max:1}},
-      plugins:{legend:{display:false}}
+      plugins:{legend:{display:false}},
+      animation:{duration:800}
     }
   });
 }
