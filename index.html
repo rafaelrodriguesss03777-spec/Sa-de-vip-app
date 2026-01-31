@@ -150,13 +150,13 @@ button.sec{background:#333;color:#fff}
 </div>
 
 <script>
-// ===== FUNÇÕES DE NAVEGAÇÃO =====
+// FUNÇÃO NAVEGAÇÃO
 function showPage(p){
 document.getElementById("pageFree").style.display=p==="free"?"block":"none";
 document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
 }
 
-// ===== DADOS GRÁTIS =====
+// DADOS GRÁTIS
 const foodFree={
 emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
 ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
@@ -168,33 +168,32 @@ ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
 definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-// ===== DADOS VIP =====
-function generateVIPData(){
-const foodVIP={},workoutVIP={};
-["emagrecer","ganhar","definir"].forEach(meta=>{
-foodVIP[meta]=[]; workoutVIP[meta]=[];
+// DADOS VIP COM EXERCÍCIOS POR META E DIA
+const foodVIP={
+emagrecer:[],
+ganhar:[],
+definir:[]
+};
+const workoutVIP={
+emagrecer:[],
+ganhar:[],
+definir:[]
+};
 for(let i=1;i<=30;i++){
-foodVIP[meta].push({
-manha:`🥚 Café ${i}: ovos, fruta, aveia`,
-tarde:`🍗 Almoço ${i}: frango, arroz, salada`,
-noite:`🌙 Jantar ${i}: sopa, legumes, proteína`
-});
-workoutVIP[meta].push({
-manha:`🚶 Caminhada ${20+i}min, 🏃 Corrida ${10+i}min, 🏋️ Flexão 3x${10+i}`,
-tarde:`🔥 Agachamento 3x${10+i}, Burpee 3x${10+i}, Abdominal 3x${10+i}`,
-noite:`🧘 Prancha ${30+i}s, Yoga 10min, Alongamento`
-});
-}
-});
-return {foodVIP,workoutVIP};
-}
-const {foodVIP,workoutVIP}=generateVIPData();
+foodVIP.emagrecer.push({manha:`🥚 Café ${i}: ovos e frutas`,tarde:`🍗 Almoço ${i}: frango, arroz`,noite:`🌙 Jantar ${i}: sopa e legumes`});
+foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
+foodVIP.definir.push({manha:`🥣 Café ${i}: aveia`,tarde:`🥗 Almoço ${i}: frango e vegetais`,noite:`🍵 Jantar ${i}: salada leve`});
 
-// ===== ESTADO =====
+workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30+${i} min, 🏃 Corrida leve`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
+workoutVIP.ganhar.push({manha:`🏋️ Supino 3x${10+i}, Flexão 3x${12+i}`,tarde:`🏋️ Agachamento 3x${12+i}, Rosca 3x${10+i}`,noite:`🧘 Prancha 40s`});
+workoutVIP.definir.push({manha:`🔥 HIIT 3x${10+i}, Corrida leve 20+${i}min`,tarde:`🏋️ Abdômen 3x15, Agachamento 3x12`,noite:`🧘 Yoga 10min`});
+}
+
+// ESTADO
 let vip=localStorage.getItem("vip")==="true";
 let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
 
-// ===== FUNÇÕES =====
+// FUNÇÕES
 document.getElementById("goal").addEventListener("change",loadAll);
 
 function unlockVIP(){
@@ -261,7 +260,7 @@ return;
 doneDays.push(todayIndex);
 localStorage.setItem("doneDays",JSON.stringify(doneDays));
 alert("🎉 Parabéns! Exercícios do dia concluídos!");
-loadAll(); // <- Atualiza barra, calendário e gráfico imediatamente
+loadAll();
 });
 
 // RESET
