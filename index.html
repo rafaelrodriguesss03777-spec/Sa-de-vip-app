@@ -5,7 +5,6 @@
 <title>Saúde VIP Premium</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 body{margin:0;font-family:Arial;background:#0e0e0e;color:#fff}
 .container{max-width:420px;margin:auto;padding:16px}
@@ -27,7 +26,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 .nav{display:flex;gap:10px;margin-bottom:16px}
 </style>
 </head>
-
 <body>
 <div class="container">
 
@@ -51,12 +49,10 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <!-- PÁGINA GRÁTIS -->
 <div id="pageFree" class="card">
 <h2>🆓 Plano Grátis</h2>
-
 <div class="box">
 <h3>🥗 Alimentação</h3>
 <div id="foodFree"></div>
 </div>
-
 <div class="box">
 <h3>🔥 Treino</h3>
 <div id="workoutFree"></div>
@@ -73,16 +69,16 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <div id="vipContent" class="hidden">
 
 <div class="box">
-<h3>🥗 Alimentação VIP</h3>
+<h3>🥗 Alimentação VIP do Dia</h3>
 <div id="foodVIP"></div>
 </div>
 
 <div class="box">
-<h3>🔥 Treino VIP</h3>
+<h3>🔥 Treino VIP do Dia</h3>
 <div id="workoutVIP"></div>
 </div>
 
-<button id="finishBtn">✅ Concluir dia</button>
+<button id="finishBtn">✅ Concluir treino do dia</button>
 <button class="sec" onclick="resetProgress()">🔄 Reiniciar 30 dias</button>
 
 <h3 style="margin-top:16px">📅 Progresso</h3>
@@ -92,7 +88,6 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <canvas id="chart"></canvas>
 
 </div>
-
 <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
 </div>
 </div>
@@ -110,7 +105,6 @@ emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
 ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
 definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
 };
-
 const workoutFree={
 emagrecer:{manha:"🚶 Caminhada",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
 ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
@@ -137,23 +131,28 @@ noite:`🧘 Prancha ${30+i}s, Yoga 10min, Alongamento`
 });
 return {foodVIP,workoutVIP};
 }
-
 const {foodVIP,workoutVIP}=generateVIPData();
 
 // ===== ESTADO =====
 let vip=localStorage.getItem("vip")==="true";
-let day=Number(localStorage.getItem("day")||1);
-let done=JSON.parse(localStorage.getItem("doneDays")||"[]");
-let chart=null;
-
-document.getElementById("goal").addEventListener("change",loadAll);
+let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
 
 // ===== FUNÇÕES =====
+document.getElementById("goal").addEventListener("change",loadAll);
+
 function unlockVIP(){
 localStorage.setItem("vip","true");
 vip=true;
 loadAll();
 alert("🎉 VIP desbloqueado!");
+}
+
+function getCurrentDayIndex(){
+const startDate=new Date(localStorage.getItem("vipStart")||new Date().toISOString());
+localStorage.setItem("vipStart",startDate);
+const today=new Date();
+const diff=Math.floor((today-startDate)/(1000*60*60*24));
+return Math.min(diff,29);
 }
 
 function loadAll(){
@@ -165,23 +164,22 @@ document.getElementById("foodFree").innerHTML=
 `<div class="period"><b>Manhã:</b> ${foodFree[goal].manha}</div>
 <div class="period"><b>Tarde:</b> ${foodFree[goal].tarde}</div>
 <div class="period"><b>Noite:</b> ${foodFree[goal].noite}</div>`;
-
 document.getElementById("workoutFree").innerHTML=
 `<div class="period"><b>Manhã:</b> ${workoutFree[goal].manha}</div>
 <div class="period"><b>Tarde:</b> ${workoutFree[goal].tarde}</div>
 <div class="period"><b>Noite:</b> ${workoutFree[goal].noite}</div>`;
 
-if(!vip)return;
-
 // VIP
+if(!vip)return;
 document.getElementById("vipContent").classList.remove("hidden");
 document.getElementById("unlockBtn").style.display="none";
 
-document.getElementById("dayCount").innerText=day;
-document.getElementById("bar").style.width=(day/30*100)+"%";
+const dayIndex=getCurrentDayIndex();
+document.getElementById("dayCount").innerText=dayIndex+1;
+document.getElementById("bar").style.width=((dayIndex+1)/30*100)+"%";
 
-const f=foodVIP[goal][(day-1)%30];
-const w=workoutVIP[goal][(day-1)%30];
+const f=foodVIP[goal][dayIndex];
+const w=workoutVIP[goal][dayIndex];
 
 document.getElementById("foodVIP").innerHTML=
 `<div class="period"><b>Manhã:</b> ${f.manha}</div>
@@ -193,58 +191,58 @@ document.getElementById("workoutVIP").innerHTML=
 <div class="period"><b>Tarde:</b> ${w.tarde}</div>
 <div class="period"><b>Noite:</b> ${w.noite}</div>`;
 
-renderCalendar();
+renderCalendar(dayIndex+1);
 renderChart();
 }
 
 // ===== DIA =====
 document.getElementById("finishBtn").addEventListener("click",()=>{
-if(done.includes(day)){
+const todayIndex=getCurrentDayIndex()+1;
+if(doneDays.includes(todayIndex)){
 alert("✅ Você já concluiu os exercícios de hoje!");
 return;
 }
-done.push(day);
-localStorage.setItem("doneDays",JSON.stringify(done));
+doneDays.push(todayIndex);
+localStorage.setItem("doneDays",JSON.stringify(doneDays));
 alert("🎉 Parabéns! Exercícios do dia concluídos!");
-day++; if(day>30)day=30;
-localStorage.setItem("day",day);
 loadAll();
 });
 
 function resetProgress(){
-day=1;done=[];
-localStorage.setItem("day",1);
+localStorage.removeItem("vipStart");
+doneDays=[];
 localStorage.setItem("doneDays","[]");
 loadAll();
 }
 
 // ===== CALENDÁRIO =====
-function renderCalendar(){
+function renderCalendar(currentDay){
 const cal=document.getElementById("calendar");
 cal.innerHTML="";
 for(let i=1;i<=30;i++){
 const d=document.createElement("div");
-d.className="day"+(done.includes(i)?" done":"");
-d.innerHTML=done.includes(i)?"✔️":i;
+d.className="day";
+d.innerHTML=doneDays.includes(i)?"✔️":i;
 cal.appendChild(d);
 }
 }
 
 // ===== GRÁFICO =====
+let chart=null;
 function renderChart(){
 const ctx=document.getElementById("chart");
 if(chart)chart.destroy();
 chart=new Chart(ctx,{
 type:"bar",
 data:{labels:[...Array(30).keys()].map(i=>i+1),
-datasets:[{data:[...Array(30).keys()].map(i=>done.includes(i+1)?1:0),
+datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
 backgroundColor:"gold"}]},
 options:{scales:{y:{min:0,max:1}}}
 });
-}
 
 // ===== NOTIFICAÇÃO =====
 if("Notification" in window){ Notification.requestPermission(); }
+}
 
 showPage("free");
 loadAll();
