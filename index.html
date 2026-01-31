@@ -116,6 +116,10 @@ button:hover{
   transform:scale(1.05);
   box-shadow:0 0 20px gold;
 }
+/* Checkboxes de exercícios */
+.exercise-item{
+  margin:5px 0;
+}
 </style>
 </head>
 <body>
@@ -165,6 +169,7 @@ button:hover{
   <div class="box">
     <h3>🔥 Treino VIP do Dia</h3>
     <div id="workoutVIP"></div>
+    <div id="exercisesList"></div>
   </div>
 
   <button id="finishBtn">✅ Concluir treino do dia</button>
@@ -181,7 +186,7 @@ button:hover{
 </div>
 
 <script>
-// Navegação entre páginas
+// Navegação
 function showPage(p){
   document.getElementById("pageFree").style.display=p==="free"?"block":"none";
   document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
@@ -215,11 +220,11 @@ for(let i=1;i<=30;i++){
 // Estado
 let vip=localStorage.getItem("vip")==="true";
 let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
+let completedExercises=JSON.parse(localStorage.getItem("completedExercises")||"{}");
 
-// Carregar metas
+// Funções
 document.getElementById("goal").addEventListener("change",loadAll);
 
-// Funções VIP
 function unlockVIP(){
   localStorage.setItem("vip","true");
   vip=true;
@@ -239,7 +244,7 @@ function loadAll(){
   const goal=document.getElementById("goal").value;
   if(!goal) return;
 
-  // Plano grátis
+  // Grátis
   document.getElementById("foodFree").innerHTML=
   `<div class="period"><b>Manhã:</b> ${foodFree[goal].manha}</div>
   <div class="period"><b>Tarde:</b> ${foodFree[goal].tarde}</div>
@@ -249,8 +254,8 @@ function loadAll(){
   <div class="period"><b>Tarde:</b> ${workoutFree[goal].tarde}</div>
   <div class="period"><b>Noite:</b> ${workoutFree[goal].noite}</div>`;
 
-  // VIP
   if(!vip) return;
+
   document.getElementById("vipContent").classList.remove("hidden");
   document.getElementById("unlockBtn").style.display="none";
 
@@ -265,10 +270,21 @@ function loadAll(){
   `<div class="period"><b>Manhã:</b> ${f.manha}</div>
   <div class="period"><b>Tarde:</b> ${f.tarde}</div>
   <div class="period"><b>Noite:</b> ${f.noite}</div>`;
-  document.getElementById("workoutVIP").innerHTML=
-  `<div class="period"><b>Manhã:</b> ${w.manha}</div>
-  <div class="period"><b>Tarde:</b> ${w.tarde}</div>
-  <div class="period"><b>Noite:</b> ${w.noite}</div>`;
+
+  // Lista de exercícios com checkbox
+  const exDiv=document.getElementById("exercisesList");
+  exDiv.innerHTML="";
+  wManha=w.manha.split(", ");
+  wTarde=w.tarde.split(", ");
+  wNoite=w.noite.split(", ");
+  const exercises=[...wManha,...wTarde,...wNoite];
+  exercises.forEach((ex,i)=>{
+    const div=document.createElement("div");
+    div.className="exercise-item";
+    const checked=(completedExercises[dayIndex]||[]).includes(i);
+    div.innerHTML=`<input type="checkbox" data-index="${i}" ${checked?"checked":""}> ${ex}`;
+    exDiv.appendChild(div);
+  });
 
   renderCalendar();
   renderChart();
@@ -276,14 +292,19 @@ function loadAll(){
 
 // Concluir treino
 document.getElementById("finishBtn").addEventListener("click",()=>{
-  const todayIndex=getCurrentDayIndex()+1;
-  if(doneDays.includes(todayIndex)){
-    alert("✅ Você já concluiu os exercícios de hoje!");
-    return;
+  const dayIndex=getCurrentDayIndex();
+  const checkboxes=document.querySelectorAll("#exercisesList input[type='checkbox']");
+  completedExercises[dayIndex]=[];
+  checkboxes.forEach(cb=>{
+    if(cb.checked) completedExercises[dayIndex].push(Number(cb.dataset.index));
+  });
+  localStorage.setItem("completedExercises",JSON.stringify(completedExercises));
+
+  if(!doneDays.includes(dayIndex+1) && completedExercises[dayIndex].length>0){
+    doneDays.push(dayIndex+1);
+    localStorage.setItem("doneDays",JSON.stringify(doneDays));
   }
-  doneDays.push(todayIndex);
-  localStorage.setItem("doneDays",JSON.stringify(doneDays));
-  alert("🎉 Parabéns! Exercícios do dia concluídos!");
+  alert("🎉 Exercícios do dia registrados!");
   loadAll();
 });
 
@@ -291,7 +312,9 @@ document.getElementById("finishBtn").addEventListener("click",()=>{
 document.getElementById("resetBtn").addEventListener("click",()=>{
   localStorage.removeItem("vipStart");
   doneDays=[];
+  completedExercises={};
   localStorage.setItem("doneDays","[]");
+  localStorage.setItem("completedExercises","{}");
   loadAll();
 });
 
@@ -312,12 +335,18 @@ let chart=null;
 function renderChart(){
   const ctx=document.getElementById("chart");
   if(chart) chart.destroy();
+  const dataArr=[];
+  for(let i=0;i<30;i++){
+    dataArr.push(completedExercises[i]?completedExercises[i].length/3:0);
+  }
   chart=new Chart(ctx,{
     type:"bar",
     data:{
       labels:[...Array(30).keys()].map(i=>i+1),
-      datasets:[{data:[...Array(30).keys()].map(i=>doneDays.includes(i+1)?1:0),
-      backgroundColor:"gold"}]
+      datasets:[{
+        data:dataArr,
+        backgroundColor:"gold"
+      }]
     },
     options:{
       scales:{y:{min:0,max:1}},
