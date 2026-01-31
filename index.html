@@ -41,6 +41,7 @@ button{
   border:2px solid #f1c40f;
 }
 ul{padding-left:20px;}
+.food-list li{margin-bottom:6px;}
 </style>
 </head>
 
@@ -85,7 +86,11 @@ const dados = {
         "Tarde: Abdominal 3/20",
         "Noite: Agachamento 3/20"
       ],
-      comida:"Alimentação leve, frutas e legumes"
+      comida:[
+        "Café: fruta + água",
+        "Almoço: arroz + frango",
+        "Jantar: salada leve"
+      ]
     },
     vip:{
       treino:[
@@ -93,9 +98,15 @@ const dados = {
         "Tarde: Abdominal 4/25",
         "Noite: HIIT 20min"
       ],
-      comida:"Café: ovos | Almoço: frango + arroz | Jantar: salada + proteína"
+      comida:[
+        "Café: ovos + aveia",
+        "Almoço: frango + arroz + legumes",
+        "Lanche: fruta ou iogurte",
+        "Jantar: salada + proteína"
+      ]
     }
   },
+
   massa:{
     gratis:{
       treino:[
@@ -103,7 +114,11 @@ const dados = {
         "Tarde: Agachamento 3/20",
         "Noite: Prancha 2min"
       ],
-      comida:"Proteína básica"
+      comida:[
+        "Café: pão + ovo",
+        "Almoço: arroz + carne",
+        "Jantar: macarrão simples"
+      ]
     },
     vip:{
       treino:[
@@ -111,9 +126,15 @@ const dados = {
         "Tarde: Agachamento 4/25",
         "Noite: Bíceps + tríceps"
       ],
-      comida:"Café: ovos + aveia | Almoço: carne + arroz | Jantar: batata doce"
+      comida:[
+        "Café: ovos + aveia",
+        "Almoço: carne + arroz + feijão",
+        "Lanche: vitamina",
+        "Jantar: batata doce + frango"
+      ]
     }
   },
+
   definir:{
     gratis:{
       treino:[
@@ -121,7 +142,11 @@ const dados = {
         "Tarde: Prancha 2min",
         "Noite: Abdominal 3/20"
       ],
-      comida:"Equilibrada"
+      comida:[
+        "Café: fruta",
+        "Almoço: proteína + legumes",
+        "Jantar: refeição leve"
+      ]
     },
     vip:{
       treino:[
@@ -129,7 +154,12 @@ const dados = {
         "Tarde: Core completo",
         "Noite: Cardio 30min"
       ],
-      comida:"Proteína magra + vegetais + baixo carbo"
+      comida:[
+        "Café: ovos + frutas",
+        "Almoço: frango + legumes",
+        "Lanche: castanhas",
+        "Jantar: proteína leve"
+      ]
     }
   }
 };
@@ -145,7 +175,7 @@ function mostrarGratis(){
     <strong>Treino:</strong>
     <ul>${g.treino.map(t=>`<li>${t}</li>`).join("")}</ul>
     <strong>Alimentação:</strong>
-    <p>${g.comida}</p>
+    <ul class="food-list">${g.comida.map(c=>`<li>${c}</li>`).join("")}</ul>
   `;
 }
 
@@ -171,7 +201,7 @@ function mostrarVIP(){
     <strong>Treino VIP:</strong>
     <ul>${v.treino.map(t=>`<li>${t}</li>`).join("")}</ul>
     <strong>Alimentação VIP:</strong>
-    <p>${v.comida}</p>
+    <ul class="food-list">${v.comida.map(c=>`<li>${c}</li>`).join("")}</ul>
   `;
 }
 
