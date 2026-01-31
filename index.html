@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <title>Saúde VIP & Grátis</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 body{
   margin:0;
@@ -26,9 +24,7 @@ body{
   margin-bottom:16px;
   box-shadow:0 0 20px rgba(255,255,255,0.05);
 }
-h2,h3{
-  margin:0 0 10px;
-}
+h2,h3{margin:0 0 10px;}
 button{
   width:100%;
   padding:14px;
@@ -50,10 +46,7 @@ button:hover{
   overflow:hidden;
   margin-bottom:10px;
 }
-.progress span{
-  display:block;
-  height:100%;
-}
+.progress span{display:block;height:100%;}
 .grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
@@ -61,17 +54,13 @@ button:hover{
 }
 .day{
   padding:10px 0;
-  background:#222;
+  background:#000;
   border-radius:8px;
   text-align:center;
   font-size:12px;
   color:#fff;
 }
-.day.done{
-  background:green;
-  color:#000;
-  font-weight:bold;
-}
+.day.done{background:green;color:#000;font-weight:bold;}
 .hidden{display:none;}
 .box{
   background:#1f1f1f;
@@ -83,31 +72,31 @@ button:hover{
 /* VIP */
 .vip{
   border:3px solid gold;
-  background: linear-gradient(145deg, #1a1a1a, #222);
-  box-shadow: 0 0 20px gold;
+  background: linear-gradient(145deg,#1a1a1a,#222);
+  box-shadow:0 0 20px gold;
   animation: glowGold 2s infinite alternate;
   position: relative;
 }
-@keyframes glowGold {
-  0% { box-shadow:0 0 15px gold; }
-  50% { box-shadow:0 0 30px gold; }
-  100% { box-shadow:0 0 15px gold; }
+@keyframes glowGold{
+  0% {box-shadow:0 0 15px gold;}
+  50% {box-shadow:0 0 30px gold;}
+  100% {box-shadow:0 0 15px gold;}
 }
-.vip button{ background:gold; color:#000; }
+.vip button{background:gold;color:#000;}
 
 /* GRÁTIS */
 .free{
   border:3px solid #00ff00;
-  background: linear-gradient(145deg, #0a0a0a, #111);
-  box-shadow: 0 0 20px #00ff00;
+  background: linear-gradient(145deg,#0a0a0a,#111);
+  box-shadow:0 0 20px #00ff00;
   animation: glowGreen 2s infinite alternate;
 }
-@keyframes glowGreen {
-  0% { box-shadow:0 0 15px #00ff00; }
-  50% { box-shadow:0 0 30px #00ff00; }
-  100% { box-shadow:0 0 15px #00ff00; }
+@keyframes glowGreen{
+  0% {box-shadow:0 0 15px #00ff00;}
+  50% {box-shadow:0 0 30px #00ff00;}
+  100% {box-shadow:0 0 15px #00ff00;}
 }
-.free button{ background:#00ff00; color:#000; }
+.free button{background:#00ff00;color:#000;}
 </style>
 </head>
 
@@ -173,7 +162,7 @@ button:hover{
 
 <script>
 // ====== DADOS ======
-const foods = {
+const foods={
   emagrecer:[
     ["🍳 Ovos","🥗 Frango grelhado","🌙 Salada leve"],
     ["🥣 Aveia","🐟 Peixe","🌙 Sopa detox"],
@@ -190,8 +179,7 @@ const foods = {
     ["🍞 Pão integral","🥗 Salada proteica","🌙 Frango grelhado"]
   ]
 };
-
-const workouts = {
+const workouts={
   emagrecer:[
     ["🚶 Caminhada 30min","🔥 Polichinelo 3x15","🧘 Alongamento 5min"],
     ["🚴 Bike 20min","🔥 Agachamento 3x12","🧘 Prancha 30s"],
@@ -213,17 +201,17 @@ const workouts = {
 function loadFree(){
   const goal=document.getElementById("goal").value;
   if(!goal) return;
-  const f = foods[goal][0];
-  const w = workouts[goal][0];
+  const f=foods[goal][0];
+  const w=workouts[goal][0];
   document.getElementById("foodFree").innerHTML=f.join("<br>");
   document.getElementById("workoutFree").innerHTML=w.join("<br>");
 }
 
 // ====== VIP ======
-let vip = localStorage.getItem("vip")==="true";
-let day = Number(localStorage.getItem("day")||1);
-let doneDays = JSON.parse(localStorage.getItem("doneDays")||"[]");
-let progressChart = null;
+let vip=localStorage.getItem("vip")==="true";
+let day=Number(localStorage.getItem("day")||1);
+let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
+let progressChart=null;
 
 function unlockVIP(){
   localStorage.setItem("vip","true");
@@ -234,7 +222,7 @@ function unlockVIP(){
 
 function loadVIP(){
   if(!vip) return;
-  const goal = document.getElementById("goal").value;
+  const goal=document.getElementById("goal").value;
   if(!goal) return;
   document.getElementById("vipContent").classList.remove("hidden");
   document.getElementById("unlockBtn").style.display="none";
@@ -242,8 +230,8 @@ function loadVIP(){
   document.getElementById("dayCount").innerText=day;
   document.getElementById("bar").style.width=(day/30*100)+"%";
 
-  const f = foods[goal][(day-1)%foods[goal].length];
-  const w = workouts[goal][(day-1)%workouts[goal].length];
+  const f=foods[goal][(day-1)%foods[goal].length];
+  const w=workouts[goal][(day-1)%workouts[goal].length];
 
   document.getElementById("food").innerHTML=f.join("<br>");
   document.getElementById("workout").innerHTML=w.join("<br>");
@@ -284,7 +272,7 @@ function renderCalendar(){
 function renderChart(){
   const ctx=document.getElementById("chart");
   if(progressChart) progressChart.destroy();
-  progressChart = new Chart(ctx,{
+  progressChart=new Chart(ctx,{
     type:"line",
     data:{
       labels:Array.from({length:30},(_,i)=>i+1),
@@ -314,11 +302,13 @@ function dailyNotification(){
   });
 }
 
+// Atualiza ambos ao trocar meta
 document.getElementById("goal").addEventListener("change",()=>{
   loadFree();
   loadVIP();
 });
 
+// Inicializa
 loadFree();
 loadVIP();
 </script>
