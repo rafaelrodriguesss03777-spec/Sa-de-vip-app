@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <title>Saúde VIP & Grátis</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 body{
   margin:0;
@@ -24,7 +26,7 @@ body{
   margin-bottom:16px;
   box-shadow:0 0 20px rgba(255,255,255,0.05);
 }
-h2,h3{margin:0 0 10px;}
+h2,h3{ margin:0 0 10px; }
 button{
   width:100%;
   padding:14px;
@@ -46,7 +48,7 @@ button:hover{
   overflow:hidden;
   margin-bottom:10px;
 }
-.progress span{display:block;height:100%;}
+.progress span{ display:block; height:100%; }
 .grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
@@ -60,8 +62,8 @@ button:hover{
   font-size:12px;
   color:#fff;
 }
-.day.done{background:green;color:#000;font-weight:bold;}
-.hidden{display:none;}
+.day.done{ background:green; color:#000; font-weight:bold; }
+.hidden{ display:none; }
 .box{
   background:#1f1f1f;
   padding:12px;
@@ -82,13 +84,13 @@ button:hover{
   50% {box-shadow:0 0 30px gold;}
   100% {box-shadow:0 0 15px gold;}
 }
-.vip button{background:gold;color:#000;}
+.vip button{ background:gold; color:#000; }
 
 /* GRÁTIS */
 .free{
   border:3px solid #00ff00;
   background: linear-gradient(145deg,#0a0a0a,#111);
-  box-shadow:0 0 20px #00ff00;
+  box-shadow: 0 0 20px #00ff00;
   animation: glowGreen 2s infinite alternate;
 }
 @keyframes glowGreen{
@@ -96,7 +98,7 @@ button:hover{
   50% {box-shadow:0 0 30px #00ff00;}
   100% {box-shadow:0 0 15px #00ff00;}
 }
-.free button{background:#00ff00;color:#000;}
+.free button{ background:#00ff00; color:#000; }
 </style>
 </head>
 
@@ -114,7 +116,7 @@ button:hover{
     </select>
   </div>
 
-  <!-- GRÁTIS -->
+  <!-- PLANO GRÁTIS -->
   <div class="card free">
     <h2>🍀 Plano Grátis</h2>
     <div class="box">
@@ -127,32 +129,26 @@ button:hover{
     </div>
   </div>
 
-  <!-- VIP -->
+  <!-- PLANO VIP -->
   <div class="card vip">
     <h2>⭐ VIP</h2>
     <p>Dia <b id="dayCount">1</b>/30</p>
     <div class="progress"><span id="bar"></span></div>
 
     <div id="vipContent" class="hidden">
-
       <div class="box">
         <h3>🥗 Alimentação VIP do Dia</h3>
         <div id="food"></div>
       </div>
-
       <div class="box">
         <h3>🔥 Treino VIP do Dia</h3>
         <div id="workout"></div>
       </div>
-
       <button onclick="finishDay()">✅ Concluir treino do dia</button>
-
       <h3 style="margin-top:16px;">📅 Seu progresso</h3>
       <div class="grid" id="calendar"></div>
-
       <h3>📊 Gráfico de Progresso</h3>
       <canvas id="chart"></canvas>
-
     </div>
 
     <button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
@@ -179,6 +175,7 @@ const foods={
     ["🍞 Pão integral","🥗 Salada proteica","🌙 Frango grelhado"]
   ]
 };
+
 const workouts={
   emagrecer:[
     ["🚶 Caminhada 30min","🔥 Polichinelo 3x15","🧘 Alongamento 5min"],
@@ -201,10 +198,8 @@ const workouts={
 function loadFree(){
   const goal=document.getElementById("goal").value;
   if(!goal) return;
-  const f=foods[goal][0];
-  const w=workouts[goal][0];
-  document.getElementById("foodFree").innerHTML=f.join("<br>");
-  document.getElementById("workoutFree").innerHTML=w.join("<br>");
+  document.getElementById("foodFree").innerHTML=foods[goal][0].join("<br>");
+  document.getElementById("workoutFree").innerHTML=workouts[goal][0].join("<br>");
 }
 
 // ====== VIP ======
@@ -302,13 +297,11 @@ function dailyNotification(){
   });
 }
 
-// Atualiza ambos ao trocar meta
 document.getElementById("goal").addEventListener("change",()=>{
   loadFree();
   loadVIP();
 });
 
-// Inicializa
 loadFree();
 loadVIP();
 </script>
