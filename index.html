@@ -69,6 +69,9 @@ button{
   background:#d4edda;
   color:#155724;
   text-align:center;
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
 }
 .progress{
   font-weight:bold;
@@ -106,8 +109,8 @@ button{
 <!-- TABS -->
 <div class="section">
 <div class="tabs">
-  <div class="tab active" onclick="showFree()">Grátis</div>
-  <div class="tab" onclick="showVIP()">VIP ⭐</div>
+  <div class="tab active" id="tabFree">Grátis</div>
+  <div class="tab" id="tabVIP">VIP ⭐</div>
 </div>
 
 <!-- GRÁTIS -->
@@ -126,12 +129,12 @@ button{
 <div class="bar"><div class="fill" id="barFill"></div></div>
 
 <div id="vipLocked">
-<div class="vip-card">
-🔒 Desbloqueie o VIP para acessar<br>
-🍽️ Alimentação diária<br>
-💪 Treinos avançados
-</div>
-<button class="btn-vip" onclick="unlockVIP()">💰 Comprar VIP (Pix)</button>
+  <div class="vip-card">
+    🔒 Desbloqueie o VIP para acessar<br>
+    🍽️ Alimentação diária<br>
+    💪 Treinos avançados
+  </div>
+  <button class="btn-vip" onclick="unlockVIP()">💰 Comprar VIP (Pix)</button>
 </div>
 
 <div id="vipContent" style="display:none">
@@ -153,72 +156,85 @@ button{
 </div>
 </div>
 </div>
+
 </div>
 
 <script>
+/* ===== VARIÁVEIS ===== */
 let day = Number(localStorage.getItem("day")) || 1;
 let vip = localStorage.getItem("vip") === "true";
 
+/* ELEMENTOS */
+const goal = document.getElementById("goal");
+const tabFree = document.getElementById("tabFree");
+const tabVIP = document.getElementById("tabVIP");
+const free = document.getElementById("free");
+const vipDiv = document.getElementById("vip");
+
+const freeFood = document.getElementById("freeFood");
+const freeTrain = document.getElementById("freeTrain");
+
+const vipLocked = document.getElementById("vipLocked");
+const vipContent = document.getElementById("vipContent");
+const vipFoodEl = document.getElementById("vipFood");
+const vipTrainEl = document.getElementById("vipTrain");
+
+const progressText = document.getElementById("progressText");
+const barFill = document.getElementById("barFill");
+const msg = document.getElementById("msg");
+const resetBtn = document.getElementById("resetBtn");
+
+/* ===== DADOS ===== */
 const freeData={
   emagrecer:{food:"Frutas, ovos e salada",train:["Caminhada 15min","Agachamento 2/15"]},
   massa:{food:"Arroz, ovo e frango",train:["Flexão 2/10","Agachamento 2/15"]},
   definir:{food:"Proteína e legumes",train:["Prancha 2/30s","Abdominal 2/20"]}
 };
 
+/* ===== FUNÇÕES ===== */
 function vipFood(goal,day){
   const foods={
-    emagrecer:[
-      "Ovos + fruta / Frango + salada / Sopa leve",
-      "Vitamina / Peixe + legumes / Omelete",
-      "Iogurte / Frango grelhado / Salada",
-      "Ovos / Carne magra + arroz / Legumes"
-    ],
-    massa:[
-      "Ovos + pão / Arroz + frango / Macarrão",
-      "Vitamina + aveia / Carne + arroz / Batata",
-      "Panqueca / Frango + macarrão / Ovos",
-      "Iogurte + granola / Carne / Arroz"
-    ],
-    definir:[
-      "Frutas / Frango + legumes / Salada",
-      "Ovos / Peixe + legumes / Sopa",
-      "Iogurte / Frango / Salada",
-      "Vitamina / Carne magra / Legumes"
-    ]
+    emagrecer:["Ovos / Frango / Sopa","Vitamina / Peixe / Omelete","Iogurte / Frango / Salada"],
+    massa:["Ovos / Arroz / Macarrão","Vitamina / Carne / Batata","Panqueca / Frango / Ovos"],
+    definir:["Frutas / Frango / Salada","Ovos / Peixe / Sopa","Iogurte / Carne / Legumes"]
   };
-  const menu=foods[goal][(day-1)%foods[goal].length];
+  const f=foods[goal][(day-1)%foods[goal].length].split("/");
   return `
-<b>☀️ Café:</b> ${menu.split("/")[0]}<br><br>
-<b>🍛 Almoço:</b> ${menu.split("/")[1]}<br><br>
-<b>🌙 Jantar:</b> ${menu.split("/")[2]}<br><br>
-<small>📆 Dia ${day}</small>`;
+  ☀️ Café: ${f[0]}<br><br>
+  🍛 Almoço: ${f[1]}<br><br>
+  🌙 Jantar: ${f[2]}<br><br>
+  📆 Dia ${day}`;
 }
 
 function vipTrain(day){
   return `
-<b>🌅 Manhã</b><br>
-Caminhada ${20+day} min<br><br>
-
-<b>🌞 Tarde</b><br>
-Agachamento 3/${15+day}<br>
-Flexão 3/${10+day}<br><br>
-
-<b>🌙 Noite</b><br>
-Abdominal 3/${20+day}<br>
-Prancha 3/${30+day}s`;
+  🌅 Manhã: Caminhada ${20+day} min<br><br>
+  🌞 Tarde: Agachamento 3/${15+day} / Flexão 3/${10+day}<br><br>
+  🌙 Noite: Abdominal 3/${20+day} / Prancha ${30+day}s`;
 }
 
-function showFree(){
+/* ===== NAVEGAÇÃO ===== */
+tabFree.onclick=()=>{
+  tabFree.classList.add("active");
+  tabVIP.classList.remove("active");
   free.style.display="block";
-  vip.style.display="none";
-}
-function showVIP(){
-  free.style.display="none";
-  vip.style.display="block";
-  loadVIP();
-}
+  vipDiv.style.display="none";
+};
 
+tabVIP.onclick=()=>{
+  tabVIP.classList.add("active");
+  tabFree.classList.remove("active");
+  free.style.display="none";
+  vipDiv.style.display="block";
+  loadVIP();
+};
+
+/* ===== VIP ===== */
 function unlockVIP(){
+  if(!goal.value){
+    alert("Selecione a meta primeiro!");
+    return;
+  }
   localStorage.setItem("vip","true");
   vip=true;
   alert("🎉 VIP liberado!");
@@ -234,10 +250,7 @@ function loadVIP(){
   vipLocked.style.display="none";
   vipContent.style.display="block";
 
-  const goal=document.getElementById("goal").value;
-  if(!goal)return;
-
-  vipFoodEl.innerHTML=vipFood(goal,day);
+  vipFoodEl.innerHTML=vipFood(goal.value,day);
   vipTrainEl.innerHTML=vipTrain(day);
   progressText.innerText=`Dia ${day}/30`;
   barFill.style.width=(day/30*100)+"%";
@@ -247,10 +260,10 @@ function completeDay(){
   if(day<30){
     day++;
     localStorage.setItem("day",day);
-    msg.innerHTML=`<div class="done card">🎉 Parabéns! Volte amanhã.</div>`;
+    msg.innerHTML=`<div class="done">🎉 Parabéns! Volte amanhã.</div>`;
     loadVIP();
   }else{
-    msg.innerHTML=`<div class="done card">🏆 Você concluiu os 30 dias!</div>`;
+    msg.innerHTML=`<div class="done">🏆 Você concluiu os 30 dias!</div>`;
     resetBtn.style.display="block";
   }
 }
@@ -262,6 +275,7 @@ function resetProgress(){
   loadVIP();
 }
 
+/* ===== META ===== */
 goal.onchange=()=>{
   const g=goal.value;
   if(!g)return;
