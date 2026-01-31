@@ -81,6 +81,7 @@ button:hover{
 .period b{color:#ffd700;}
 .hidden{display:none;}
 .nav{display:flex;gap:10px;margin-bottom:16px;}
+
 /* Botões de navegação */
 .btn-free{
   background:linear-gradient(90deg,#00ff00,#00cc00);
@@ -102,6 +103,18 @@ button:hover{
   0%{box-shadow:0 0 15px gold;}
   50%{box-shadow:0 0 30px gold;}
   100%{box-shadow:0 0 15px gold;}
+}
+/* Botões VIP dentro do card */
+.vip-card button{
+  background:linear-gradient(90deg,#FFD700,#FFEA00);
+  color:#000;
+  font-weight:bold;
+  box-shadow:0 0 10px gold;
+  transition: all 0.3s;
+}
+.vip-card button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px gold;
 }
 </style>
 </head>
@@ -154,8 +167,8 @@ button:hover{
     <div id="workoutVIP"></div>
   </div>
 
-  <button id="finishBtn" class="btn-vip">✅ Concluir treino do dia</button>
-  <button id="resetBtn" class="btn-vip" style="margin-top:10px;">🔄 Reiniciar 30 dias</button>
+  <button id="finishBtn">✅ Concluir treino do dia</button>
+  <button id="resetBtn" style="margin-top:10px;">🔄 Reiniciar 30 dias</button>
 
   <h3 style="margin-top:16px;">📅 Progresso</h3>
   <div class="grid" id="calendar"></div>
@@ -164,7 +177,7 @@ button:hover{
   <canvas id="chart"></canvas>
 </div>
 
-<button id="unlockBtn" class="btn-vip">🔓 Desbloquear VIP</button>
+<button id="unlockBtn">🔓 Desbloquear VIP</button>
 </div>
 
 <script>
@@ -206,7 +219,7 @@ let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
 // Carregar metas
 document.getElementById("goal").addEventListener("change",loadAll);
 
-// Funções
+// Funções VIP
 function unlockVIP(){
   localStorage.setItem("vip","true");
   vip=true;
