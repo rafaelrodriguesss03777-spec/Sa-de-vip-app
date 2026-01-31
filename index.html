@@ -82,7 +82,7 @@ button{background:gold;color:#000;font-weight:bold;cursor:pointer}
 <div id="workoutVIP"></div>
 </div>
 
-<button onclick="finishDay()">✅ Concluir dia</button>
+<button id="finishBtn">✅ Concluir dia</button>
 <button class="sec" onclick="resetProgress()">🔄 Reiniciar 30 dias</button>
 
 <h3 style="margin-top:16px">📅 Progresso</h3>
@@ -105,7 +105,6 @@ document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
 }
 
 // ===== DADOS =====
-// GRÁTIS
 const foodFree={
 emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
 ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
@@ -118,13 +117,11 @@ ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
 definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
-// VIP: 30 dias completos com 10 refeições e 10 exercícios cada período
+// ===== VIP 30 dias =====
 function generateVIPData(){
 const foodVIP={},workoutVIP={};
-const metas=["emagrecer","ganhar","definir"];
-metas.forEach(meta=>{
-foodVIP[meta]=[];
-workoutVIP[meta]=[];
+["emagrecer","ganhar","definir"].forEach(meta=>{
+foodVIP[meta]=[]; workoutVIP[meta]=[];
 for(let i=1;i<=30;i++){
 foodVIP[meta].push({
 manha:`🥚 Café ${i} - Ovos, Fruta, Aveia`,
@@ -201,15 +198,18 @@ renderChart();
 }
 
 // ===== DIA =====
-function finishDay(){
-if(!done.includes(day)){
+document.getElementById("finishBtn").addEventListener("click",()=>{
+if(done.includes(day)){
+alert("✅ Você já concluiu os exercícios de hoje!");
+return;
+}
 done.push(day);
 localStorage.setItem("doneDays",JSON.stringify(done));
+alert("🎉 Parabéns! Exercícios do dia concluídos!");
 day++; if(day>30)day=30;
 localStorage.setItem("day",day);
 loadAll();
-}
-}
+});
 
 function resetProgress(){
 day=1;done=[];
@@ -244,9 +244,7 @@ options:{scales:{y:{min:0,max:1}}}
 }
 
 // ===== NOTIFICAÇÃO =====
-if("Notification" in window){
-Notification.requestPermission();
-}
+if("Notification" in window){ Notification.requestPermission(); }
 
 showPage("free");
 loadAll();
