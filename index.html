@@ -12,41 +12,126 @@ body{
   background:#0e0e0e;
   color:#fff;
 }
-.container{max-width:420px;margin:auto;padding:16px;}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:16px;
+}
 .card{
-  background:#151515;border-radius:16px;padding:16px;
-  margin-bottom:16px;box-shadow:0 0 20px rgba(255,255,255,0.05);
+  background:#151515;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 0 20px rgba(255,255,255,0.05);
+  transition: all 0.3s;
 }
 h2,h3{margin:0 0 10px;}
 select,button{
-  width:100%;padding:14px;border-radius:12px;
-  border:none;font-size:16px;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
 }
-button{font-weight:bold;cursor:pointer;}
-.progress{height:10px;background:#333;border-radius:10px;overflow:hidden;margin-bottom:10px;}
-.progress span{display:block;height:100%;transition:width 0.5s;}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-.day{background:#000;border-radius:8px;text-align:center;padding:10px 0;font-size:12px;}
-.day.done{background:#0a0;color:#0f0;font-weight:bold;}
-.box{background:#1f1f1f;padding:12px;border-radius:12px;margin-bottom:12px;border:1px solid #444;}
+button{
+  font-weight:bold;
+  cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+button:hover{
+  transform: scale(1.05);
+}
+.progress{
+  height:10px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+.progress span{
+  display:block;
+  height:100%;
+  transition:width 0.5s;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.day{
+  background:#000;
+  color:#fff;
+  border-radius:8px;
+  text-align:center;
+  padding:10px 0;
+  font-size:12px;
+}
+.day.done{
+  color:#0f0;
+  background:#0a0;
+  font-weight:bold;
+}
+.box{
+  background:#1f1f1f;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+  border:1px solid #444;
+}
 .period b{color:#ffd700;}
 .hidden{display:none;}
 .nav{display:flex;gap:10px;margin-bottom:16px;}
-.btn-free{background:linear-gradient(90deg,#00ff00,#00cc00);}
-.btn-vip{background:linear-gradient(90deg,#FFD700,#FFEA00);}
-.vip-card{border:3px solid gold;box-shadow:0 0 20px gold;}
-.exercise-item{margin:5px 0;}
+
+/* Botões de navegação */
+.btn-free{
+  background:linear-gradient(90deg,#00ff00,#00cc00);
+  color:#000;
+  box-shadow:0 0 10px #00ff00;
+}
+.btn-vip{
+  background:linear-gradient(90deg,#FFD700,#FFEA00);
+  color:#000;
+  box-shadow:0 0 10px gold;
+}
+/* VIP card */
+.vip-card{
+  border:3px solid gold;
+  box-shadow:0 0 20px gold;
+  animation: glowGold 2s infinite alternate;
+}
+@keyframes glowGold{
+  0%{box-shadow:0 0 15px gold;}
+  50%{box-shadow:0 0 30px gold;}
+  100%{box-shadow:0 0 15px gold;}
+}
+/* Botões VIP dentro do card */
+.vip-card button{
+  background:linear-gradient(90deg,#FFD700,#FFEA00);
+  color:#000;
+  font-weight:bold;
+  box-shadow:0 0 10px gold;
+  transition: all 0.3s;
+}
+.vip-card button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px gold;
+}
+/* Checkboxes de exercícios */
+.exercise-item{
+  margin:5px 0;
+}
 </style>
 </head>
-
 <body>
 <div class="container">
 
+<!-- Navegação -->
 <div class="nav">
   <button class="btn-free" onclick="showPage('free')">🆓 Plano Grátis</button>
   <button class="btn-vip" onclick="showPage('vip')">⭐ VIP</button>
 </div>
 
+<!-- Meta -->
 <div class="card">
 <h2>🎯 Escolha sua meta</h2>
 <select id="goal">
@@ -57,130 +142,225 @@ button{font-weight:bold;cursor:pointer;}
 </select>
 </div>
 
+<!-- Plano Grátis -->
 <div id="pageFree" class="card">
 <h2>🆓 Plano Grátis</h2>
-<div class="box"><h3>🥗 Alimentação</h3><div id="foodFree"></div></div>
-<div class="box"><h3>🔥 Treino</h3><div id="workoutFree"></div></div>
+<div class="box">
+<h3>🥗 Alimentação</h3>
+<div id="foodFree"></div>
+</div>
+<div class="box">
+<h3>🔥 Treino</h3>
+<div id="workoutFree"></div>
+</div>
 </div>
 
+<!-- VIP -->
 <div id="pageVIP" class="card vip-card hidden">
 <h2>⭐ VIP</h2>
-
-<div class="box">
-<h3>⚙️ Preferências VIP</h3>
-<select id="gender">
-  <option value="masculino">Masculino</option>
-  <option value="feminino">Feminino</option>
-</select>
-<br><br>
-<select id="difficulty">
-  <option value="facil">Fácil</option>
-  <option value="medio">Médio</option>
-  <option value="dificil">Difícil</option>
-</select>
-</div>
-
 <p>Dia <b id="dayCount">1</b>/30</p>
 <div class="progress"><span id="bar"></span></div>
 
-<div class="box">
-<h3>🔥 Treino VIP do Dia</h3>
-<div id="exercisesList"></div>
+<div id="vipContent">
+  <div class="box">
+    <h3>🥗 Alimentação VIP do Dia</h3>
+    <div id="foodVIP"></div>
+  </div>
+  <div class="box">
+    <h3>🔥 Treino VIP do Dia</h3>
+    <div id="workoutVIP"></div>
+    <div id="exercisesList"></div>
+  </div>
+
+  <button id="finishBtn">✅ Concluir treino do dia</button>
+  <button id="resetBtn" style="margin-top:10px;">🔄 Reiniciar 30 dias</button>
+
+  <h3 style="margin-top:16px;">📅 Progresso</h3>
+  <div class="grid" id="calendar"></div>
+
+  <h3 style="margin-top:20px;">📊 Gráfico de progresso</h3>
+  <canvas id="chart"></canvas>
 </div>
 
-<button id="finishBtn">✅ Concluir treino</button>
-<button id="resetBtn" style="margin-top:10px;">🔄 Reiniciar</button>
-
-<h3>📅 Progresso</h3>
-<div class="grid" id="calendar"></div>
-
-<h3>📊 Gráfico</h3>
-<canvas id="chart"></canvas>
-
-<button id="unlockBtn" onclick="unlockVIP()">🔓 Desbloquear VIP</button>
-</div>
+<button id="unlockBtn">🔓 Desbloquear VIP</button>
 </div>
 
 <script>
+// Navegação
 function showPage(p){
-  pageFree.style.display=p==="free"?"block":"none";
-  pageVIP.style.display=p==="vip"?"block":"none";
+  document.getElementById("pageFree").style.display=p==="free"?"block":"none";
+  document.getElementById("pageVIP").style.display=p==="vip"?"block":"none";
 }
 
-const workoutLevels={
-facil:(i)=>[`Agachamento 2x10`,`Flexão 2x8`,`Prancha 20s`],
-medio:(i)=>[`Agachamento 3x12`,`Flexão 3x10`,`Prancha 30s`],
-dificil:(i)=>[`Agachamento 4x15`,`Flexão 4x12`,`Prancha 45s`]
+// Dados grátis
+const foodFree={
+emagrecer:{manha:"🍎 Fruta",tarde:"🥗 Salada",noite:"🍲 Sopa"},
+ganhar:{manha:"🥪 Pão + ovos",tarde:"🍛 Arroz + frango",noite:"🥛 Vitamina"},
+definir:{manha:"🥣 Aveia",tarde:"🥗 Frango",noite:"🍵 Chá"}
+};
+const workoutFree={
+emagrecer:{manha:"🚶 Caminhada 30min",tarde:"🔥 Polichinelo",noite:"🧘 Alongar"},
+ganhar:{manha:"💪 Flexão",tarde:"🏋️ Agachamento",noite:"🧘 Alongar"},
+definir:{manha:"🔥 HIIT",tarde:"🏋️ Abdômen",noite:"🧘 Alongar"}
 };
 
+// Dados VIP
+const foodVIP={emagrecer:[],ganhar:[],definir:[]};
+const workoutVIP={emagrecer:[],ganhar:[],definir:[]};
+for(let i=1;i<=30;i++){
+  foodVIP.emagrecer.push({manha:`🥚 Café ${i}: ovos e frutas`,tarde:`🍗 Almoço ${i}: frango, arroz`,noite:`🌙 Jantar ${i}: sopa e legumes`});
+  foodVIP.ganhar.push({manha:`🥞 Café ${i}: panqueca`,tarde:`🍛 Almoço ${i}: arroz + frango`,noite:`🥛 Shake ${i}`});
+  foodVIP.definir.push({manha:`🥣 Café ${i}: aveia`,tarde:`🥗 Almoço ${i}: frango e vegetais`,noite:`🍵 Jantar ${i}: salada leve`});
+
+  workoutVIP.emagrecer.push({manha:`🚶 Caminhada 30+${i}min, 🏃 Corrida leve`,tarde:`🔥 Polichinelo 3x15, Agachamento 3x12`,noite:`🧘 Prancha 30s, Alongamento`});
+  workoutVIP.ganhar.push({manha:`🏋️ Supino 3x${10+i}, Flexão 3x${12+i}`,tarde:`🏋️ Agachamento 3x${12+i}, Rosca 3x${10+i}`,noite:`🧘 Prancha 40s`});
+  workoutVIP.definir.push({manha:`🔥 HIIT 3x${10+i}, Corrida leve 20+${i}min`,tarde:`🏋️ Abdômen 3x15, Agachamento 3x12`,noite:`🧘 Yoga 10min`});
+}
+
+// Estado
 let vip=localStorage.getItem("vip")==="true";
 let doneDays=JSON.parse(localStorage.getItem("doneDays")||"[]");
+let completedExercises=JSON.parse(localStorage.getItem("completedExercises")||"{}");
+
+// Funções
+document.getElementById("goal").addEventListener("change",loadAll);
 
 function unlockVIP(){
   localStorage.setItem("vip","true");
   vip=true;
+  alert("🎉 VIP desbloqueado!");
   loadAll();
 }
 
-function getDay(){
-  const s=new Date(localStorage.getItem("vipStart")||new Date());
-  if(!localStorage.getItem("vipStart")) localStorage.setItem("vipStart",s);
-  return Math.min(Math.floor((new Date()-s)/86400000),29);
+function getCurrentDayIndex(){
+  const startDate=new Date(localStorage.getItem("vipStart")||new Date().toISOString());
+  if(!localStorage.getItem("vipStart")) localStorage.setItem("vipStart",startDate);
+  const today=new Date();
+  const diff=Math.floor((today-startDate)/(1000*60*60*24));
+  return Math.min(diff,29);
 }
 
 function loadAll(){
-  const goal=goalSel.value;
-  if(!goal || !vip) return;
+  const goal=document.getElementById("goal").value;
+  if(!goal) return;
 
-  unlockBtn.style.display="none";
-  const d=getDay();
-  dayCount.innerText=d+1;
-  bar.style.width=((d+1)/30*100)+"%";
+  // Grátis
+  document.getElementById("foodFree").innerHTML=
+  `<div class="period"><b>Manhã:</b> ${foodFree[goal].manha}</div>
+  <div class="period"><b>Tarde:</b> ${foodFree[goal].tarde}</div>
+  <div class="period"><b>Noite:</b> ${foodFree[goal].noite}</div>`;
+  document.getElementById("workoutFree").innerHTML=
+  `<div class="period"><b>Manhã:</b> ${workoutFree[goal].manha}</div>
+  <div class="period"><b>Tarde:</b> ${workoutFree[goal].tarde}</div>
+  <div class="period"><b>Noite:</b> ${workoutFree[goal].noite}</div>`;
 
-  const diff=difficulty.value;
-  const exs=workoutLevels[diff](d);
+  if(!vip) return;
 
-  exercisesList.innerHTML="";
-  exs.forEach(e=>{
+  document.getElementById("vipContent").classList.remove("hidden");
+  document.getElementById("unlockBtn").style.display="none";
+
+  const dayIndex=getCurrentDayIndex();
+  document.getElementById("dayCount").innerText=dayIndex+1;
+  document.getElementById("bar").style.width=((dayIndex+1)/30*100)+"%";
+
+  const f=foodVIP[goal][dayIndex];
+  const w=workoutVIP[goal][dayIndex];
+
+  document.getElementById("foodVIP").innerHTML=
+  `<div class="period"><b>Manhã:</b> ${f.manha}</div>
+  <div class="period"><b>Tarde:</b> ${f.tarde}</div>
+  <div class="period"><b>Noite:</b> ${f.noite}</div>`;
+
+  // Lista de exercícios com checkbox
+  const exDiv=document.getElementById("exercisesList");
+  exDiv.innerHTML="";
+  wManha=w.manha.split(", ");
+  wTarde=w.tarde.split(", ");
+  wNoite=w.noite.split(", ");
+  const exercises=[...wManha,...wTarde,...wNoite];
+  exercises.forEach((ex,i)=>{
     const div=document.createElement("div");
     div.className="exercise-item";
-    div.innerHTML=`<input type="checkbox"> ${e}`;
-    exercisesList.appendChild(div);
+    const checked=(completedExercises[dayIndex]||[]).includes(i);
+    div.innerHTML=`<input type="checkbox" data-index="${i}" ${checked?"checked":""}> ${ex}`;
+    exDiv.appendChild(div);
   });
 
   renderCalendar();
   renderChart();
 }
 
+// Concluir treino
+document.getElementById("finishBtn").addEventListener("click",()=>{
+  const dayIndex=getCurrentDayIndex();
+  const checkboxes=document.querySelectorAll("#exercisesList input[type='checkbox']");
+  completedExercises[dayIndex]=[];
+  checkboxes.forEach(cb=>{
+    if(cb.checked) completedExercises[dayIndex].push(Number(cb.dataset.index));
+  });
+  localStorage.setItem("completedExercises",JSON.stringify(completedExercises));
+
+  if(!doneDays.includes(dayIndex+1) && completedExercises[dayIndex].length>0){
+    doneDays.push(dayIndex+1);
+    localStorage.setItem("doneDays",JSON.stringify(doneDays));
+  }
+  alert("🎉 Exercícios do dia registrados!");
+  loadAll();
+});
+
+// Reiniciar 30 dias
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  localStorage.removeItem("vipStart");
+  doneDays=[];
+  completedExercises={};
+  localStorage.setItem("doneDays","[]");
+  localStorage.setItem("completedExercises","{}");
+  loadAll();
+});
+
+// Calendário
 function renderCalendar(){
-  calendar.innerHTML="";
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
   for(let i=1;i<=30;i++){
     const d=document.createElement("div");
-    d.className="day"+(doneDays.includes(i)?" done":"");
+    d.className="day";
     d.innerText=doneDays.includes(i)?"✅":i;
-    calendar.appendChild(d);
+    cal.appendChild(d);
   }
 }
 
-finishBtn.onclick=()=>{
-  const d=getDay()+1;
-  if(!doneDays.includes(d)) doneDays.push(d);
-  localStorage.setItem("doneDays",JSON.stringify(doneDays));
-  loadAll();
-};
+// Gráfico colorido
+let chart=null;
+function renderChart(){
+  const ctx=document.getElementById("chart");
+  if(chart) chart.destroy();
+  const dataArr=[];
+  const bgArr=[];
+  for(let i=0;i<30;i++){
+    const done=completedExercises[i]?completedExercises[i].length/3:0;
+    dataArr.push(done);
+    if(done>=1) bgArr.push("green");
+    else if(done>=0.5) bgArr.push("yellow");
+    else bgArr.push("red");
+  }
+  chart=new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:[...Array(30).keys()].map(i=>i+1),
+      datasets:[{data:dataArr, backgroundColor:bgArr}]
+    },
+    options:{
+      scales:{y:{min:0,max:1}},
+      plugins:{legend:{display:false}},
+      animation:{duration:800}
+    }
+  });
+}
 
-resetBtn.onclick=()=>{
-  localStorage.clear();
-  location.reload();
-};
-
-goalSel=document.getElementById("goal");
-difficulty=document.getElementById("difficulty");
-
-goalSel.onchange=loadAll;
-difficulty.onchange=loadAll;
-
+// Inicialização
 showPage("free");
+loadAll();
 </script>
 </body>
 </html>
